@@ -1,9 +1,158 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  SafeAreaView, 
+  ScrollView, 
+  TouchableOpacity,
+  Image,
+  Animated,
+  Dimensions
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../theme';
-import InsightCard from '../../components/InsightCard';
-import { mockInsights } from '../../data/mockInsights';
+import mockInsights from '../../data/mockInsights';
+import { AppContext } from '../../../App';
+
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = width - (theme.spacing.spacing.screenPadding * 2);
+
+/**
+ * InsightCard Component
+ * 
+ * Swipeable card showing daily insights with multiple panels
+ */
+const InsightCard = ({ insight, onSave, isSaved }) => {
+  const [currentPanel, setCurrentPanel] = useState('challenge');
+  const [panelAnimation] = useState(new Animated.Value(0));
+  
+  // Available panels for this insight
+  const availablePanels = ['challenge', 'why', 'try'];
+  if (insight.reassurance) {
+    availablePanels.push('reassurance');
+  }
+  
+  // Panel titles
+  const panelTitles = {
+    challenge: 'Challenge',
+    why: 'Why',
+    try: 'Try',
+    reassurance: 'Reassurance'
+  };
+  
+  // Animate panel change
+  useEffect(() => {
+    Animated.timing(panelAnimation, {
+      toValue: availablePanels.indexOf(currentPanel),
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  }, [currentPanel]);
+  
+  // Handle panel navigation
+  const handleNextPanel = () => {
+    const currentIndex = availablePanels.indexOf(currentPanel);
+    if (currentIndex < availablePanels.length - 1) {
+      setCurrentPanel(availablePanels[currentIndex + 1]);
+    }
+  };
+  
+  const handlePrevPanel = () => {
+    const currentIndex = availablePanels.indexOf(currentPanel);
+    if (currentIndex > 0) {
+      setCurrentPanel(availablePanels[currentIndex - 1]);
+    }
+  };
+  
+  // Calculate transform for panel animation
+  const translateX = panelAnimation.interpolate({
+    inputRange: availablePanels.map((_, i) => i),
+    outputRange: availablePanels.map((_, i) => -i * CARD_WIDTH)
+  });
+
+  return (
+    <View style={styles.cardContainer}>
+      {/* Panel navigation dots */}
+      <View style={styles.panelDotsContainer}>
+        {availablePanels.map((panel, index) => (
+          <TouchableOpacity 
+            key={panel}
+            style={[
+              styles.panelDot,
+              currentPanel === panel && styles.panelDotActive
+            ]}
+            onPress={() => setCurrentPanel(panel)}
+          />
+        ))}
+      </View>
+      
+      {/* Card content */}
+      <View style={styles.cardContent}>
+        <Animated.View 
+          style={[
+            styles.panelsContainer,
+            { transform: [{ translateX }] }
+          ]}
+        >
+          {availablePanels.map(panel => (
+            <View key={panel} style={styles.panel}>
+              <Text style={styles.panelTitle}>{insight[panel].title}</Text>
+              <Text style={styles.panelText}>{insight[panel].content}</Text>
+            </View>
+          ))}
+        </Animated.View>
+        
+        {/* Panel navigation buttons */}
+        <View style={styles.panelNavigation}>
+          {currentPanel !== availablePanels[0] && (
+            <TouchableOpacity 
+              style={styles.navButton}
+              onPress={handlePrevPanel}
+            >
+              <Ionicons name="arrow-back" size={20} color={theme.colors.primary.main} />
+              <Text style={styles.navButtonText}>Back</Text>
+            </TouchableOpacity>
+          )}
+          
+          <View style={styles.navSpacer} />
+          
+          {currentPanel !== availablePanels[availablePanels.length - 1] && (
+            <TouchableOpacity 
+              style={styles.navButton}
+              onPress={handleNextPanel}
+            >
+              <Text style={styles.navButtonText}>Next</Text>
+              <Ionicons name="arrow-forward" size={20} color={theme.colors.primary.main} />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+      
+      {/* Card footer */}
+      <View style={styles.cardFooter}>
+        <TouchableOpacity 
+          style={styles.footerButton}
+          onPress={() => onSave(insight)}
+        >
+          <Ionicons 
+            name={isSaved ? "bookmark" : "bookmark-outline"} 
+            size={20} 
+            color={theme.colors.primary.main} 
+          />
+          <Text style={styles.footerButtonText}>
+            {isSaved ? "Saved" : "Save"}
+          </Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.footerButton}>
+          <Ionicons name="thumbs-up-outline" size={20} color={theme.colors.primary.main} />
+          <Text style={styles.footerButtonText}>Helpful</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
 
 /**
  * Today Screen
@@ -12,131 +161,56 @@ import { mockInsights } from '../../data/mockInsights';
  * Non-tracking, content-first approach
  */
 export default function TodayScreen() {
-  const [currentInsight, setCurrentInsight] = useState(null);
-  const [lastViewedDate, setLastViewedDate] = useState(null);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [showCheckIn, setShowCheckIn] = useState(false);
+  const [currentInsight, setCurrentInsight] = useState(mockInsights[0]);
+  const { isItemSaved, handleSaveItem, handleRemoveSavedItem, babyName } = React.useContext(AppContext);
   
-  // Mock function to get today's date
-  const getTodayDate = () => {
-    const today = new Date();
-    return today.toISOString().split('T')[0]; // YYYY-MM-DD format
-  };
-  
-  // Mock function to determine if today is Friday (for weekly check-in)
-  const isFriday = () => {
-    const today = new Date();
-    return today.getDay() === 5; // 0 is Sunday, 5 is Friday
-  };
-  
-  // Mock function to select an insight based on baby's age and other factors
-  const selectInsightForToday = () => {
-    // In a real app, this would use personalization logic
-    // For now, just return a random insight from the mock data
-    const randomIndex = Math.floor(Math.random() * mockInsights.length);
-    return mockInsights[randomIndex];
-  };
-  
-  // Initialize insight on component mount
-  useEffect(() => {
-    loadTodayInsight();
-    
-    // Check if today is Friday to show weekly check-in
-    if (isFriday()) {
-      setShowCheckIn(true);
+  // Handle saving/unsaving insight
+  const handleToggleSave = (insight) => {
+    if (isItemSaved(insight.id, 'insights')) {
+      handleRemoveSavedItem(insight.id, 'insights');
+    } else {
+      handleSaveItem(insight, 'insights');
     }
-  }, []);
-  
-  // Load today's insight
-  const loadTodayInsight = () => {
-    const todayDate = getTodayDate();
-    
-    // If we already viewed today's insight, show the same one
-    if (lastViewedDate === todayDate && currentInsight) {
-      return;
-    }
-    
-    // Otherwise, select a new insight
-    const insight = selectInsightForToday();
-    setCurrentInsight(insight);
-    setLastViewedDate(todayDate);
-  };
-  
-  // Handle pull-to-refresh
-  const handleRefresh = () => {
-    setIsRefreshing(true);
-    
-    // Simulate network request
-    setTimeout(() => {
-      loadTodayInsight();
-      setIsRefreshing(false);
-    }, 1000);
-  };
-  
-  // Handle check-in completion
-  const handleCheckInComplete = () => {
-    setShowCheckIn(false);
-    // In a real app, this would save check-in data to Firestore
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView 
-        contentContainerStyle={styles.scrollContent}
-        onRefresh={handleRefresh}
-        refreshing={isRefreshing}
-      >
+      <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Header with date */}
         <View style={styles.header}>
           <View>
             <Text style={styles.dateText}>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</Text>
             <Text style={styles.headerTitle}>Today</Text>
           </View>
-          <TouchableOpacity style={styles.refreshButton} onPress={handleRefresh}>
-            <Ionicons name="refresh" size={24} color={theme.colors.primary.main} />
-          </TouchableOpacity>
+          <View style={styles.babyInfoContainer}>
+            <Text style={styles.babyName}>{babyName}</Text>
+            <Text style={styles.babyAge}>5 months</Text>
+          </View>
         </View>
         
         {/* Daily Insight Card */}
-        {currentInsight ? (
-          <InsightCard insight={currentInsight} />
-        ) : (
-          <View style={styles.placeholderCard}>
-            <Text style={styles.placeholderText}>Loading your daily insight...</Text>
-          </View>
-        )}
+        <View style={styles.insightContainer}>
+          <Text style={styles.insightLabel}>Daily Insight</Text>
+          <InsightCard 
+            insight={currentInsight}
+            onSave={handleToggleSave}
+            isSaved={isItemSaved(currentInsight.id, 'insights')}
+          />
+        </View>
         
-        {/* Weekly Check-In (shown only on Fridays) */}
-        {showCheckIn && (
-          <View style={styles.checkInCard}>
-            <Text style={styles.checkInTitle}>Weekly Check-In</Text>
-            <Text style={styles.checkInDescription}>
-              A few quick questions to help personalize your experience.
+        {/* Weekly Focus */}
+        <View style={styles.weeklyFocusContainer}>
+          <Text style={styles.sectionTitle}>Weekly Focus</Text>
+          <View style={styles.weeklyFocusCard}>
+            <Text style={styles.weeklyFocusTitle}>Tummy Time Exploration</Text>
+            <Text style={styles.weeklyFocusText}>
+              This week, focus on making tummy time engaging with different textures and toys positioned just out of reach to encourage movement.
             </Text>
-            <TouchableOpacity 
-              style={styles.checkInButton}
-              onPress={handleCheckInComplete}
-            >
-              <Text style={styles.checkInButtonText}>Start Check-In</Text>
+            <TouchableOpacity style={styles.weeklyFocusButton}>
+              <Text style={styles.weeklyFocusButtonText}>View Activities</Text>
+              <Ionicons name="arrow-forward" size={16} color={theme.colors.secondary.dark} />
             </TouchableOpacity>
           </View>
-        )}
-        
-        {/* Baby Development Summary */}
-        <View style={styles.developmentCard}>
-          <View style={styles.developmentHeader}>
-            <Text style={styles.developmentTitle}>Current Phase: 4-6 months</Text>
-            <TouchableOpacity>
-              <Text style={styles.developmentLink}>View Journey</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.progressContainer}>
-            <View style={[styles.progressBar, { width: '45%' }]} />
-          </View>
-          <Text style={styles.developmentDescription}>
-            Your baby is developing rapidly! They're likely working on rolling, 
-            showing interest in objects, and becoming more vocal.
-          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -167,99 +241,149 @@ const styles = StyleSheet.create({
     ...theme.typography.textVariants.h2,
     color: theme.colors.neutral.darkest,
   },
-  refreshButton: {
-    padding: theme.spacing.spacing.xs,
+  babyInfoContainer: {
+    alignItems: 'flex-end',
   },
-  placeholderCard: {
+  babyName: {
+    ...theme.typography.textVariants.h5,
+    color: theme.colors.primary.dark,
+  },
+  babyAge: {
+    ...theme.typography.textVariants.body2,
+    color: theme.colors.neutral.medium,
+  },
+  insightContainer: {
+    marginBottom: theme.spacing.spacing.xl,
+  },
+  insightLabel: {
+    ...theme.typography.textVariants.overline,
+    color: theme.colors.neutral.medium,
+    marginBottom: theme.spacing.spacing.sm,
+    textTransform: 'uppercase',
+  },
+  cardContainer: {
     backgroundColor: theme.colors.neutral.lightest,
     borderRadius: 16,
-    padding: theme.spacing.spacing.lg,
-    marginBottom: theme.spacing.spacing.xl,
-    height: 300,
-    justifyContent: 'center',
-    alignItems: 'center',
     shadowColor: theme.colors.neutral.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
-  },
-  placeholderText: {
-    ...theme.typography.textVariants.body1,
-    color: theme.colors.neutral.medium,
-  },
-  checkInCard: {
-    backgroundColor: theme.colors.secondary.light,
-    borderRadius: 16,
-    padding: theme.spacing.spacing.lg,
-    marginBottom: theme.spacing.spacing.xl,
-    shadowColor: theme.colors.neutral.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  checkInTitle: {
-    ...theme.typography.textVariants.h4,
-    color: theme.colors.neutral.darkest,
-    marginBottom: theme.spacing.spacing.sm,
-  },
-  checkInDescription: {
-    ...theme.typography.textVariants.body1,
-    color: theme.colors.neutral.dark,
-    marginBottom: theme.spacing.spacing.md,
-  },
-  checkInButton: {
-    backgroundColor: theme.colors.secondary.main,
-    borderRadius: 8,
-    paddingVertical: theme.spacing.spacing.sm,
-    paddingHorizontal: theme.spacing.spacing.md,
-    alignSelf: 'flex-start',
-  },
-  checkInButtonText: {
-    ...theme.typography.textVariants.button,
-    color: theme.colors.neutral.white,
-  },
-  developmentCard: {
-    backgroundColor: theme.colors.neutral.lightest,
-    borderRadius: 16,
-    padding: theme.spacing.spacing.lg,
-    marginBottom: theme.spacing.spacing.xl,
-    shadowColor: theme.colors.neutral.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  developmentHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: theme.spacing.spacing.sm,
-  },
-  developmentTitle: {
-    ...theme.typography.textVariants.h5,
-    color: theme.colors.neutral.darkest,
-  },
-  developmentLink: {
-    ...theme.typography.textVariants.button,
-    color: theme.colors.primary.main,
-    fontSize: 14,
-  },
-  progressContainer: {
-    height: 6,
-    backgroundColor: theme.colors.neutral.lighter,
-    borderRadius: 3,
-    marginBottom: theme.spacing.spacing.md,
     overflow: 'hidden',
   },
-  progressBar: {
-    height: '100%',
-    backgroundColor: theme.colors.primary.main,
-    borderRadius: 3,
+  panelDotsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingVertical: theme.spacing.spacing.sm,
   },
-  developmentDescription: {
+  panelDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: theme.colors.neutral.lighter,
+    marginHorizontal: 4,
+  },
+  panelDotActive: {
+    backgroundColor: theme.colors.primary.main,
+  },
+  cardContent: {
+    height: 300,
+    overflow: 'hidden',
+  },
+  panelsContainer: {
+    flexDirection: 'row',
+    width: CARD_WIDTH * 4, // Maximum 4 panels
+  },
+  panel: {
+    width: CARD_WIDTH,
+    padding: theme.spacing.spacing.lg,
+  },
+  panelTitle: {
+    ...theme.typography.textVariants.h4,
+    color: theme.colors.neutral.darkest,
+    marginBottom: theme.spacing.spacing.md,
+  },
+  panelText: {
     ...theme.typography.textVariants.body1,
     color: theme.colors.neutral.dark,
+    lineHeight: 24,
+  },
+  panelNavigation: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: theme.spacing.spacing.md,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(255,255,255,0.9)',
+  },
+  navButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: theme.spacing.spacing.sm,
+  },
+  navButtonText: {
+    ...theme.typography.textVariants.button,
+    color: theme.colors.primary.main,
+    marginHorizontal: theme.spacing.spacing.xs,
+  },
+  navSpacer: {
+    flex: 1,
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.neutral.lighter,
+    padding: theme.spacing.spacing.sm,
+  },
+  footerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: theme.spacing.spacing.sm,
+    marginRight: theme.spacing.spacing.md,
+  },
+  footerButtonText: {
+    ...theme.typography.textVariants.button,
+    color: theme.colors.primary.main,
+    marginLeft: theme.spacing.spacing.xs,
+  },
+  weeklyFocusContainer: {
+    marginBottom: theme.spacing.spacing.xl,
+  },
+  sectionTitle: {
+    ...theme.typography.textVariants.h4,
+    color: theme.colors.neutral.darkest,
+    marginBottom: theme.spacing.spacing.md,
+  },
+  weeklyFocusCard: {
+    backgroundColor: theme.colors.secondary.lightest,
+    borderRadius: 16,
+    padding: theme.spacing.spacing.lg,
+    shadowColor: theme.colors.neutral.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  weeklyFocusTitle: {
+    ...theme.typography.textVariants.h5,
+    color: theme.colors.secondary.dark,
+    marginBottom: theme.spacing.spacing.sm,
+  },
+  weeklyFocusText: {
+    ...theme.typography.textVariants.body1,
+    color: theme.colors.neutral.dark,
+    marginBottom: theme.spacing.spacing.md,
+  },
+  weeklyFocusButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+  },
+  weeklyFocusButtonText: {
+    ...theme.typography.textVariants.button,
+    color: theme.colors.secondary.dark,
+    marginRight: theme.spacing.spacing.xs,
   },
 });
