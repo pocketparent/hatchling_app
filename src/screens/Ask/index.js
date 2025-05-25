@@ -1,6 +1,101 @@
-import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  SafeAreaView, 
+  ScrollView, 
+  TouchableOpacity,
+  TextInput,
+  FlatList,
+  Animated
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import theme from '../../theme';
+import mockAskData from '../../data/mockAskData';
+
+/**
+ * CategoryButton Component
+ * 
+ * Button for category selection in Ask Hatchling
+ */
+const CategoryButton = ({ category, isSelected, onPress }) => {
+  return (
+    <TouchableOpacity 
+      style={[
+        styles.categoryButton,
+        isSelected && styles.categoryButtonSelected
+      ]}
+      onPress={() => onPress(category.id)}
+    >
+      <Text style={styles.categoryIcon}>{category.icon}</Text>
+      <Text style={[
+        styles.categoryName,
+        isSelected && styles.categoryNameSelected
+      ]}>
+        {category.name}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+/**
+ * QuestionCard Component
+ * 
+ * Card displaying a question with expandable answer
+ */
+const QuestionCard = ({ question, isExpanded, onToggle }) => {
+  const [animation] = useState(new Animated.Value(0));
+  
+  useEffect(() => {
+    Animated.timing(animation, {
+      toValue: isExpanded ? 1 : 0,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  }, [isExpanded]);
+  
+  const maxHeight = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 500], // Maximum height for the answer
+  });
+
+  return (
+    <TouchableOpacity 
+      style={styles.questionCard}
+      onPress={() => onToggle(question.id)}
+      activeOpacity={0.8}
+    >
+      <View style={styles.questionHeader}>
+        <Text style={styles.questionText}>{question.question}</Text>
+        <Ionicons 
+          name={isExpanded ? "chevron-up" : "chevron-down"} 
+          size={20} 
+          color={theme.colors.neutral.dark} 
+        />
+      </View>
+      
+      <Animated.View style={[styles.answerContainer, { maxHeight }]}>
+        <Text style={styles.answerText}>{question.answer}</Text>
+        
+        {/* Tags */}
+        <View style={styles.tagsContainer}>
+          {question.tags.map((tag, index) => (
+            <View key={index} style={styles.tag}>
+              <Text style={styles.tagText}>{tag}</Text>
+            </View>
+          ))}
+        </View>
+        
+        {/* Save button */}
+        <TouchableOpacity style={styles.saveButton}>
+          <Ionicons name="bookmark-outline" size={18} color={theme.colors.primary.main} />
+          <Text style={styles.saveButtonText}>Save</Text>
+        </TouchableOpacity>
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};
 
 /**
  * Ask Screen
@@ -9,38 +104,65 @@ import theme from '../../theme';
  * Non-tracking, content-first approach
  */
 export default function AskScreen() {
-  // Mock data for question categories
-  const categories = [
-    { id: '1', name: 'Sleep', icon: '🌙' },
-    { id: '2', name: 'Feeding', icon: '🍼' },
-    { id: '3', name: 'Development', icon: '🧩' },
-    { id: '4', name: 'Health', icon: '🩺' },
-    { id: '5', name: 'Behavior', icon: '🧸' },
-  ];
-
-  // Mock data for recent questions
-  const recentQuestions = [
-    { 
-      id: '1', 
-      question: 'Why is my baby waking up every hour at night?',
-      preview: 'Sleep patterns change as your baby develops. Around 4 months...'
-    },
-    { 
-      id: '2', 
-      question: 'How do I know if my baby is getting enough milk?',
-      preview: 'Look for these signs of satisfaction after feeding...'
-    },
-  ];
+  const [categories] = useState(mockAskData.categories);
+  const [questions] = useState(mockAskData.questions);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [expandedQuestionId, setExpandedQuestionId] = useState(null);
+  
+  // Filter questions based on selected category and search query
+  const filteredQuestions = questions.filter(question => {
+    const matchesCategory = selectedCategory ? question.category === selectedCategory : true;
+    const matchesSearch = searchQuery.trim() === '' ? true : 
+      question.question.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      question.answer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      question.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    return matchesCategory && matchesSearch;
+  });
+  
+  // Handle category selection
+  const handleCategoryPress = (categoryId) => {
+    setSelectedCategory(categoryId === selectedCategory ? null : categoryId);
+  };
+  
+  // Handle question expansion
+  const handleQuestionToggle = (questionId) => {
+    setExpandedQuestionId(questionId === expandedQuestionId ? null : questionId);
+  };
+  
+  // Handle search
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+  };
+  
+  // Clear filters
+  const handleClearFilters = () => {
+    setSelectedCategory(null);
+    setSearchQuery('');
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.headerTitle}>Ask Hatchling</Text>
         
-        {/* Search placeholder */}
-        <TouchableOpacity style={styles.searchBar}>
-          <Text style={styles.searchPlaceholder}>Search questions...</Text>
-        </TouchableOpacity>
+        {/* Search bar */}
+        <View style={styles.searchBarContainer}>
+          <Ionicons name="search" size={20} color={theme.colors.neutral.medium} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search questions..."
+            value={searchQuery}
+            onChangeText={handleSearch}
+            placeholderTextColor={theme.colors.neutral.medium}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <Ionicons name="close-circle" size={20} color={theme.colors.neutral.medium} />
+            </TouchableOpacity>
+          )}
+        </View>
         
         {/* Categories */}
         <Text style={styles.sectionTitle}>Browse by Topic</Text>
@@ -50,30 +172,50 @@ export default function AskScreen() {
           contentContainerStyle={styles.categoriesContainer}
         >
           {categories.map(category => (
-            <TouchableOpacity key={category.id} style={styles.categoryButton}>
-              <Text style={styles.categoryIcon}>{category.icon}</Text>
-              <Text style={styles.categoryName}>{category.name}</Text>
-            </TouchableOpacity>
+            <CategoryButton 
+              key={category.id}
+              category={category}
+              isSelected={selectedCategory === category.id}
+              onPress={handleCategoryPress}
+            />
           ))}
         </ScrollView>
         
-        {/* Recent questions */}
-        <Text style={styles.sectionTitle}>Recent Questions</Text>
-        {recentQuestions.map(item => (
-          <TouchableOpacity key={item.id} style={styles.questionCard}>
-            <Text style={styles.questionText}>{item.question}</Text>
-            <Text style={styles.answerPreview}>{item.preview}</Text>
-            <Text style={styles.readMoreText}>Read more</Text>
-          </TouchableOpacity>
-        ))}
+        {/* Active filters indicator */}
+        {(selectedCategory || searchQuery.trim().length > 0) && (
+          <View style={styles.filtersContainer}>
+            <Text style={styles.filtersText}>
+              {selectedCategory ? 
+                `Showing: ${categories.find(c => c.id === selectedCategory)?.name}` : 
+                searchQuery.trim().length > 0 ? 
+                  `Search: "${searchQuery}"` : 
+                  ''}
+            </Text>
+            <TouchableOpacity onPress={handleClearFilters}>
+              <Text style={styles.clearFiltersText}>Clear</Text>
+            </TouchableOpacity>
+          </View>
+        )}
         
-        {/* Common questions placeholder */}
-        <Text style={styles.sectionTitle}>Common Questions</Text>
-        <View style={styles.questionCard}>
-          <Text style={styles.questionText}>When will my baby start sleeping through the night?</Text>
-          <Text style={styles.answerPreview}>Every baby is different, but most begin to sleep for longer stretches...</Text>
-          <Text style={styles.readMoreText}>Read more</Text>
-        </View>
+        {/* Questions list */}
+        {filteredQuestions.length > 0 ? (
+          <View style={styles.questionsContainer}>
+            {filteredQuestions.map(question => (
+              <QuestionCard 
+                key={question.id}
+                question={question}
+                isExpanded={question.id === expandedQuestionId}
+                onToggle={handleQuestionToggle}
+              />
+            ))}
+          </View>
+        ) : (
+          <View style={styles.emptyStateContainer}>
+            <Ionicons name="search-outline" size={48} color={theme.colors.neutral.light} />
+            <Text style={styles.emptyStateText}>No questions found</Text>
+            <Text style={styles.emptyStateSubtext}>Try adjusting your search or filters</Text>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -86,6 +228,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: theme.spacing.spacing.screenPadding,
+    paddingBottom: theme.spacing.spacing.xxxl,
   },
   headerTitle: {
     ...theme.typography.textVariants.h2,
@@ -93,18 +236,23 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.spacing.lg,
     marginTop: theme.spacing.spacing.md,
   },
-  searchBar: {
+  searchBarContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: theme.colors.neutral.lighter,
     borderRadius: 8,
-    padding: theme.spacing.spacing.md,
+    padding: theme.spacing.spacing.sm,
     marginBottom: theme.spacing.spacing.lg,
   },
-  searchPlaceholder: {
+  searchInput: {
+    flex: 1,
     ...theme.typography.textVariants.body1,
-    color: theme.colors.neutral.medium,
+    color: theme.colors.neutral.darkest,
+    marginLeft: theme.spacing.spacing.sm,
+    padding: theme.spacing.spacing.xs,
   },
   sectionTitle: {
-    ...theme.typography.textVariants.h4,
+    ...theme.typography.textVariants.h5,
     color: theme.colors.neutral.darkest,
     marginBottom: theme.spacing.spacing.md,
   },
@@ -117,6 +265,9 @@ const styles = StyleSheet.create({
     marginRight: theme.spacing.spacing.lg,
     width: 70,
   },
+  categoryButtonSelected: {
+    // No specific style needed, we'll style the text and icon
+  },
   categoryIcon: {
     fontSize: 28,
     marginBottom: theme.spacing.spacing.xs,
@@ -125,6 +276,28 @@ const styles = StyleSheet.create({
     ...theme.typography.textVariants.caption,
     color: theme.colors.neutral.dark,
     textAlign: 'center',
+  },
+  categoryNameSelected: {
+    color: theme.colors.primary.main,
+    fontWeight: '600',
+  },
+  filtersContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing.spacing.md,
+  },
+  filtersText: {
+    ...theme.typography.textVariants.body2,
+    color: theme.colors.neutral.dark,
+  },
+  clearFiltersText: {
+    ...theme.typography.textVariants.button,
+    color: theme.colors.primary.main,
+    fontSize: 14,
+  },
+  questionsContainer: {
+    marginBottom: theme.spacing.spacing.lg,
   },
   questionCard: {
     backgroundColor: theme.colors.neutral.lightest,
@@ -136,20 +309,71 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+    overflow: 'hidden',
+  },
+  questionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   questionText: {
     ...theme.typography.textVariants.h5,
     color: theme.colors.neutral.darkest,
-    marginBottom: theme.spacing.spacing.sm,
+    flex: 1,
+    marginRight: theme.spacing.spacing.sm,
   },
-  answerPreview: {
+  answerContainer: {
+    overflow: 'hidden',
+  },
+  answerText: {
     ...theme.typography.textVariants.body1,
     color: theme.colors.neutral.dark,
-    marginBottom: theme.spacing.spacing.sm,
+    marginTop: theme.spacing.spacing.md,
+    marginBottom: theme.spacing.spacing.md,
   },
-  readMoreText: {
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: theme.spacing.spacing.md,
+  },
+  tag: {
+    backgroundColor: theme.colors.neutral.lighter,
+    borderRadius: 16,
+    paddingVertical: theme.spacing.spacing.xxs,
+    paddingHorizontal: theme.spacing.spacing.sm,
+    marginRight: theme.spacing.spacing.xs,
+    marginBottom: theme.spacing.spacing.xs,
+  },
+  tagText: {
+    ...theme.typography.textVariants.caption,
+    color: theme.colors.neutral.dark,
+  },
+  saveButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    padding: theme.spacing.spacing.sm,
+  },
+  saveButtonText: {
     ...theme.typography.textVariants.button,
     color: theme.colors.primary.main,
+    marginLeft: theme.spacing.spacing.xs,
     fontSize: 14,
+  },
+  emptyStateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing.spacing.xl,
+    marginTop: theme.spacing.spacing.xl,
+  },
+  emptyStateText: {
+    ...theme.typography.textVariants.h5,
+    color: theme.colors.neutral.medium,
+    marginTop: theme.spacing.spacing.md,
+  },
+  emptyStateSubtext: {
+    ...theme.typography.textVariants.body2,
+    color: theme.colors.neutral.medium,
+    marginTop: theme.spacing.spacing.xs,
   },
 });
