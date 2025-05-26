@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../theme';
-import mockInsights from '../../data/mockInsights';
+import { mockInsights } from '../../data/mockInsights';
 import { AppContext } from '../../../App';
 
 const { width } = Dimensions.get('window');
