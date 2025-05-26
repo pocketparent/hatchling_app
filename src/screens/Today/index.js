@@ -3,7 +3,6 @@ import {
   View, 
   Text, 
   StyleSheet, 
-  Image, 
   TouchableOpacity, 
   Dimensions, 
   ScrollView,
@@ -133,11 +132,10 @@ const TodayScreen = () => {
       </View>
       
       <View style={styles.profileSection}>
-        <Image 
-          source={require('../../../assets/baby_avatar.png')} 
-          style={styles.profileImage}
-          defaultSource={require('../../../assets/baby_avatar.png')}
-        />
+        {/* Using a placeholder View instead of Image to avoid asset errors */}
+        <View style={styles.profileImage}>
+          <Text style={styles.placeholderText}>{babyName?.charAt(0) || "B"}</Text>
+        </View>
         <View style={styles.profileInfo}>
           <Text style={styles.profileName}>{babyName},</Text>
           <Text style={styles.profileAge}>{ageInMonths} months</Text>
@@ -306,7 +304,14 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: theme.colors.neutral.lightest,
+    backgroundColor: theme.colors.secondary.light,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  placeholderText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
   },
   profileInfo: {
     marginLeft: 15,

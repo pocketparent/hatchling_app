@@ -5,7 +5,6 @@ import {
   StyleSheet, 
   ScrollView, 
   TouchableOpacity,
-  Image,
   FlatList
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -100,23 +99,21 @@ const SavedScreen = () => {
       );
     }
     
-    // Mock media items for the UI
+    // Mock media items for the UI - using placeholder Views instead of Images
     const mockMedia = [
-      { id: 'media_001', uri: require('../../../assets/baby_milestone_1.png') },
-      { id: 'media_002', uri: require('../../../assets/baby_milestone_2.png') },
-      { id: 'media_003', uri: require('../../../assets/baby_milestone_3.png') },
-      { id: 'media_004', uri: require('../../../assets/baby_milestone_4.png') },
+      { id: 'media_001', label: '1' },
+      { id: 'media_002', label: '2' },
+      { id: 'media_003', label: '3' },
+      { id: 'media_004', label: '4' },
     ];
     
     return (
       <View style={styles.mediaGrid}>
         {mockMedia.map(item => (
           <TouchableOpacity key={item.id} style={styles.mediaItem}>
-            <Image 
-              source={item.uri}
-              style={styles.mediaImage}
-              defaultSource={item.uri}
-            />
+            <View style={styles.mediaPlaceholder}>
+              <Text style={styles.mediaPlaceholderText}>{item.label}</Text>
+            </View>
           </TouchableOpacity>
         ))}
       </View>
@@ -369,10 +366,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
   },
-  mediaImage: {
+  mediaPlaceholder: {
     width: '100%',
     height: '100%',
-    backgroundColor: theme.colors.neutral.lighter,
+    backgroundColor: theme.colors.secondary.light,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  mediaPlaceholderText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
   },
 });
 
