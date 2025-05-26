@@ -1,27 +1,26 @@
 /**
  * Hatchling App Typography System
  * 
- * Inspired by Dieter Rams and Steve Jobs design principles:
- * - Clear, legible, and purposeful
- * - Minimalist yet warm and approachable
- * - Focused on readability and content hierarchy
+ * Simplified to use standard system fonts for maximum compatibility
+ * Focuses on readability and consistent styling across all platforms
  */
 
 import { Platform } from 'react-native';
 
-// Base font families
+// Base font families - using system fonts for maximum compatibility
 const fontFamilies = {
   // Primary font for most text
-  primary: 'Inter-Regular',
+  primary: Platform.select({
+    ios: 'System',
+    android: 'Roboto',
+    default: 'System',
+  }),
   
   // Secondary font for headings and emphasis
-  secondary: 'Inter-Medium',
-  
-  // Monospace font for technical content
-  mono: Platform.select({
-    ios: 'Courier',
-    android: 'monospace',
-    default: 'Courier',
+  secondary: Platform.select({
+    ios: 'System',
+    android: 'Roboto',
+    default: 'System',
   }),
 };
 
@@ -51,110 +50,98 @@ const fontSizes = {
 
 // Line heights
 const lineHeights = {
-  tight: 1.2,
-  normal: 1.5,
-  relaxed: 1.8,
+  tight: 1.2 * 20, // Using explicit pixel values for better cross-platform compatibility
+  normal: 1.5 * 20,
+  relaxed: 1.8 * 20,
 };
 
-// Letter spacing
-const letterSpacing = {
-  tight: -0.5,
-  normal: 0,
-  wide: 0.5,
-  wider: 1,
-};
-
-// Text variants
+// Text variants with explicit styling for maximum compatibility
 export const textVariants = {
   // Headings
   h1: {
-    fontFamily: 'Inter-Bold',
     fontSize: fontSizes.giant,
     fontWeight: fontWeights.bold,
-    lineHeight: lineHeights.tight,
-    letterSpacing: letterSpacing.tight,
+    lineHeight: 58,
+    color: '#000000',
   },
   h2: {
-    fontFamily: 'Inter-Bold',
     fontSize: fontSizes.display,
     fontWeight: fontWeights.bold,
-    lineHeight: lineHeights.tight,
-    letterSpacing: letterSpacing.tight,
+    lineHeight: 44,
+    color: '#000000',
   },
   h3: {
-    fontFamily: 'Inter-SemiBold',
     fontSize: fontSizes.xxxl,
     fontWeight: fontWeights.semibold,
-    lineHeight: lineHeights.tight,
+    lineHeight: 36,
+    color: '#000000',
   },
   h4: {
-    fontFamily: 'Inter-SemiBold',
     fontSize: fontSizes.xxl,
     fontWeight: fontWeights.semibold,
-    lineHeight: lineHeights.tight,
+    lineHeight: 30,
+    color: '#000000',
   },
   h5: {
-    fontFamily: 'Inter-Medium',
     fontSize: fontSizes.xl,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.tight,
+    lineHeight: 26,
+    color: '#000000',
   },
   
   // Body text
   body1: {
-    fontFamily: 'Inter-Regular',
     fontSize: fontSizes.md,
     fontWeight: fontWeights.regular,
-    lineHeight: lineHeights.normal,
+    lineHeight: 24,
+    color: '#333333',
   },
   body2: {
-    fontFamily: 'Inter-Regular',
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.regular,
-    lineHeight: lineHeights.normal,
+    lineHeight: 20,
+    color: '#333333',
   },
   
   // Special text styles
   caption: {
-    fontFamily: 'Inter-Regular',
     fontSize: fontSizes.xs,
     fontWeight: fontWeights.regular,
-    lineHeight: lineHeights.normal,
+    lineHeight: 16,
+    color: '#666666',
   },
   button: {
-    fontFamily: 'Inter-Medium',
     fontSize: fontSizes.md,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.tight,
-    letterSpacing: letterSpacing.wide,
+    lineHeight: 24,
+    color: '#000000',
   },
   overline: {
-    fontFamily: 'Inter-Medium',
     fontSize: fontSizes.xs,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.normal,
-    letterSpacing: letterSpacing.wider,
+    lineHeight: 16,
     textTransform: 'uppercase',
+    color: '#666666',
   },
   
   // Content-specific styles
   insightTitle: {
-    fontFamily: 'Inter-SemiBold',
     fontSize: fontSizes.xl,
     fontWeight: fontWeights.semibold,
-    lineHeight: lineHeights.tight,
+    lineHeight: 26,
+    color: '#000000',
   },
   insightBody: {
-    fontFamily: 'Inter-Regular',
     fontSize: fontSizes.md,
     fontWeight: fontWeights.regular,
-    lineHeight: lineHeights.relaxed,
+    lineHeight: 28,
+    color: '#333333',
   },
   milestoneTitle: {
-    fontFamily: 'Inter-Medium',
     fontSize: fontSizes.lg,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.tight,
+    lineHeight: 24,
+    color: '#000000',
   },
 };
 
@@ -163,6 +150,5 @@ export default {
   fontWeights,
   fontSizes,
   lineHeights,
-  letterSpacing,
   textVariants,
 };

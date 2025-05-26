@@ -1,17 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-import * as Font from 'expo-font';
-import { 
-  useFonts,
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_600SemiBold,
-  Inter_700Bold,
-} from '@expo-google-fonts/inter';
-import AppLoading from 'expo-app-loading';
 import theme from './src/theme';
 
 // Import screens
@@ -31,16 +22,6 @@ export const AppContext = createContext();
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const [isReady, setIsReady] = useState(false);
-  
-  // Load fonts
-  const [fontsLoaded] = useFonts({
-    'Inter-Regular': Inter_400Regular,
-    'Inter-Medium': Inter_500Medium,
-    'Inter-SemiBold': Inter_600SemiBold,
-    'Inter-Bold': Inter_700Bold,
-  });
-  
   // App-wide state
   const [babyAge, setBabyAge] = useState(150); // Default to 5 months (150 days)
   const [babyName, setBabyName] = useState('Emma');
@@ -96,15 +77,6 @@ export default function App() {
   // For demo purposes, we'll show the check-in demo
   const showCheckInDemo = true;
   const TodayComponent = showCheckInDemo ? CheckInDemo : TodayScreen;
-  
-  // Wait for fonts to load
-  if (!fontsLoaded) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading Hatchling...</Text>
-      </View>
-    );
-  }
 
   return (
     <AppContext.Provider value={contextValue}>
@@ -155,17 +127,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.neutral.white,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: theme.colors.neutral.white,
-  },
-  loadingText: {
-    fontSize: 18,
-    color: theme.colors.primary.main,
-    fontWeight: '500',
-  },
   tabBar: {
     backgroundColor: theme.colors.neutral.white,
     borderTopWidth: 1,
@@ -175,7 +136,6 @@ const styles = StyleSheet.create({
   },
   tabBarLabel: {
     fontSize: 12,
-    fontFamily: 'Inter-Medium',
     fontWeight: '500',
   },
 });
