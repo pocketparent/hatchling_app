@@ -32,33 +32,33 @@ const AskScreen = () => {
     { id: 'behavior', label: 'Behavior', icon: 'happy-outline', color: theme.colors.content.behavior }
   ];
   
-  // Mock questions data
+  // Mock questions data - Fixed syntax issues with multi-line strings
   const questions = [
     {
       id: 'q001',
       question: 'When should my baby start sleeping through the night?',
-      answer: 'Most babies are developmentally capable of sleeping for longer stretches (6+ hours) around 4-6 months, though many continue to wake. "Sleeping through the night" is often defined as 6-8 hours, not necessarily 10-12 hours or matching adult sleep cycles.\n\nFactors affecting sleep consolidation include:\n• Physical development and weight gain\n• Feeding patterns and caloric needs\n• Individual temperament\n• Sleep associations and routines\n\nRemember that night wakings are biologically normal for babies and serve protective functions. If your current sleep situation works for your family, there's no need to change it based on external expectations.',
+      answer: 'Most babies are developmentally capable of sleeping for longer stretches (6+ hours) around 4-6 months, though many continue to wake. "Sleeping through the night" is often defined as 6-8 hours, not necessarily 10-12 hours or matching adult sleep cycles.\n\nFactors affecting sleep consolidation include:\n• Physical development and weight gain\n• Feeding patterns and caloric needs\n• Individual temperament\n• Sleep associations and routines\n\nRemember that night wakings are biologically normal for babies and serve protective functions. If your current sleep situation works for your family, there\'s no need to change it based on external expectations.',
       category: 'sleep',
       ageRange: [0, 365]
     },
     {
       id: 'q002',
       question: 'How much tummy time should my 4-month-old get?',
-      answer: 'At 4 months, aim for 20-30 minutes of total tummy time daily, broken into shorter sessions throughout the day (3-5 minutes each to start, gradually increasing as tolerated).\n\nQuality matters more than quantity. Watch for signs that your baby is engaging and building strength during tummy time:\n• Lifting head higher (working toward 90 degrees)\n• Pushing up on forearms or straightening arms\n• Looking around while maintaining position\n• Reaching for toys\n\nIf your baby dislikes tummy time, try these approaches:\n• Timing it after naps but before feeding\n• Placing baby on your chest while you're reclined\n• Using a rolled towel under the chest/armpits for support\n• Providing interesting toys or a mirror\n• Getting down on their level and engaging face-to-face',
+      answer: 'At 4 months, aim for 20-30 minutes of total tummy time daily, broken into shorter sessions throughout the day (3-5 minutes each to start, gradually increasing as tolerated).\n\nQuality matters more than quantity. Watch for signs that your baby is engaging and building strength during tummy time:\n• Lifting head higher (working toward 90 degrees)\n• Pushing up on forearms or straightening arms\n• Looking around while maintaining position\n• Reaching for toys\n\nIf your baby dislikes tummy time, try these approaches:\n• Timing it after naps but before feeding\n• Placing baby on your chest while you\'re reclined\n• Using a rolled towel under the chest/armpits for support\n• Providing interesting toys or a mirror\n• Getting down on their level and engaging face-to-face',
       category: 'development',
       ageRange: [90, 180]
     },
     {
       id: 'q003',
       question: 'Is my baby getting enough breast milk?',
-      answer: 'Without measuring bottle volumes, you can tell your breastfed baby is getting enough milk through these indicators:\n\nReliable signs of adequate intake:\n• 6+ wet diapers daily (clear or pale yellow urine)\n• Regular bowel movements (at least 3-4 per day in the first month, then may decrease)\n• Weight gain following their growth curve\n• Alert and content after most feedings\n• Meeting developmental milestones\n\nBreastfeeding patterns:\n• 8-12 feedings in 24 hours for newborns\n• You can hear swallowing during feeds\n• Baby's sucking pattern changes from quick sucks to deeper, rhythmic suck-swallow patterns\n• Breasts feel softer after feeding\n\nIf you're concerned about milk supply, consult with a lactation consultant before supplementing, as this can sometimes create a cycle that further reduces supply.',
+      answer: 'Without measuring bottle volumes, you can tell your breastfed baby is getting enough milk through these indicators:\n\nReliable signs of adequate intake:\n• 6+ wet diapers daily (clear or pale yellow urine)\n• Regular bowel movements (at least 3-4 per day in the first month, then may decrease)\n• Weight gain following their growth curve\n• Alert and content after most feedings\n• Meeting developmental milestones\n\nBreastfeeding patterns:\n• 8-12 feedings in 24 hours for newborns\n• You can hear swallowing during feeds\n• Baby\'s sucking pattern changes from quick sucks to deeper, rhythmic suck-swallow patterns\n• Breasts feel softer after feeding\n\nIf you\'re concerned about milk supply, consult with a lactation consultant before supplementing, as this can sometimes create a cycle that further reduces supply.',
       category: 'feeding',
       ageRange: [0, 365]
     },
     {
       id: 'q004',
       question: 'When should I worry about a fever?',
-      answer: 'Fever guidelines by age:\n\n0-3 months: Contact doctor for any temperature of 100.4°F (38°C) or higher immediately, even if baby seems well otherwise.\n\n3-6 months: Call doctor for temperatures above 101°F (38.3°C), or for any fever lasting more than 24 hours.\n\n6-24 months: Call doctor for temperatures above 103°F (39.4°C), or for fevers lasting more than 2-3 days.\n\nRegardless of temperature, seek medical attention if your baby shows these signs:\n• Unusual lethargy or excessive irritability\n• Difficulty waking\n• Rash that doesn't fade when pressed\n• Difficulty breathing\n• Signs of dehydration (dry mouth, no tears, fewer wet diapers)\n• Persistent vomiting or diarrhea\n• Stiff neck or sensitivity to light\n\nRemember that fever itself isn't an illness but a sign that the body is fighting infection. How your baby acts often matters more than the number on the thermometer.',
+      answer: 'Fever guidelines by age:\n\n0-3 months: Contact doctor for any temperature of 100.4°F (38°C) or higher immediately, even if baby seems well otherwise.\n\n3-6 months: Call doctor for temperatures above 101°F (38.3°C), or for any fever lasting more than 24 hours.\n\n6-24 months: Call doctor for temperatures above 103°F (39.4°C), or for fevers lasting more than 2-3 days.\n\nRegardless of temperature, seek medical attention if your baby shows these signs:\n• Unusual lethargy or excessive irritability\n• Difficulty waking\n• Rash that doesn\'t fade when pressed\n• Difficulty breathing\n• Signs of dehydration (dry mouth, no tears, fewer wet diapers)\n• Persistent vomiting or diarrhea\n• Stiff neck or sensitivity to light\n\nRemember that fever itself isn\'t an illness but a sign that the body is fighting infection. How your baby acts often matters more than the number on the thermometer.',
       category: 'health',
       ageRange: [0, 730]
     },
