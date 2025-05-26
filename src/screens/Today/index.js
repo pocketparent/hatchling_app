@@ -62,6 +62,7 @@ const InsightCard = ({ insight, onSave, isSaved, onMarkHelpful }) => {
           <TouchableOpacity 
             style={styles.navArrowLeft}
             onPress={handlePrevPanel}
+            hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
           >
             <Text style={styles.navArrowText}>{'<'}</Text>
           </TouchableOpacity>
@@ -73,6 +74,7 @@ const InsightCard = ({ insight, onSave, isSaved, onMarkHelpful }) => {
           <TouchableOpacity 
             style={styles.navArrowRight}
             onPress={handleNextPanel}
+            hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
           >
             <Text style={styles.navArrowText}>{'>'}</Text>
           </TouchableOpacity>
@@ -80,9 +82,11 @@ const InsightCard = ({ insight, onSave, isSaved, onMarkHelpful }) => {
       </View>
       
       {/* Pagination indicator */}
-      <Text style={styles.paginationText}>
-        {currentIndex + 1} / {availablePanels.length}
-      </Text>
+      <View style={styles.paginationContainer}>
+        <Text style={styles.paginationText}>
+          {currentIndex + 1} / {availablePanels.length}
+        </Text>
+      </View>
       
       {/* Card footer */}
       <View style={styles.cardFooter}>
@@ -147,9 +151,13 @@ export default function TodayScreen() {
     <ImageBackground 
       source={require('../../assets/images/background_pattern.png')}
       style={styles.backgroundImage}
+      imageStyle={styles.backgroundImageStyle}
     >
       <SafeAreaView style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContent}>
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
           {/* Header with baby info */}
           <View style={styles.header}>
             <View style={styles.babyInfoContainer}>
@@ -187,12 +195,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.primary.main, // Teal background
   },
+  backgroundImageStyle: {
+    resizeMode: 'cover',
+  },
   container: {
     flex: 1,
   },
   scrollContent: {
     padding: theme.spacing.spacing.screenPadding,
     paddingTop: 40,
+    paddingBottom: 100, // Extra padding at bottom for better scrolling
   },
   header: {
     marginBottom: theme.spacing.spacing.xl,
@@ -212,13 +224,18 @@ const styles = StyleSheet.create({
     marginLeft: theme.spacing.spacing.md,
   },
   babyName: {
-    ...theme.typography.textVariants.h2,
-    color: theme.colors.neutral.white,
+    fontFamily: 'System',
+    fontSize: 36,
     fontWeight: '600',
+    color: theme.colors.neutral.white,
+    letterSpacing: -0.5,
   },
   babyAge: {
-    ...theme.typography.textVariants.h3,
+    fontFamily: 'System',
+    fontSize: 28,
+    fontWeight: '400',
     color: theme.colors.neutral.white,
+    letterSpacing: -0.3,
   },
   cardContainer: {
     backgroundColor: theme.colors.neutral.lightest, // Cream background
@@ -233,29 +250,32 @@ const styles = StyleSheet.create({
   cardHeader: {
     paddingTop: theme.spacing.spacing.lg,
     paddingHorizontal: theme.spacing.spacing.lg,
+    alignItems: 'center',
   },
   cardHeaderText: {
-    ...theme.typography.textVariants.overline,
-    color: '#A05B41', // Rust color for header text
+    fontFamily: 'System',
     fontSize: 16,
     fontWeight: '600',
+    color: '#A05B41', // Rust color for header text
     letterSpacing: 1,
+    textAlign: 'center',
   },
   cardTitle: {
-    ...theme.typography.textVariants.h1,
-    color: theme.colors.primary.dark,
+    fontFamily: 'System',
     fontSize: 36,
     fontWeight: '700',
+    color: theme.colors.primary.dark,
     paddingHorizontal: theme.spacing.spacing.lg,
     paddingTop: theme.spacing.spacing.md,
     paddingBottom: theme.spacing.spacing.lg,
     textAlign: 'center',
+    letterSpacing: -0.5,
+    lineHeight: 44,
   },
   cardContent: {
-    padding: theme.spacing.spacing.lg,
+    paddingHorizontal: theme.spacing.spacing.lg,
     paddingBottom: theme.spacing.spacing.xl,
-    flexDirection: 'row',
-    alignItems: 'center',
+    minHeight: 120,
     justifyContent: 'center',
   },
   navArrowLeft: {
@@ -286,31 +306,41 @@ const styles = StyleSheet.create({
     fontWeight: '300',
   },
   cardChallenge: {
-    ...theme.typography.textVariants.body1,
-    color: theme.colors.neutral.darkest,
-    fontSize: 18,
+    fontFamily: 'System',
+    fontSize: 20,
     lineHeight: 28,
+    color: theme.colors.neutral.darkest,
     textAlign: 'center',
     paddingHorizontal: theme.spacing.spacing.xl,
+    letterSpacing: -0.2,
+  },
+  paginationContainer: {
+    alignItems: 'center',
+    paddingBottom: theme.spacing.spacing.lg,
   },
   paginationText: {
-    ...theme.typography.textVariants.body2,
+    fontFamily: 'System',
+    fontSize: 16,
     color: theme.colors.neutral.dark,
     textAlign: 'center',
-    paddingBottom: theme.spacing.spacing.lg,
   },
   cardFooter: {
     flexDirection: 'row',
     backgroundColor: theme.colors.secondary.main, // Coral color
-    padding: theme.spacing.spacing.lg,
+    paddingVertical: theme.spacing.spacing.lg,
     justifyContent: 'space-around',
+    alignItems: 'center',
   },
   footerButton: {
     alignItems: 'center',
+    justifyContent: 'center',
   },
   footerButtonText: {
-    ...theme.typography.textVariants.button,
+    fontFamily: 'System',
+    fontSize: 16,
+    fontWeight: '500',
     color: theme.colors.neutral.white,
     marginTop: theme.spacing.spacing.xs,
+    textAlign: 'center',
   },
 });
