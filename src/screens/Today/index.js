@@ -1,389 +1,470 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   View, 
   Text, 
   StyleSheet, 
-  SafeAreaView, 
-  ScrollView, 
-  TouchableOpacity,
-  Image,
+  Image, 
+  TouchableOpacity, 
+  Dimensions, 
+  ScrollView,
   Animated,
-  Dimensions
+  PanResponder
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import theme from '../../theme';
-import mockInsights from '../../data/mockInsights';
-import { AppContext } from '../../../App';
+import { useContext } from 'react';
+import { AppContext } from '../../App';
+import theme from '../../src/theme';
+import { mockInsights } from '../../src/data/mockInsights';
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = width - (theme.spacing.spacing.screenPadding * 2);
 
-/**
- * InsightCard Component
- * 
- * Swipeable card showing daily insights with multiple panels
- */
-const InsightCard = ({ insight, onSave, isSaved }) => {
-  const [currentPanel, setCurrentPanel] = useState('challenge');
-  const [panelAnimation] = useState(new Animated.Value(0));
+const TodayScreen = () => {
+  const { babyName, babyAge } = useContext(AppContext);
+  const [currentInsightIndex, setCurrentInsightIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [showCheckIn, setShowCheckIn] = useState(false);
   
-  // Available panels for this insight
-  const availablePanels = ['challenge', 'why', 'try'];
-  if (insight.reassurance) {
-    availablePanels.push('reassurance');
-  }
+  // Get current insight
+  const currentInsight = mockInsights[currentInsightIndex];
   
-  // Panel titles
-  const panelTitles = {
-    challenge: 'Challenge',
-    why: 'Why',
-    try: 'Try',
-    reassurance: 'Reassurance'
-  };
+  // For swipe animation
+  const position = useRef(new Animated.ValueXY()).current;
   
-  // Animate panel change
-  useEffect(() => {
-    Animated.timing(panelAnimation, {
-      toValue: availablePanels.indexOf(currentPanel),
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (_, gesture) => {
+        position.setValue({ x: gesture.dx, y: 0 });
+      },
+      onPanResponderRelease: (_, gesture) => {
+        if (gesture.dx > 120 && currentPage > 0) {
+          // Swipe right - go to previous page
+          swipeRight();
+        } else if (gesture.dx < -120 && currentPage < 3) {
+          // Swipe left - go to next page
+          swipeLeft();
+        } else {
+          // Return to original position
+          Animated.spring(position, {
+            toValue: { x: 0, y: 0 },
+            friction: 5,
+            useNativeDriver: false
+          }).start();
+        }
+      }
+    })
+  ).current;
+  
+  const swipeLeft = () => {
+    Animated.timing(position, {
+      toValue: { x: -width, y: 0 },
       duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }, [currentPanel]);
+      useNativeDriver: false
+    }).start(() => {
+      setCurrentPage(currentPage + 1);
+      position.setValue({ x: 0, y: 0 });
+    });
+  };
   
-  // Handle panel navigation
-  const handleNextPanel = () => {
-    const currentIndex = availablePanels.indexOf(currentPanel);
-    if (currentIndex < availablePanels.length - 1) {
-      setCurrentPanel(availablePanels[currentIndex + 1]);
+  const swipeRight = () => {
+    Animated.timing(position, {
+      toValue: { x: width, y: 0 },
+      duration: 300,
+      useNativeDriver: false
+    }).start(() => {
+      setCurrentPage(currentPage - 1);
+      position.setValue({ x: 0, y: 0 });
+    });
+  };
+  
+  // Calculate baby's age in months
+  const ageInMonths = Math.floor(babyAge / 30);
+  
+  // Get content for current page
+  const getPageContent = () => {
+    switch(currentPage) {
+      case 0:
+        return (
+          <View style={styles.insightContent}>
+            <Text style={styles.insightTitle}>{currentInsight.title}</Text>
+            <Text style={styles.insightQuestion}>{currentInsight.challenge}</Text>
+          </View>
+        );
+      case 1:
+        return (
+          <View style={styles.insightContent}>
+            <Text style={styles.insightSectionTitle}>Why This Happens</Text>
+            <Text style={styles.insightBody}>{currentInsight.why}</Text>
+          </View>
+        );
+      case 2:
+        return (
+          <View style={styles.insightContent}>
+            <Text style={styles.insightSectionTitle}>What To Try</Text>
+            <Text style={styles.insightBody}>{currentInsight.try}</Text>
+          </View>
+        );
+      case 3:
+        return (
+          <View style={styles.insightContent}>
+            <Text style={styles.insightSectionTitle}>Reassurance</Text>
+            <Text style={styles.insightBody}>{currentInsight.reassurance}</Text>
+          </View>
+        );
+      default:
+        return null;
     }
   };
   
-  const handlePrevPanel = () => {
-    const currentIndex = availablePanels.indexOf(currentPanel);
-    if (currentIndex > 0) {
-      setCurrentPanel(availablePanels[currentIndex - 1]);
-    }
-  };
-  
-  // Calculate transform for panel animation
-  const translateX = panelAnimation.interpolate({
-    inputRange: availablePanels.map((_, i) => i),
-    outputRange: availablePanels.map((_, i) => -i * CARD_WIDTH)
-  });
-
   return (
-    <View style={styles.cardContainer}>
-      {/* Panel navigation dots */}
-      <View style={styles.panelDotsContainer}>
-        {availablePanels.map((panel, index) => (
-          <TouchableOpacity 
-            key={panel}
-            style={[
-              styles.panelDot,
-              currentPanel === panel && styles.panelDotActive
-            ]}
-            onPress={() => setCurrentPanel(panel)}
-          />
-        ))}
+    <ScrollView style={styles.container}>
+      <View style={styles.backgroundElements}>
+        {/* Decorative elements */}
+        <View style={[styles.decorativeElement, { top: 50, left: 20 }]} />
+        <View style={[styles.decorativeElement, { top: 120, right: 30 }]} />
+        <View style={[styles.decorativeElement, { top: 200, left: 40 }]} />
+        <View style={[styles.decorativeStar, { top: 80, right: 50 }]} />
+        <View style={[styles.decorativeStar, { top: 180, left: 30 }]} />
+        <View style={[styles.decorativeLeaf, { top: 100, right: 20 }]} />
       </View>
       
-      {/* Card content */}
-      <View style={styles.cardContent}>
+      <View style={styles.header}>
+        <Text style={styles.appTitle}>Hatchling</Text>
+      </View>
+      
+      <View style={styles.profileSection}>
+        <Image 
+          source={require('../../assets/baby_avatar.png')} 
+          style={styles.profileImage}
+          defaultSource={require('../../assets/baby_avatar.png')}
+        />
+        <View style={styles.profileInfo}>
+          <Text style={styles.profileName}>{babyName},</Text>
+          <Text style={styles.profileAge}>{ageInMonths} months</Text>
+        </View>
+      </View>
+      
+      <View style={styles.insightContainer}>
+        <Text style={styles.insightLabel}>DAILY INSIGHT</Text>
+        
         <Animated.View 
           style={[
-            styles.panelsContainer,
-            { transform: [{ translateX }] }
+            styles.insightCard,
+            { transform: position.getTranslateTransform() }
           ]}
+          {...panResponder.panHandlers}
         >
-          {availablePanels.map(panel => (
-            <View key={panel} style={styles.panel}>
-              <Text style={styles.panelTitle}>{insight[panel].title}</Text>
-              <Text style={styles.panelText}>{insight[panel].content}</Text>
-            </View>
-          ))}
+          {getPageContent()}
+          
+          <View style={styles.navigationIndicators}>
+            <TouchableOpacity 
+              style={styles.navArrow} 
+              onPress={swipeRight}
+              disabled={currentPage === 0}
+            >
+              <Ionicons 
+                name="chevron-back" 
+                size={24} 
+                color={currentPage === 0 ? 'transparent' : theme.colors.primary.main} 
+              />
+            </TouchableOpacity>
+            
+            <Text style={styles.pageIndicator}>{currentPage + 1}/4</Text>
+            
+            <TouchableOpacity 
+              style={styles.navArrow} 
+              onPress={swipeLeft}
+              disabled={currentPage === 3}
+            >
+              <Ionicons 
+                name="chevron-forward" 
+                size={24} 
+                color={currentPage === 3 ? 'transparent' : theme.colors.primary.main} 
+              />
+            </TouchableOpacity>
+          </View>
         </Animated.View>
         
-        {/* Panel navigation buttons */}
-        <View style={styles.panelNavigation}>
-          {currentPanel !== availablePanels[0] && (
-            <TouchableOpacity 
-              style={styles.navButton}
-              onPress={handlePrevPanel}
-            >
-              <Ionicons name="arrow-back" size={20} color={theme.colors.primary.main} />
-              <Text style={styles.navButtonText}>Back</Text>
-            </TouchableOpacity>
-          )}
+        <View style={styles.actionButtons}>
+          <TouchableOpacity style={styles.actionButton}>
+            <Ionicons name="bookmark-outline" size={24} color="#FFFFFF" />
+            <Text style={styles.actionButtonText}>Save</Text>
+          </TouchableOpacity>
           
-          <View style={styles.navSpacer} />
+          <TouchableOpacity style={styles.actionButton}>
+            <Ionicons name="share-outline" size={24} color="#FFFFFF" />
+            <Text style={styles.actionButtonText}>Share</Text>
+          </TouchableOpacity>
           
-          {currentPanel !== availablePanels[availablePanels.length - 1] && (
-            <TouchableOpacity 
-              style={styles.navButton}
-              onPress={handleNextPanel}
-            >
-              <Text style={styles.navButtonText}>Next</Text>
-              <Ionicons name="arrow-forward" size={20} color={theme.colors.primary.main} />
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity style={styles.actionButton}>
+            <Ionicons name="happy-outline" size={24} color="#FFFFFF" />
+            <Text style={styles.actionButtonText}>Helpful</Text>
+          </TouchableOpacity>
         </View>
       </View>
       
-      {/* Card footer */}
-      <View style={styles.cardFooter}>
+      {/* Weekly Check-In Section */}
+      <View style={styles.checkInSection}>
         <TouchableOpacity 
-          style={styles.footerButton}
-          onPress={() => onSave(insight)}
+          style={styles.checkInButton}
+          onPress={() => setShowCheckIn(true)}
         >
-          <Ionicons 
-            name={isSaved ? "bookmark" : "bookmark-outline"} 
-            size={20} 
-            color={theme.colors.primary.main} 
-          />
-          <Text style={styles.footerButtonText}>
-            {isSaved ? "Saved" : "Save"}
-          </Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.footerButton}>
-          <Ionicons name="thumbs-up-outline" size={20} color={theme.colors.primary.main} />
-          <Text style={styles.footerButtonText}>Helpful</Text>
+          <Ionicons name="calendar-outline" size={24} color={theme.colors.primary.main} />
+          <View style={styles.checkInTextContainer}>
+            <Text style={styles.checkInTitle}>Weekly Check-In</Text>
+            <Text style={styles.checkInSubtitle}>Help us personalize content for {babyName}</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.primary.main} />
         </TouchableOpacity>
       </View>
-    </View>
+      
+      {/* Upcoming Milestones Preview */}
+      <View style={styles.milestonesPreview}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Upcoming Milestones</Text>
+          <TouchableOpacity>
+            <Text style={styles.seeAllText}>See All</Text>
+          </TouchableOpacity>
+        </View>
+        
+        <View style={styles.milestoneCard}>
+          <View style={styles.milestoneIconContainer}>
+            <Ionicons name="body-outline" size={24} color={theme.colors.content.development} />
+          </View>
+          <View style={styles.milestoneContent}>
+            <Text style={styles.milestoneTitle}>Rolling Over</Text>
+            <Text style={styles.milestoneDescription}>Most babies master this milestone between 4-6 months</Text>
+          </View>
+        </View>
+      </View>
+      
+      {/* Spacing at bottom */}
+      <View style={{ height: 100 }} />
+    </ScrollView>
   );
 };
-
-/**
- * Today Screen
- * 
- * Main landing screen showing daily insight card
- * Non-tracking, content-first approach
- */
-export default function TodayScreen() {
-  const [currentInsight, setCurrentInsight] = useState(mockInsights[0]);
-  const { isItemSaved, handleSaveItem, handleRemoveSavedItem, babyName } = React.useContext(AppContext);
-  
-  // Handle saving/unsaving insight
-  const handleToggleSave = (insight) => {
-    if (isItemSaved(insight.id, 'insights')) {
-      handleRemoveSavedItem(insight.id, 'insights');
-    } else {
-      handleSaveItem(insight, 'insights');
-    }
-  };
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header with date */}
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.dateText}>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</Text>
-            <Text style={styles.headerTitle}>Today</Text>
-          </View>
-          <View style={styles.babyInfoContainer}>
-            <Text style={styles.babyName}>{babyName}</Text>
-            <Text style={styles.babyAge}>5 months</Text>
-          </View>
-        </View>
-        
-        {/* Daily Insight Card */}
-        <View style={styles.insightContainer}>
-          <Text style={styles.insightLabel}>Daily Insight</Text>
-          <InsightCard 
-            insight={currentInsight}
-            onSave={handleToggleSave}
-            isSaved={isItemSaved(currentInsight.id, 'insights')}
-          />
-        </View>
-        
-        {/* Weekly Focus */}
-        <View style={styles.weeklyFocusContainer}>
-          <Text style={styles.sectionTitle}>Weekly Focus</Text>
-          <View style={styles.weeklyFocusCard}>
-            <Text style={styles.weeklyFocusTitle}>Tummy Time Exploration</Text>
-            <Text style={styles.weeklyFocusText}>
-              This week, focus on making tummy time engaging with different textures and toys positioned just out of reach to encourage movement.
-            </Text>
-            <TouchableOpacity style={styles.weeklyFocusButton}>
-              <Text style={styles.weeklyFocusButtonText}>View Activities</Text>
-              <Ionicons name="arrow-forward" size={16} color={theme.colors.secondary.dark} />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.neutral.white,
+    backgroundColor: theme.colors.primary.main,
   },
-  scrollContent: {
-    padding: theme.spacing.spacing.screenPadding,
+  backgroundElements: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: theme.spacing.spacing.lg,
-    marginTop: theme.spacing.spacing.md,
-  },
-  dateText: {
-    ...theme.typography.textVariants.body2,
-    color: theme.colors.neutral.medium,
-    marginBottom: theme.spacing.spacing.xxs,
-  },
-  headerTitle: {
-    ...theme.typography.textVariants.h2,
-    color: theme.colors.neutral.darkest,
-  },
-  babyInfoContainer: {
-    alignItems: 'flex-end',
-  },
-  babyName: {
-    ...theme.typography.textVariants.h5,
-    color: theme.colors.primary.dark,
-  },
-  babyAge: {
-    ...theme.typography.textVariants.body2,
-    color: theme.colors.neutral.medium,
-  },
-  insightContainer: {
-    marginBottom: theme.spacing.spacing.xl,
-  },
-  insightLabel: {
-    ...theme.typography.textVariants.overline,
-    color: theme.colors.neutral.medium,
-    marginBottom: theme.spacing.spacing.sm,
-    textTransform: 'uppercase',
-  },
-  cardContainer: {
-    backgroundColor: theme.colors.neutral.lightest,
-    borderRadius: 16,
-    shadowColor: theme.colors.neutral.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-    overflow: 'hidden',
-  },
-  panelDotsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingVertical: theme.spacing.spacing.sm,
-  },
-  panelDot: {
+  decorativeElement: {
+    position: 'absolute',
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: theme.colors.neutral.lighter,
-    marginHorizontal: 4,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
   },
-  panelDotActive: {
-    backgroundColor: theme.colors.primary.main,
+  decorativeStar: {
+    position: 'absolute',
+    width: 12,
+    height: 12,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderLeftWidth: 6,
+    borderRightWidth: 6,
+    borderBottomWidth: 10,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'rgba(255, 255, 255, 0.3)',
+    transform: [{ rotate: '180deg' }],
   },
-  cardContent: {
-    height: 300,
-    overflow: 'hidden',
+  decorativeLeaf: {
+    position: 'absolute',
+    width: 20,
+    height: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    transform: [{ rotate: '45deg' }],
   },
-  panelsContainer: {
+  header: {
+    paddingTop: 50,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  appTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 10,
+  },
+  profileSection: {
     flexDirection: 'row',
-    width: CARD_WIDTH * 4, // Maximum 4 panels
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginTop: 10,
+    marginBottom: 20,
   },
-  panel: {
-    width: CARD_WIDTH,
-    padding: theme.spacing.spacing.lg,
+  profileImage: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: theme.colors.neutral.lightest,
   },
-  panelTitle: {
-    ...theme.typography.textVariants.h4,
-    color: theme.colors.neutral.darkest,
-    marginBottom: theme.spacing.spacing.md,
+  profileInfo: {
+    marginLeft: 15,
   },
-  panelText: {
-    ...theme.typography.textVariants.body1,
-    color: theme.colors.neutral.dark,
+  profileName: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  profileAge: {
+    fontSize: 24,
+    color: '#FFFFFF',
+  },
+  insightContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 20,
+  },
+  insightLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: theme.colors.secondary.main,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  insightCard: {
+    backgroundColor: theme.colors.neutral.lightest,
+    borderRadius: 20,
+    padding: 20,
+    minHeight: 200,
+  },
+  insightContent: {
+    marginBottom: 20,
+  },
+  insightTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: theme.colors.primary.dark,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  insightQuestion: {
+    fontSize: 18,
+    color: theme.colors.primary.dark,
+    textAlign: 'center',
+    lineHeight: 26,
+  },
+  insightSectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: theme.colors.primary.dark,
+    marginBottom: 10,
+  },
+  insightBody: {
+    fontSize: 16,
+    color: theme.colors.neutral.darker,
     lineHeight: 24,
   },
-  panelNavigation: {
+  navigationIndicators: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: theme.spacing.spacing.md,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    alignItems: 'center',
+    marginTop: 10,
   },
-  navButton: {
+  navArrow: {
+    padding: 5,
+  },
+  pageIndicator: {
+    fontSize: 16,
+    color: theme.colors.primary.main,
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: theme.colors.secondary.main,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    paddingVertical: 15,
+    marginTop: -1,
+  },
+  actionButton: {
+    alignItems: 'center',
+  },
+  actionButtonText: {
+    color: '#FFFFFF',
+    marginTop: 5,
+    fontSize: 14,
+  },
+  checkInSection: {
+    paddingHorizontal: 20,
+    marginBottom: 20,
+  },
+  checkInButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: theme.spacing.spacing.sm,
+    backgroundColor: theme.colors.neutral.lightest,
+    borderRadius: 15,
+    padding: 15,
   },
-  navButtonText: {
-    ...theme.typography.textVariants.button,
-    color: theme.colors.primary.main,
-    marginHorizontal: theme.spacing.spacing.xs,
-  },
-  navSpacer: {
+  checkInTextContainer: {
     flex: 1,
+    marginLeft: 10,
   },
-  cardFooter: {
-    flexDirection: 'row',
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.neutral.lighter,
-    padding: theme.spacing.spacing.sm,
+  checkInTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: theme.colors.primary.dark,
   },
-  footerButton: {
+  checkInSubtitle: {
+    fontSize: 14,
+    color: theme.colors.neutral.dark,
+  },
+  milestonesPreview: {
+    paddingHorizontal: 20,
+  },
+  sectionHeader: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing.spacing.sm,
-    marginRight: theme.spacing.spacing.md,
-  },
-  footerButtonText: {
-    ...theme.typography.textVariants.button,
-    color: theme.colors.primary.main,
-    marginLeft: theme.spacing.spacing.xs,
-  },
-  weeklyFocusContainer: {
-    marginBottom: theme.spacing.spacing.xl,
+    marginBottom: 10,
   },
   sectionTitle: {
-    ...theme.typography.textVariants.h4,
-    color: theme.colors.neutral.darkest,
-    marginBottom: theme.spacing.spacing.md,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
   },
-  weeklyFocusCard: {
-    backgroundColor: theme.colors.secondary.lightest,
-    borderRadius: 16,
-    padding: theme.spacing.spacing.lg,
-    shadowColor: theme.colors.neutral.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+  seeAllText: {
+    fontSize: 14,
+    color: theme.colors.secondary.light,
   },
-  weeklyFocusTitle: {
-    ...theme.typography.textVariants.h5,
-    color: theme.colors.secondary.dark,
-    marginBottom: theme.spacing.spacing.sm,
-  },
-  weeklyFocusText: {
-    ...theme.typography.textVariants.body1,
-    color: theme.colors.neutral.dark,
-    marginBottom: theme.spacing.spacing.md,
-  },
-  weeklyFocusButton: {
+  milestoneCard: {
     flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
+    backgroundColor: theme.colors.neutral.lightest,
+    borderRadius: 15,
+    padding: 15,
+    marginBottom: 10,
   },
-  weeklyFocusButtonText: {
-    ...theme.typography.textVariants.button,
-    color: theme.colors.secondary.dark,
-    marginRight: theme.spacing.spacing.xs,
+  milestoneIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: theme.colors.content.development + '20',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  milestoneContent: {
+    flex: 1,
+  },
+  milestoneTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: theme.colors.primary.dark,
+    marginBottom: 5,
+  },
+  milestoneDescription: {
+    fontSize: 14,
+    color: theme.colors.neutral.dark,
   },
 });
+
+export default TodayScreen;
