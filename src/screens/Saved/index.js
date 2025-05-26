@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useContext } from 'react';
-import { AppContext } from '../../App';
-import theme from '../../src/theme';
+import { AppContext } from '../../../App';
+import theme from '../../theme';
 
 const SavedScreen = () => {
   const { babyName, babyAge, savedItems } = useContext(AppContext);
@@ -102,10 +102,10 @@ const SavedScreen = () => {
     
     // Mock media items for the UI
     const mockMedia = [
-      { id: 'media_001', uri: require('../../assets/baby_milestone_1.png') },
-      { id: 'media_002', uri: require('../../assets/baby_milestone_2.png') },
-      { id: 'media_003', uri: require('../../assets/baby_milestone_3.png') },
-      { id: 'media_004', uri: require('../../assets/baby_milestone_4.png') },
+      { id: 'media_001', uri: require('../../../assets/baby_milestone_1.png') },
+      { id: 'media_002', uri: require('../../../assets/baby_milestone_2.png') },
+      { id: 'media_003', uri: require('../../../assets/baby_milestone_3.png') },
+      { id: 'media_004', uri: require('../../../assets/baby_milestone_4.png') },
     ];
     
     return (

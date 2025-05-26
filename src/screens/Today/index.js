@@ -12,9 +12,9 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useContext } from 'react';
-import { AppContext } from '../../App';
-import theme from '../../src/theme';
-import { mockInsights } from '../../src/data/mockInsights';
+import { AppContext } from '../../../App';
+import theme from '../../theme';
+import { mockInsights } from '../../data/mockInsights';
 
 const { width } = Dimensions.get('window');
 
@@ -134,9 +134,9 @@ const TodayScreen = () => {
       
       <View style={styles.profileSection}>
         <Image 
-          source={require('../../assets/baby_avatar.png')} 
+          source={require('../../../assets/baby_avatar.png')} 
           style={styles.profileImage}
-          defaultSource={require('../../assets/baby_avatar.png')}
+          defaultSource={require('../../../assets/baby_avatar.png')}
         />
         <View style={styles.profileInfo}>
           <Text style={styles.profileName}>{babyName},</Text>

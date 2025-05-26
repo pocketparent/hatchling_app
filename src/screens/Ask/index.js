@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useContext } from 'react';
-import { AppContext } from '../../App';
-import theme from '../../src/theme';
+import { AppContext } from '../../../App';
+import theme from '../../theme';
 
 const AskScreen = () => {
   const { babyName, babyAge } = useContext(AppContext);
@@ -398,19 +398,18 @@ const styles = StyleSheet.create({
   answerActions: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 15,
+    marginTop: 20,
     paddingTop: 15,
     borderTopWidth: 1,
     borderTopColor: theme.colors.neutral.lighter,
   },
   answerAction: {
-    flexDirection: 'row',
     alignItems: 'center',
   },
   answerActionText: {
-    marginLeft: 5,
+    fontSize: 12,
     color: theme.colors.primary.main,
-    fontWeight: '500',
+    marginTop: 5,
   },
   askYourOwnContainer: {
     alignItems: 'center',
@@ -425,8 +424,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.primary.main,
-    paddingHorizontal: 20,
     paddingVertical: 12,
+    paddingHorizontal: 20,
     borderRadius: 25,
   },
   askYourOwnButtonText: {

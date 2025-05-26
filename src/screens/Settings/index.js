@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useContext } from 'react';
-import { AppContext } from '../../App';
-import theme from '../../src/theme';
+import { AppContext } from '../../../App';
+import theme from '../../theme';
 
 const SettingsScreen = () => {
   const { babyName, babyAge, setBabyName } = useContext(AppContext);

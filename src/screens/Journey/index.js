@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useContext } from 'react';
-import { AppContext } from '../../App';
-import theme from '../../src/theme';
+import { AppContext } from '../../../App';
+import theme from '../../theme';
 
 const JourneyScreen = () => {
   const { babyName, babyAge } = useContext(AppContext);
@@ -228,9 +228,9 @@ const JourneyScreen = () => {
         
         <View style={styles.weeklyFocusCard}>
           <Image 
-            source={require('../../assets/tummy_time.png')} 
+            source={require('../../../assets/tummy_time.png')} 
             style={styles.weeklyFocusImage}
-            defaultSource={require('../../assets/tummy_time.png')}
+            defaultSource={require('../../../assets/tummy_time.png')}
           />
           
           <View style={styles.weeklyFocusContent}>
