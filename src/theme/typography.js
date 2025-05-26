@@ -12,18 +12,10 @@ import { Platform } from 'react-native';
 // Base font families
 const fontFamilies = {
   // Primary font for most text
-  primary: Platform.select({
-    ios: 'System',
-    android: 'Roboto',
-    default: 'System',
-  }),
+  primary: 'Inter-Regular',
   
   // Secondary font for headings and emphasis
-  secondary: Platform.select({
-    ios: 'Georgia',
-    android: 'serif',
-    default: 'Georgia',
-  }),
+  secondary: 'Inter-Medium',
   
   // Monospace font for technical content
   mono: Platform.select({
@@ -76,33 +68,33 @@ const letterSpacing = {
 export const textVariants = {
   // Headings
   h1: {
-    fontFamily: fontFamilies.secondary,
+    fontFamily: 'Inter-Bold',
     fontSize: fontSizes.giant,
     fontWeight: fontWeights.bold,
     lineHeight: lineHeights.tight,
     letterSpacing: letterSpacing.tight,
   },
   h2: {
-    fontFamily: fontFamilies.secondary,
+    fontFamily: 'Inter-Bold',
     fontSize: fontSizes.display,
     fontWeight: fontWeights.bold,
     lineHeight: lineHeights.tight,
     letterSpacing: letterSpacing.tight,
   },
   h3: {
-    fontFamily: fontFamilies.secondary,
+    fontFamily: 'Inter-SemiBold',
     fontSize: fontSizes.xxxl,
     fontWeight: fontWeights.semibold,
     lineHeight: lineHeights.tight,
   },
   h4: {
-    fontFamily: fontFamilies.secondary,
+    fontFamily: 'Inter-SemiBold',
     fontSize: fontSizes.xxl,
     fontWeight: fontWeights.semibold,
     lineHeight: lineHeights.tight,
   },
   h5: {
-    fontFamily: fontFamilies.secondary,
+    fontFamily: 'Inter-Medium',
     fontSize: fontSizes.xl,
     fontWeight: fontWeights.medium,
     lineHeight: lineHeights.tight,
@@ -110,13 +102,13 @@ export const textVariants = {
   
   // Body text
   body1: {
-    fontFamily: fontFamilies.primary,
+    fontFamily: 'Inter-Regular',
     fontSize: fontSizes.md,
     fontWeight: fontWeights.regular,
     lineHeight: lineHeights.normal,
   },
   body2: {
-    fontFamily: fontFamilies.primary,
+    fontFamily: 'Inter-Regular',
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.regular,
     lineHeight: lineHeights.normal,
@@ -124,20 +116,20 @@ export const textVariants = {
   
   // Special text styles
   caption: {
-    fontFamily: fontFamilies.primary,
+    fontFamily: 'Inter-Regular',
     fontSize: fontSizes.xs,
     fontWeight: fontWeights.regular,
     lineHeight: lineHeights.normal,
   },
   button: {
-    fontFamily: fontFamilies.primary,
+    fontFamily: 'Inter-Medium',
     fontSize: fontSizes.md,
     fontWeight: fontWeights.medium,
     lineHeight: lineHeights.tight,
     letterSpacing: letterSpacing.wide,
   },
   overline: {
-    fontFamily: fontFamilies.primary,
+    fontFamily: 'Inter-Medium',
     fontSize: fontSizes.xs,
     fontWeight: fontWeights.medium,
     lineHeight: lineHeights.normal,
@@ -147,19 +139,19 @@ export const textVariants = {
   
   // Content-specific styles
   insightTitle: {
-    fontFamily: fontFamilies.secondary,
+    fontFamily: 'Inter-SemiBold',
     fontSize: fontSizes.xl,
     fontWeight: fontWeights.semibold,
     lineHeight: lineHeights.tight,
   },
   insightBody: {
-    fontFamily: fontFamilies.primary,
+    fontFamily: 'Inter-Regular',
     fontSize: fontSizes.md,
     fontWeight: fontWeights.regular,
     lineHeight: lineHeights.relaxed,
   },
   milestoneTitle: {
-    fontFamily: fontFamilies.secondary,
+    fontFamily: 'Inter-Medium',
     fontSize: fontSizes.lg,
     fontWeight: fontWeights.medium,
     lineHeight: lineHeights.tight,
