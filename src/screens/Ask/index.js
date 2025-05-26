@@ -125,36 +125,38 @@ const AskScreen = () => {
         )}
       </View>
       
-      {/* Categories */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.categoriesContainer}
-      >
-        {categories.map(category => (
-          <TouchableOpacity
-            key={category.id}
-            style={[
-              styles.categoryButton,
-              selectedCategory === category.id && styles.categoryButtonActive,
-              selectedCategory === category.id && { borderColor: category.color }
-            ]}
-            onPress={() => setSelectedCategory(category.id)}
-          >
-            <View style={[
-              styles.categoryIcon,
-              { backgroundColor: category.color + '20' }
-            ]}>
-              <Ionicons name={category.icon} size={20} color={category.color} />
-            </View>
-            <Text style={[
-              styles.categoryText,
-              selectedCategory === category.id && styles.categoryTextActive,
-              selectedCategory === category.id && { color: category.color }
-            ]}>{category.label}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      {/* Categories - FIXED HEIGHT ISSUE */}
+      <View style={styles.categoriesWrapper}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoriesContainer}
+        >
+          {categories.map(category => (
+            <TouchableOpacity
+              key={category.id}
+              style={[
+                styles.categoryButton,
+                selectedCategory === category.id && styles.categoryButtonActive,
+                selectedCategory === category.id && { borderColor: category.color }
+              ]}
+              onPress={() => setSelectedCategory(category.id)}
+            >
+              <View style={[
+                styles.categoryIcon,
+                { backgroundColor: category.color + '20' }
+              ]}>
+                <Ionicons name={category.icon} size={20} color={category.color} />
+              </View>
+              <Text style={[
+                styles.categoryText,
+                selectedCategory === category.id && styles.categoryTextActive,
+                selectedCategory === category.id && { color: category.color }
+              ]}>{category.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
       
       {/* Questions list */}
       <ScrollView style={styles.questionsContainer}>
@@ -303,28 +305,35 @@ const styles = StyleSheet.create({
   clearButton: {
     padding: 5,
   },
+  // FIXED: Added wrapper with fixed height to contain the categories
+  categoriesWrapper: {
+    height: 60, // Fixed height for the category section
+    marginBottom: 5,
+  },
   categoriesContainer: {
     paddingHorizontal: 15,
-    paddingBottom: 15,
+    paddingBottom: 5,
+    height: 60, // Match the wrapper height
   },
   categoryButton: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 15,
-    paddingVertical: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6, // Reduced vertical padding
     borderRadius: 20,
     marginHorizontal: 5,
     borderWidth: 2,
     borderColor: 'transparent',
+    height: 40, // Fixed height for category buttons
   },
   categoryButtonActive: {
     backgroundColor: '#FFFFFF',
   },
   categoryIcon: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 28, // Slightly smaller
+    height: 28, // Slightly smaller
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 5,
@@ -332,6 +341,7 @@ const styles = StyleSheet.create({
   categoryText: {
     color: theme.colors.neutral.dark,
     fontWeight: '500',
+    fontSize: 14, // Explicit font size
   },
   categoryTextActive: {
     fontWeight: '600',
@@ -381,8 +391,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: '600',
-    color: theme.colors.primary.dark,
-    marginRight: 10,
+    color: theme.colors.neutral.darkest,
   },
   answerContainer: {
     padding: 15,
@@ -393,23 +402,24 @@ const styles = StyleSheet.create({
   answerText: {
     fontSize: 15,
     lineHeight: 22,
-    color: theme.colors.neutral.darker,
+    color: theme.colors.neutral.dark,
   },
   answerActions: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 20,
+    marginTop: 15,
     paddingTop: 15,
     borderTopWidth: 1,
     borderTopColor: theme.colors.neutral.lighter,
   },
   answerAction: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
   answerActionText: {
-    fontSize: 12,
+    marginLeft: 5,
     color: theme.colors.primary.main,
-    marginTop: 5,
+    fontWeight: '500',
   },
   askYourOwnContainer: {
     alignItems: 'center',
@@ -424,8 +434,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.primary.main,
-    paddingVertical: 12,
     paddingHorizontal: 20,
+    paddingVertical: 12,
     borderRadius: 25,
   },
   askYourOwnButtonText: {
