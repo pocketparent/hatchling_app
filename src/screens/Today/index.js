@@ -10,7 +10,7 @@ import {
   Animated,
   Dimensions,
   ImageBackground,
-  PanResponder
+  FlatList
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../theme';
@@ -23,72 +23,47 @@ const CARD_WIDTH = width - (theme.spacing.spacing.screenPadding * 2);
 /**
  * InsightCard Component
  * 
- * Card showing daily insights with swipe navigation
+ * Card showing daily insights with smooth swipe navigation
  */
 const InsightCard = ({ insight, onSave, isSaved, onMarkHelpful }) => {
-  const [currentPanel, setCurrentPanel] = useState('challenge');
-  const [panelIndex, setPanelIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   
   // Available panels for this insight
   const availablePanels = ['challenge', 'why', 'try', 'reassurance'];
   
-  // Animation values
-  const position = useRef(new Animated.ValueXY()).current;
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (evt, gestureState) => {
-        position.setValue({ x: gestureState.dx, y: 0 });
-      },
-      onPanResponderRelease: (evt, gestureState) => {
-        if (gestureState.dx < -50 && panelIndex < availablePanels.length - 1) {
-          // Swipe left to next panel
-          goToNextPanel();
-        } else if (gestureState.dx > 50 && panelIndex > 0) {
-          // Swipe right to previous panel
-          goToPrevPanel();
-        } else {
-          // Return to original position
-          Animated.spring(position, {
-            toValue: { x: 0, y: 0 },
-            friction: 5,
-            useNativeDriver: true
-          }).start();
-        }
-      }
-    })
-  ).current;
+  // Handle swipe to change panel
+  const renderItem = ({ item, index }) => {
+    const panelType = availablePanels[index];
+    const panelContent = insight[panelType];
+    
+    return (
+      <View style={styles.panelContainer}>
+        <Text style={styles.cardChallenge}>{panelContent}</Text>
+      </View>
+    );
+  };
 
-  // Handle panel navigation
-  const goToNextPanel = () => {
-    const nextIndex = panelIndex + 1;
-    if (nextIndex < availablePanels.length) {
-      Animated.timing(position, {
-        toValue: { x: -CARD_WIDTH, y: 0 },
-        duration: 300,
-        useNativeDriver: true
-      }).start(() => {
-        position.setValue({ x: 0, y: 0 });
-        setPanelIndex(nextIndex);
-        setCurrentPanel(availablePanels[nextIndex]);
-      });
-    }
+  // Handle pagination indicator
+  const Pagination = () => {
+    return (
+      <View style={styles.paginationContainer}>
+        <Text style={styles.paginationText}>
+          {activeIndex + 1} / {availablePanels.length}
+        </Text>
+      </View>
+    );
   };
-  
-  const goToPrevPanel = () => {
-    const prevIndex = panelIndex - 1;
-    if (prevIndex >= 0) {
-      Animated.timing(position, {
-        toValue: { x: CARD_WIDTH, y: 0 },
-        duration: 300,
-        useNativeDriver: true
-      }).start(() => {
-        position.setValue({ x: 0, y: 0 });
-        setPanelIndex(prevIndex);
-        setCurrentPanel(availablePanels[prevIndex]);
-      });
+
+  // Handle viewability change
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    if (viewableItems.length > 0) {
+      setActiveIndex(viewableItems[0].index);
     }
-  };
+  }).current;
+
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50
+  }).current;
 
   return (
     <View style={styles.cardContainer}>
@@ -101,22 +76,22 @@ const InsightCard = ({ insight, onSave, isSaved, onMarkHelpful }) => {
       <Text style={styles.cardTitle}>{insight.title}</Text>
       
       {/* Card content with swipe navigation */}
-      <Animated.View 
-        style={[
-          styles.cardContent,
-          { transform: position.getTranslateTransform() }
-        ]}
-        {...panResponder.panHandlers}
-      >
-        <Text style={styles.cardChallenge}>{insight[currentPanel]}</Text>
-      </Animated.View>
+      <FlatList
+        data={availablePanels}
+        renderItem={renderItem}
+        keyExtractor={(item) => item}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
+        snapToInterval={CARD_WIDTH}
+        decelerationRate="fast"
+        style={styles.flatList}
+      />
       
       {/* Pagination indicator */}
-      <View style={styles.paginationContainer}>
-        <Text style={styles.paginationText}>
-          {panelIndex + 1} / {availablePanels.length}
-        </Text>
-      </View>
+      <Pagination />
       
       {/* Card footer */}
       <View style={styles.cardFooter}>
@@ -302,7 +277,11 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
     lineHeight: 48,
   },
-  cardContent: {
+  flatList: {
+    width: CARD_WIDTH,
+  },
+  panelContainer: {
+    width: CARD_WIDTH,
     paddingHorizontal: theme.spacing.spacing.lg,
     paddingBottom: theme.spacing.spacing.xl,
     minHeight: 150,
