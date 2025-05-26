@@ -12,17 +12,27 @@ import { useContext } from 'react';
 import { AppContext } from '../../../App';
 import theme from '../../theme';
 
-const SettingsScreen = () => {
-  const { babyName, babyAge, setBabyName } = useContext(AppContext);
+const SettingsScreen = ({ navigation }) => {
+  const { 
+    babyName, 
+    babyAge, 
+    setBabyName, 
+    darkMode, 
+    toggleDarkMode, 
+    currentTheme 
+  } = useContext(AppContext);
+  
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [weeklyCheckInReminders, setWeeklyCheckInReminders] = useState(true);
-  const [darkModeEnabled, setDarkModeEnabled] = useState(false);
   
   // Calculate baby's age in months
   const ageInMonths = Math.floor(babyAge / 30);
   
+  // Use current theme based on dark mode
+  const colors = currentTheme.colors;
+  
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.primary.main }]}>
       <View style={styles.backgroundElements}>
         {/* Decorative elements */}
         <View style={[styles.decorativeElement, { top: 50, left: 20 }]} />
@@ -35,159 +45,182 @@ const SettingsScreen = () => {
         <Text style={styles.headerTitle}>Settings</Text>
       </View>
       
-      <ScrollView style={styles.contentContainer}>
+      <ScrollView style={[styles.contentContainer, { backgroundColor: colors.neutral.white }]}>
         {/* Profile Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Profile</Text>
+          <Text style={[styles.sectionTitle, { color: colors.primary.dark }]}>Profile</Text>
           
-          <TouchableOpacity style={styles.settingItem}>
+          <TouchableOpacity 
+            style={[styles.settingItem, { borderBottomColor: colors.neutral.lighter }]}
+            onPress={() => navigation.navigate('Profile')}
+          >
             <View style={styles.settingContent}>
-              <Ionicons name="person-outline" size={24} color={theme.colors.primary.main} style={styles.settingIcon} />
+              <Ionicons name="person-outline" size={24} color={colors.primary.main} style={styles.settingIcon} />
               <View>
-                <Text style={styles.settingLabel}>Baby's Name</Text>
-                <Text style={styles.settingValue}>{babyName}</Text>
+                <Text style={[styles.settingLabel, { color: colors.neutral.darker }]}>Baby's Name</Text>
+                <Text style={[styles.settingValue, { color: colors.neutral.dark }]}>{babyName}</Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color={theme.colors.neutral.medium} />
+            <Ionicons name="chevron-forward" size={20} color={colors.neutral.medium} />
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.settingItem}>
+          <TouchableOpacity 
+            style={[styles.settingItem, { borderBottomColor: colors.neutral.lighter }]}
+            onPress={() => navigation.navigate('Birthday')}
+          >
             <View style={styles.settingContent}>
-              <Ionicons name="calendar-outline" size={24} color={theme.colors.primary.main} style={styles.settingIcon} />
+              <Ionicons name="calendar-outline" size={24} color={colors.primary.main} style={styles.settingIcon} />
               <View>
-                <Text style={styles.settingLabel}>Baby's Birthday</Text>
-                <Text style={styles.settingValue}>{ageInMonths} months old</Text>
+                <Text style={[styles.settingLabel, { color: colors.neutral.darker }]}>Baby's Birthday</Text>
+                <Text style={[styles.settingValue, { color: colors.neutral.dark }]}>{ageInMonths} months old</Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color={theme.colors.neutral.medium} />
+            <Ionicons name="chevron-forward" size={20} color={colors.neutral.medium} />
           </TouchableOpacity>
         </View>
         
         {/* Notifications Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Notifications</Text>
+          <Text style={[styles.sectionTitle, { color: colors.primary.dark }]}>Notifications</Text>
           
-          <View style={styles.settingItem}>
+          <View style={[styles.settingItem, { borderBottomColor: colors.neutral.lighter }]}>
             <View style={styles.settingContent}>
-              <Ionicons name="notifications-outline" size={24} color={theme.colors.primary.main} style={styles.settingIcon} />
+              <Ionicons name="notifications-outline" size={24} color={colors.primary.main} style={styles.settingIcon} />
               <View>
-                <Text style={styles.settingLabel}>Push Notifications</Text>
-                <Text style={styles.settingDescription}>Receive daily insights and milestone alerts</Text>
+                <Text style={[styles.settingLabel, { color: colors.neutral.darker }]}>Push Notifications</Text>
+                <Text style={[styles.settingDescription, { color: colors.neutral.medium }]}>Receive daily insights and milestone alerts</Text>
               </View>
             </View>
             <Switch
               value={notificationsEnabled}
               onValueChange={setNotificationsEnabled}
-              trackColor={{ false: theme.colors.neutral.light, true: theme.colors.primary.light }}
-              thumbColor={notificationsEnabled ? theme.colors.primary.main : theme.colors.neutral.medium}
+              trackColor={{ false: colors.neutral.light, true: colors.primary.light }}
+              thumbColor={notificationsEnabled ? colors.primary.main : colors.neutral.medium}
             />
           </View>
           
-          <View style={styles.settingItem}>
+          <View style={[styles.settingItem, { borderBottomColor: colors.neutral.lighter }]}>
             <View style={styles.settingContent}>
-              <Ionicons name="checkbox-outline" size={24} color={theme.colors.primary.main} style={styles.settingIcon} />
+              <Ionicons name="checkbox-outline" size={24} color={colors.primary.main} style={styles.settingIcon} />
               <View>
-                <Text style={styles.settingLabel}>Weekly Check-In Reminders</Text>
-                <Text style={styles.settingDescription}>Get reminded to complete your weekly check-in</Text>
+                <Text style={[styles.settingLabel, { color: colors.neutral.darker }]}>Weekly Check-In Reminders</Text>
+                <Text style={[styles.settingDescription, { color: colors.neutral.medium }]}>Get reminded to complete your weekly check-in</Text>
               </View>
             </View>
             <Switch
               value={weeklyCheckInReminders}
               onValueChange={setWeeklyCheckInReminders}
-              trackColor={{ false: theme.colors.neutral.light, true: theme.colors.primary.light }}
-              thumbColor={weeklyCheckInReminders ? theme.colors.primary.main : theme.colors.neutral.medium}
+              trackColor={{ false: colors.neutral.light, true: colors.primary.light }}
+              thumbColor={weeklyCheckInReminders ? colors.primary.main : colors.neutral.medium}
             />
           </View>
         </View>
         
         {/* Appearance Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Appearance</Text>
+          <Text style={[styles.sectionTitle, { color: colors.primary.dark }]}>Appearance</Text>
           
-          <View style={styles.settingItem}>
+          <View style={[styles.settingItem, { borderBottomColor: colors.neutral.lighter }]}>
             <View style={styles.settingContent}>
-              <Ionicons name="moon-outline" size={24} color={theme.colors.primary.main} style={styles.settingIcon} />
+              <Ionicons name="moon-outline" size={24} color={colors.primary.main} style={styles.settingIcon} />
               <View>
-                <Text style={styles.settingLabel}>Dark Mode</Text>
-                <Text style={styles.settingDescription}>Use dark theme throughout the app</Text>
+                <Text style={[styles.settingLabel, { color: colors.neutral.darker }]}>Dark Mode</Text>
+                <Text style={[styles.settingDescription, { color: colors.neutral.medium }]}>Use dark theme throughout the app</Text>
               </View>
             </View>
             <Switch
-              value={darkModeEnabled}
-              onValueChange={setDarkModeEnabled}
-              trackColor={{ false: theme.colors.neutral.light, true: theme.colors.primary.light }}
-              thumbColor={darkModeEnabled ? theme.colors.primary.main : theme.colors.neutral.medium}
+              value={darkMode}
+              onValueChange={toggleDarkMode}
+              trackColor={{ false: colors.neutral.light, true: colors.primary.light }}
+              thumbColor={darkMode ? colors.primary.main : colors.neutral.medium}
             />
           </View>
         </View>
         
         {/* Account Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Account</Text>
+          <Text style={[styles.sectionTitle, { color: colors.primary.dark }]}>Account</Text>
           
-          <TouchableOpacity style={styles.settingItem}>
+          <TouchableOpacity 
+            style={[styles.settingItem, { borderBottomColor: colors.neutral.lighter }]}
+            onPress={() => navigation.navigate('Backup')}
+          >
             <View style={styles.settingContent}>
-              <Ionicons name="cloud-upload-outline" size={24} color={theme.colors.primary.main} style={styles.settingIcon} />
+              <Ionicons name="cloud-upload-outline" size={24} color={colors.primary.main} style={styles.settingIcon} />
               <View>
-                <Text style={styles.settingLabel}>Backup & Sync</Text>
-                <Text style={styles.settingDescription}>Sync your data across devices</Text>
+                <Text style={[styles.settingLabel, { color: colors.neutral.darker }]}>Backup & Sync</Text>
+                <Text style={[styles.settingDescription, { color: colors.neutral.medium }]}>Sync your data across devices</Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color={theme.colors.neutral.medium} />
+            <Ionicons name="chevron-forward" size={20} color={colors.neutral.medium} />
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.settingItem}>
+          <TouchableOpacity 
+            style={[styles.settingItem, { borderBottomColor: colors.neutral.lighter }]}
+            onPress={() => navigation.navigate('Privacy')}
+          >
             <View style={styles.settingContent}>
-              <Ionicons name="lock-closed-outline" size={24} color={theme.colors.primary.main} style={styles.settingIcon} />
+              <Ionicons name="lock-closed-outline" size={24} color={colors.primary.main} style={styles.settingIcon} />
               <View>
-                <Text style={styles.settingLabel}>Privacy Settings</Text>
-                <Text style={styles.settingDescription}>Manage your data and privacy preferences</Text>
+                <Text style={[styles.settingLabel, { color: colors.neutral.darker }]}>Privacy Settings</Text>
+                <Text style={[styles.settingDescription, { color: colors.neutral.medium }]}>Manage your data and privacy preferences</Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color={theme.colors.neutral.medium} />
+            <Ionicons name="chevron-forward" size={20} color={colors.neutral.medium} />
           </TouchableOpacity>
         </View>
         
         {/* Support Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Support</Text>
+          <Text style={[styles.sectionTitle, { color: colors.primary.dark }]}>Support</Text>
           
-          <TouchableOpacity style={styles.settingItem}>
+          <TouchableOpacity 
+            style={[styles.settingItem, { borderBottomColor: colors.neutral.lighter }]}
+            onPress={() => navigation.navigate('HelpCenter')}
+          >
             <View style={styles.settingContent}>
-              <Ionicons name="help-circle-outline" size={24} color={theme.colors.primary.main} style={styles.settingIcon} />
+              <Ionicons name="help-circle-outline" size={24} color={colors.primary.main} style={styles.settingIcon} />
               <View>
-                <Text style={styles.settingLabel}>Help Center</Text>
-                <Text style={styles.settingDescription}>Get help with using Hatchling</Text>
+                <Text style={[styles.settingLabel, { color: colors.neutral.darker }]}>Help Center</Text>
+                <Text style={[styles.settingDescription, { color: colors.neutral.medium }]}>Get help with using Hatchling</Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color={theme.colors.neutral.medium} />
+            <Ionicons name="chevron-forward" size={20} color={colors.neutral.medium} />
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.settingItem}>
+          <TouchableOpacity 
+            style={[styles.settingItem, { borderBottomColor: colors.neutral.lighter }]}
+            onPress={() => navigation.navigate('Contact')}
+          >
             <View style={styles.settingContent}>
-              <Ionicons name="mail-outline" size={24} color={theme.colors.primary.main} style={styles.settingIcon} />
+              <Ionicons name="mail-outline" size={24} color={colors.primary.main} style={styles.settingIcon} />
               <View>
-                <Text style={styles.settingLabel}>Contact Us</Text>
-                <Text style={styles.settingDescription}>Send us feedback or report an issue</Text>
+                <Text style={[styles.settingLabel, { color: colors.neutral.darker }]}>Contact Us</Text>
+                <Text style={[styles.settingDescription, { color: colors.neutral.medium }]}>Send us feedback or report an issue</Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color={theme.colors.neutral.medium} />
+            <Ionicons name="chevron-forward" size={20} color={colors.neutral.medium} />
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.settingItem}>
+          <TouchableOpacity 
+            style={[styles.settingItem, { borderBottomColor: colors.neutral.lighter }]}
+            onPress={() => navigation.navigate('About')}
+          >
             <View style={styles.settingContent}>
-              <Ionicons name="information-circle-outline" size={24} color={theme.colors.primary.main} style={styles.settingIcon} />
+              <Ionicons name="information-circle-outline" size={24} color={colors.primary.main} style={styles.settingIcon} />
               <View>
-                <Text style={styles.settingLabel}>About Hatchling</Text>
-                <Text style={styles.settingDescription}>Version 1.0.0</Text>
+                <Text style={[styles.settingLabel, { color: colors.neutral.darker }]}>About Hatchling</Text>
+                <Text style={[styles.settingDescription, { color: colors.neutral.medium }]}>Version 1.0.0</Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color={theme.colors.neutral.medium} />
+            <Ionicons name="chevron-forward" size={20} color={colors.neutral.medium} />
           </TouchableOpacity>
         </View>
         
         {/* Logout Button */}
-        <TouchableOpacity style={styles.logoutButton}>
+        <TouchableOpacity 
+          style={[styles.logoutButton, { backgroundColor: colors.neutral.lightest }]}
+        >
           <Text style={styles.logoutButtonText}>Log Out</Text>
         </TouchableOpacity>
         
@@ -201,7 +234,6 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.primary.main,
   },
   backgroundElements: {
     position: 'absolute',
@@ -250,7 +282,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
@@ -262,7 +293,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: theme.colors.primary.dark,
     marginBottom: 15,
   },
   settingItem: {
@@ -271,7 +301,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.neutral.lighter,
   },
   settingContent: {
     flexDirection: 'row',
@@ -284,19 +313,15 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 16,
     fontWeight: '500',
-    color: theme.colors.neutral.darker,
     marginBottom: 3,
   },
   settingValue: {
     fontSize: 14,
-    color: theme.colors.neutral.dark,
   },
   settingDescription: {
     fontSize: 14,
-    color: theme.colors.neutral.medium,
   },
   logoutButton: {
-    backgroundColor: theme.colors.neutral.lightest,
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',

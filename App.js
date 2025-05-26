@@ -1,9 +1,10 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { View, Text, StyleSheet, StatusBar } from 'react-native';
-import { createContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react';
 
 // Import screens
 import TodayScreen from './src/screens/Today';
@@ -11,6 +12,15 @@ import JourneyScreen from './src/screens/Journey';
 import AskScreen from './src/screens/Ask';
 import SavedScreen from './src/screens/Saved';
 import SettingsScreen from './src/screens/Settings';
+
+// Import settings sub-screens
+import ProfileScreen from './src/screens/Settings/ProfileScreen';
+import BirthdayScreen from './src/screens/Settings/BirthdayScreen';
+import BackupScreen from './src/screens/Settings/BackupScreen';
+import PrivacyScreen from './src/screens/Settings/PrivacyScreen';
+import HelpCenterScreen from './src/screens/Settings/HelpCenterScreen';
+import ContactScreen from './src/screens/Settings/ContactScreen';
+import AboutScreen from './src/screens/Settings/AboutScreen';
 
 // Import custom tab bar
 import CustomTabBar from './src/components/CustomTabBar';
@@ -22,6 +32,27 @@ import theme from './src/theme';
 export const AppContext = createContext();
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+// Settings stack navigator
+const SettingsStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="SettingsMain" component={SettingsScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Birthday" component={BirthdayScreen} />
+      <Stack.Screen name="Backup" component={BackupScreen} />
+      <Stack.Screen name="Privacy" component={PrivacyScreen} />
+      <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+      <Stack.Screen name="Contact" component={ContactScreen} />
+      <Stack.Screen name="About" component={AboutScreen} />
+    </Stack.Navigator>
+  );
+};
 
 export default function App() {
   // App-wide state
@@ -32,6 +63,7 @@ export default function App() {
     activities: [],
     media: []
   });
+  const [darkMode, setDarkMode] = useState(false);
   
   // Handle saving items
   const handleSaveItem = (item, type) => {
@@ -63,6 +95,14 @@ export default function App() {
     return savedItems[type].some(item => item.id === itemId);
   };
   
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode(prev => !prev);
+  };
+  
+  // Get current theme based on dark mode setting
+  const currentTheme = darkMode ? theme.dark : theme;
+  
   // App context value
   const contextValue = {
     babyAge,
@@ -72,16 +112,22 @@ export default function App() {
     savedItems,
     handleSaveItem,
     handleRemoveSavedItem,
-    isItemSaved
+    isItemSaved,
+    darkMode,
+    toggleDarkMode,
+    currentTheme
   };
 
   return (
     <SafeAreaProvider>
       <AppContext.Provider value={contextValue}>
-        <StatusBar barStyle="light-content" backgroundColor={theme.colors.primary.main} />
+        <StatusBar 
+          barStyle={darkMode ? "light-content" : "dark-content"} 
+          backgroundColor={darkMode ? theme.dark.colors.primary.main : theme.colors.primary.main} 
+        />
         <NavigationContainer>
           <Tab.Navigator
-            tabBar={props => <CustomTabBar {...props} />}
+            tabBar={props => <CustomTabBar {...props} darkMode={darkMode} />}
             screenOptions={{
               headerShown: false,
             }}
@@ -90,7 +136,7 @@ export default function App() {
             <Tab.Screen name="Journey" component={JourneyScreen} />
             <Tab.Screen name="Ask" component={AskScreen} />
             <Tab.Screen name="Saved" component={SavedScreen} />
-            <Tab.Screen name="Settings" component={SettingsScreen} />
+            <Tab.Screen name="Settings" component={SettingsStack} />
           </Tab.Navigator>
         </NavigationContainer>
       </AppContext.Provider>
