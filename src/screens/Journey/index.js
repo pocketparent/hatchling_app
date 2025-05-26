@@ -13,6 +13,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../theme';
 import { mockMilestones } from '../../data/mockMilestones';
+import { AppContext } from '../../../App';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width - (theme.spacing.spacing.screenPadding * 2);
@@ -55,7 +56,12 @@ const MilestonePhaseSelector = ({ phases, selectedPhase, onSelectPhase }) => {
  * 
  * Card showing progress in a developmental domain
  */
-const DomainProgressCard = ({ domain, progress, onExplore }) => {
+const DomainProgressCard = ({ domain, progress, onExplore, completedMilestones }) => {
+  // Calculate actual progress based on completed milestones
+  const actualProgress = domain.milestones.length > 0 
+    ? completedMilestones.filter(id => domain.milestones.some(m => m.id === id)).length / domain.milestones.length
+    : 0;
+
   return (
     <View style={styles.domainCard}>
       <View style={styles.domainHeader}>
@@ -73,14 +79,14 @@ const DomainProgressCard = ({ domain, progress, onExplore }) => {
         <View 
           style={[
             styles.progressBar, 
-            { width: `${progress * 100}%` }
+            { width: `${actualProgress * 100}%` }
           ]} 
         />
       </View>
       
       {/* Milestone count */}
       <Text style={styles.milestoneCount}>
-        {domain.milestones.length} key milestones in this phase
+        {completedMilestones.filter(id => domain.milestones.some(m => m.id === id)).length} of {domain.milestones.length} milestones completed
       </Text>
     </View>
   );
@@ -111,11 +117,56 @@ const WeeklyFocusCard = ({ focus }) => {
 };
 
 /**
+ * CheckableMilestone Component
+ * 
+ * Individual milestone item with checkbox
+ */
+const CheckableMilestone = ({ milestone, isCompleted, onToggle }) => {
+  return (
+    <View style={styles.milestoneItem}>
+      <View style={styles.milestoneHeader}>
+        <Text style={styles.milestoneTitle}>{milestone.title}</Text>
+        <TouchableOpacity 
+          style={[
+            styles.checkbox,
+            isCompleted && styles.checkboxChecked
+          ]}
+          onPress={() => onToggle(milestone.id)}
+        >
+          {isCompleted && (
+            <Ionicons name="checkmark" size={16} color={theme.colors.neutral.white} />
+          )}
+        </TouchableOpacity>
+      </View>
+      
+      <Text style={styles.milestoneDescription}>{milestone.description}</Text>
+      
+      <View style={styles.milestoneSection}>
+        <Text style={styles.milestoneSectionTitle}>What it looks like:</Text>
+        <Text style={styles.milestoneSectionText}>{milestone.whatItLooksLike}</Text>
+      </View>
+      
+      <View style={styles.milestoneSection}>
+        <Text style={styles.milestoneSectionTitle}>How to support:</Text>
+        <Text style={styles.milestoneSectionText}>{milestone.howToSupport}</Text>
+      </View>
+      
+      {milestone.nextMilestone && (
+        <View style={styles.milestoneSection}>
+          <Text style={styles.milestoneSectionTitle}>Coming next:</Text>
+          <Text style={styles.milestoneSectionText}>{milestone.nextMilestone}</Text>
+        </View>
+      )}
+    </View>
+  );
+};
+
+/**
  * DomainDetailModal Component
  * 
- * Modal showing detailed milestones for a domain
+ * Modal showing detailed milestones for a domain with checkboxes
  */
-const DomainDetailModal = ({ domain, visible, onClose }) => {
+const DomainDetailModal = ({ domain, visible, onClose, completedMilestones, onToggleMilestone }) => {
   if (!visible) return null;
   
   return (
@@ -130,27 +181,12 @@ const DomainDetailModal = ({ domain, visible, onClose }) => {
         
         <ScrollView style={styles.modalBody}>
           {domain.milestones.map(milestone => (
-            <View key={milestone.id} style={styles.milestoneItem}>
-              <Text style={styles.milestoneTitle}>{milestone.title}</Text>
-              <Text style={styles.milestoneDescription}>{milestone.description}</Text>
-              
-              <View style={styles.milestoneSection}>
-                <Text style={styles.milestoneSectionTitle}>What it looks like:</Text>
-                <Text style={styles.milestoneSectionText}>{milestone.whatItLooksLike}</Text>
-              </View>
-              
-              <View style={styles.milestoneSection}>
-                <Text style={styles.milestoneSectionTitle}>How to support:</Text>
-                <Text style={styles.milestoneSectionText}>{milestone.howToSupport}</Text>
-              </View>
-              
-              {milestone.nextMilestone && (
-                <View style={styles.milestoneSection}>
-                  <Text style={styles.milestoneSectionTitle}>Coming next:</Text>
-                  <Text style={styles.milestoneSectionText}>{milestone.nextMilestone}</Text>
-                </View>
-              )}
-            </View>
+            <CheckableMilestone
+              key={milestone.id}
+              milestone={milestone}
+              isCompleted={completedMilestones.includes(milestone.id)}
+              onToggle={onToggleMilestone}
+            />
           ))}
         </ScrollView>
         
@@ -176,13 +212,8 @@ export default function JourneyScreen() {
   const [selectedPhase, setSelectedPhase] = useState(phases[2]); // Default to 4-6 months
   const [selectedDomain, setSelectedDomain] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  
-  // Calculate domain progress (mock data)
-  const getDomainProgress = (domainId) => {
-    // In a real app, this would be calculated based on observed milestones
-    // For now, return random progress between 0.3 and 0.8
-    return 0.3 + Math.random() * 0.5;
-  };
+  const [completedMilestones, setCompletedMilestones] = useState([]);
+  const { babyName } = React.useContext(AppContext);
   
   // Handle domain exploration
   const handleExplore = (domain) => {
@@ -193,6 +224,17 @@ export default function JourneyScreen() {
   // Close modal
   const handleCloseModal = () => {
     setModalVisible(false);
+  };
+  
+  // Toggle milestone completion
+  const handleToggleMilestone = (milestoneId) => {
+    setCompletedMilestones(prev => {
+      if (prev.includes(milestoneId)) {
+        return prev.filter(id => id !== milestoneId);
+      } else {
+        return [...prev, milestoneId];
+      }
+    });
   };
   
   // Get weekly focus for the selected phase
@@ -235,18 +277,21 @@ export default function JourneyScreen() {
             <DomainProgressCard 
               key={domain.id}
               domain={domain}
-              progress={getDomainProgress(domain.id)}
+              progress={0}
               onExplore={() => handleExplore(domain)}
+              completedMilestones={completedMilestones}
             />
           ))}
         </View>
         
-        {/* Domain detail modal */}
+        {/* Domain detail modal with checkable milestones */}
         {selectedDomain && (
           <DomainDetailModal 
             domain={selectedDomain}
             visible={modalVisible}
             onClose={handleCloseModal}
+            completedMilestones={completedMilestones}
+            onToggleMilestone={handleToggleMilestone}
           />
         )}
       </ScrollView>
@@ -422,10 +467,29 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.neutral.lighter,
   },
+  milestoneHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing.spacing.xs,
+  },
   milestoneTitle: {
     ...theme.typography.textVariants.h5,
     color: theme.colors.neutral.darkest,
-    marginBottom: theme.spacing.spacing.xs,
+    flex: 1,
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: theme.colors.primary.main,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: theme.spacing.spacing.sm,
+  },
+  checkboxChecked: {
+    backgroundColor: theme.colors.primary.main,
   },
   milestoneDescription: {
     ...theme.typography.textVariants.body1,
