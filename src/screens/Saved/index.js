@@ -3,381 +3,650 @@ import {
   View, 
   Text, 
   StyleSheet, 
+  SafeAreaView, 
   ScrollView, 
   TouchableOpacity,
-  FlatList
+  Image,
+  Modal,
+  Dimensions
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useContext } from 'react';
-import { AppContext } from '../../../App';
 import theme from '../../theme';
+import mockSavedContent from '../../data/mockSavedContent';
 
-const SavedScreen = () => {
-  const { babyName, babyAge, savedItems } = useContext(AppContext);
-  const [activeTab, setActiveTab] = useState('insights');
-  
-  // Calculate baby's age in months
-  const ageInMonths = Math.floor(babyAge / 30);
-  
-  // Render saved insights
-  const renderInsights = () => {
-    if (savedItems.insights.length === 0) {
-      return (
-        <View style={styles.emptyState}>
-          <Ionicons name="bookmark-outline" size={40} color={theme.colors.neutral.medium} />
-          <Text style={styles.emptyStateTitle}>No saved insights yet</Text>
-          <Text style={styles.emptyStateText}>
-            Tap the save button on any insight to add it to your collection
-          </Text>
-        </View>
-      );
-    }
-    
-    return (
-      <View>
-        {savedItems.insights.map(insight => (
-          <TouchableOpacity key={insight.id} style={styles.insightCard}>
-            <View style={[styles.insightIconContainer, { backgroundColor: getCategoryColor(insight.category) }]}>
-              <Text style={styles.insightIcon}>
-                {getCategoryIcon(insight.category)}
-              </Text>
-            </View>
-            <View style={styles.insightContent}>
-              <Text style={styles.insightTitle}>{insight.title}</Text>
-              <Text style={styles.insightType}>Daily Insight</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
-    );
-  };
-  
-  // Render saved activities
-  const renderActivities = () => {
-    if (savedItems.activities.length === 0) {
-      return (
-        <View style={styles.emptyState}>
-          <Ionicons name="play-outline" size={40} color={theme.colors.neutral.medium} />
-          <Text style={styles.emptyStateTitle}>No saved activities yet</Text>
-          <Text style={styles.emptyStateText}>
-            Save activities from milestones or weekly focus to try later
-          </Text>
-        </View>
-      );
-    }
-    
-    return (
-      <View>
-        {savedItems.activities.map(activity => (
-          <TouchableOpacity key={activity.id} style={styles.insightCard}>
-            <View style={[styles.insightIconContainer, { backgroundColor: theme.colors.secondary.main }]}>
-              <Text style={styles.insightIcon}>
-                {getActivityIcon(activity.type)}
-              </Text>
-            </View>
-            <View style={styles.insightContent}>
-              <Text style={styles.insightTitle}>{activity.title}</Text>
-              <Text style={styles.insightType}>Activity Suggestion</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
-    );
-  };
-  
-  // Render saved media
-  const renderMedia = () => {
-    if (savedItems.media.length === 0) {
-      return (
-        <View style={styles.emptyState}>
-          <Ionicons name="images-outline" size={40} color={theme.colors.neutral.medium} />
-          <Text style={styles.emptyStateTitle}>No captured moments yet</Text>
-          <Text style={styles.emptyStateText}>
-            Capture and save milestone moments to remember them
-          </Text>
-        </View>
-      );
-    }
-    
-    // Mock media items for the UI - using placeholder Views instead of Images
-    const mockMedia = [
-      { id: 'media_001', label: '1' },
-      { id: 'media_002', label: '2' },
-      { id: 'media_003', label: '3' },
-      { id: 'media_004', label: '4' },
-    ];
-    
-    return (
-      <View style={styles.mediaGrid}>
-        {mockMedia.map(item => (
-          <TouchableOpacity key={item.id} style={styles.mediaItem}>
-            <View style={styles.mediaPlaceholder}>
-              <Text style={styles.mediaPlaceholderText}>{item.label}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
-    );
-  };
-  
-  // Helper function to get category color
-  const getCategoryColor = (category) => {
-    switch(category) {
-      case 'sleep':
-        return theme.colors.content.sleep;
-      case 'feeding':
-        return theme.colors.content.feeding;
-      case 'development':
-        return theme.colors.content.development;
-      case 'health':
-        return theme.colors.content.health;
-      case 'behavior':
-        return theme.colors.content.behavior;
-      default:
-        return theme.colors.primary.main;
-    }
-  };
-  
-  // Helper function to get category icon
-  const getCategoryIcon = (category) => {
-    switch(category) {
-      case 'sleep':
-        return '🌙';
-      case 'feeding':
-        return '🍼';
-      case 'development':
-        return '📈';
-      case 'health':
-        return '❤️';
-      case 'behavior':
-        return '😊';
-      default:
-        return '💡';
-    }
-  };
-  
-  // Helper function to get activity icon
-  const getActivityIcon = (type) => {
-    switch(type) {
-      case 'play':
-        return '🎮';
-      case 'music':
-        return '🎵';
-      case 'motor':
-        return '🏃';
-      case 'sensory':
-        return '👁️';
-      default:
-        return '🎯';
-    }
-  };
-  
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = width - (theme.spacing.spacing.screenPadding * 2);
+
+/**
+ * SavedItemCard Component
+ * 
+ * Card displaying a saved insight or activity
+ */
+const SavedItemCard = ({ item, onPress }) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.backgroundElements}>
-        {/* Decorative elements */}
-        <View style={[styles.decorativeElement, { top: 50, left: 20 }]} />
-        <View style={[styles.decorativeElement, { top: 120, right: 30 }]} />
-        <View style={[styles.decorativeStar, { top: 80, right: 50 }]} />
-        <View style={[styles.decorativeLeaf, { top: 100, right: 20 }]} />
+    <TouchableOpacity 
+      style={styles.savedItemContainer}
+      onPress={() => onPress(item)}
+    >
+      <View style={[styles.iconContainer, { backgroundColor: item.color }]}>
+        <Text style={styles.icon}>{item.icon}</Text>
       </View>
-      
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Saved</Text>
+      <View style={styles.savedItemContent}>
+        <Text style={styles.savedItemTitle}>{item.title}</Text>
+        <Text style={styles.savedItemType}>{item.type}</Text>
       </View>
-      
-      {/* Tab navigation */}
-      <View style={styles.tabContainer}>
-        <TouchableOpacity 
-          style={[styles.tab, activeTab === 'insights' && styles.activeTab]} 
-          onPress={() => setActiveTab('insights')}
-        >
-          <Text style={[styles.tabText, activeTab === 'insights' && styles.activeTabText]}>
-            Saved Insights
-          </Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={[styles.tab, activeTab === 'activities' && styles.activeTab]} 
-          onPress={() => setActiveTab('activities')}
-        >
-          <Text style={[styles.tabText, activeTab === 'activities' && styles.activeTabText]}>
-            Saved Activities
-          </Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={[styles.tab, activeTab === 'media' && styles.activeTab]} 
-          onPress={() => setActiveTab('media')}
-        >
-          <Text style={[styles.tabText, activeTab === 'media' && styles.activeTabText]}>
-            Captured Milestone Media
-          </Text>
-        </TouchableOpacity>
-      </View>
-      
-      {/* Content based on active tab */}
-      <ScrollView style={styles.contentContainer}>
-        {activeTab === 'insights' && renderInsights()}
-        {activeTab === 'activities' && renderActivities()}
-        {activeTab === 'media' && renderMedia()}
-        
-        {/* Spacing at bottom */}
-        <View style={{ height: 100 }} />
-      </ScrollView>
-    </View>
+    </TouchableOpacity>
   );
 };
+
+/**
+ * MediaThumbnail Component
+ * 
+ * Thumbnail for milestone media
+ */
+const MediaThumbnail = ({ item, onPress }) => {
+  return (
+    <TouchableOpacity 
+      style={styles.mediaItem}
+      onPress={() => onPress(item)}
+    >
+      {item.id === 'media_1' && (
+        <Image 
+          source={require('../../assets/images/baby_milestone_1.png')} 
+          style={styles.mediaImage}
+          resizeMode="cover"
+        />
+      )}
+      {item.id === 'media_2' && (
+        <Image 
+          source={require('../../assets/images/baby_milestone_2.png')} 
+          style={styles.mediaImage}
+          resizeMode="cover"
+        />
+      )}
+      {item.id === 'media_3' && (
+        <Image 
+          source={require('../../assets/images/baby_milestone_3.png')} 
+          style={styles.mediaImage}
+          resizeMode="cover"
+        />
+      )}
+      {item.id === 'media_4' && (
+        <Image 
+          source={require('../../assets/images/baby_milestone_4.png')} 
+          style={styles.mediaImage}
+          resizeMode="cover"
+        />
+      )}
+      {!['media_1', 'media_2', 'media_3', 'media_4'].includes(item.id) && (
+        <View style={styles.mediaPlaceholder}>
+          <Text style={styles.mediaPlaceholderText}>
+            {item.type === 'video' ? '🎬' : '📷'}
+          </Text>
+        </View>
+      )}
+    </TouchableOpacity>
+  );
+};
+
+/**
+ * InsightDetailModal Component
+ * 
+ * Modal displaying the full content of a saved insight
+ */
+const InsightDetailModal = ({ insight, visible, onClose }) => {
+  const [currentPanel, setCurrentPanel] = useState('challenge');
+  
+  if (!visible || !insight) return null;
+  
+  const panels = [
+    { id: 'challenge', title: 'Challenge' },
+    { id: 'why', title: 'Why' },
+    { id: 'try', title: 'Try' },
+    { id: 'reassurance', title: 'Reassurance' }
+  ];
+  
+  // Filter out reassurance if it doesn't exist
+  const availablePanels = panels.filter(panel => 
+    insight.content[panel.id] !== undefined
+  );
+  
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>{insight.title}</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Ionicons name="close" size={24} color={theme.colors.neutral.dark} />
+            </TouchableOpacity>
+          </View>
+          
+          {/* Panel selector */}
+          <View style={styles.panelSelectorContainer}>
+            {availablePanels.map(panel => (
+              <TouchableOpacity 
+                key={panel.id}
+                style={[
+                  styles.panelTab,
+                  currentPanel === panel.id && styles.panelTabActive
+                ]}
+                onPress={() => setCurrentPanel(panel.id)}
+              >
+                <Text style={[
+                  styles.panelTabText,
+                  currentPanel === panel.id && styles.panelTabTextActive
+                ]}>
+                  {panel.title}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          
+          {/* Panel content */}
+          <ScrollView style={styles.panelContent}>
+            <Text style={styles.panelContentTitle}>
+              {insight.content[currentPanel]?.title}
+            </Text>
+            <Text style={styles.panelContentText}>
+              {insight.content[currentPanel]?.content}
+            </Text>
+          </ScrollView>
+          
+          <TouchableOpacity 
+            style={styles.modalCloseButton}
+            onPress={onClose}
+          >
+            <Text style={styles.modalCloseButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+/**
+ * ActivityDetailModal Component
+ * 
+ * Modal displaying the full content of a saved activity
+ */
+const ActivityDetailModal = ({ activity, visible, onClose }) => {
+  if (!visible || !activity) return null;
+  
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>{activity.title}</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Ionicons name="close" size={24} color={theme.colors.neutral.dark} />
+            </TouchableOpacity>
+          </View>
+          
+          <ScrollView style={styles.activityContent}>
+            <Text style={styles.activityDescription}>
+              {activity.content.description}
+            </Text>
+            
+            <Text style={styles.activitySectionTitle}>Benefits</Text>
+            {activity.content.benefits.map((benefit, index) => (
+              <View key={index} style={styles.bulletItem}>
+                <Text style={styles.bulletPoint}>•</Text>
+                <Text style={styles.bulletText}>{benefit}</Text>
+              </View>
+            ))}
+            
+            <Text style={styles.activitySectionTitle}>Suggestions</Text>
+            {activity.content.suggestions.map((suggestion, index) => (
+              <View key={index} style={styles.bulletItem}>
+                <Text style={styles.bulletPoint}>•</Text>
+                <Text style={styles.bulletText}>{suggestion}</Text>
+              </View>
+            ))}
+          </ScrollView>
+          
+          <TouchableOpacity 
+            style={styles.modalCloseButton}
+            onPress={onClose}
+          >
+            <Text style={styles.modalCloseButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+/**
+ * MediaDetailModal Component
+ * 
+ * Modal displaying the full content of milestone media
+ */
+const MediaDetailModal = ({ media, visible, onClose }) => {
+  if (!visible || !media) return null;
+  
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.mediaModalContent}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>{media.title}</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Ionicons name="close" size={24} color={theme.colors.neutral.dark} />
+            </TouchableOpacity>
+          </View>
+          
+          <View style={styles.mediaContainer}>
+            {media.id === 'media_1' && (
+              <Image 
+                source={require('../../assets/images/baby_milestone_1.png')} 
+                style={styles.mediaImageLarge}
+                resizeMode="contain"
+              />
+            )}
+            {media.id === 'media_2' && (
+              <Image 
+                source={require('../../assets/images/baby_milestone_2.png')} 
+                style={styles.mediaImageLarge}
+                resizeMode="contain"
+              />
+            )}
+            {media.id === 'media_3' && (
+              <Image 
+                source={require('../../assets/images/baby_milestone_3.png')} 
+                style={styles.mediaImageLarge}
+                resizeMode="contain"
+              />
+            )}
+            {media.id === 'media_4' && (
+              <Image 
+                source={require('../../assets/images/baby_milestone_4.png')} 
+                style={styles.mediaImageLarge}
+                resizeMode="contain"
+              />
+            )}
+            {!['media_1', 'media_2', 'media_3', 'media_4'].includes(media.id) && (
+              <View style={styles.mediaPlaceholderLarge}>
+                <Text style={styles.mediaPlaceholderTextLarge}>
+                  {media.type === 'video' ? '🎬' : '📷'}
+                </Text>
+              </View>
+            )}
+          </View>
+          
+          <View style={styles.mediaDetails}>
+            <Text style={styles.mediaDate}>{media.date}</Text>
+            <Text style={styles.mediaDescription}>{media.description}</Text>
+          </View>
+          
+          <TouchableOpacity 
+            style={styles.modalCloseButton}
+            onPress={onClose}
+          >
+            <Text style={styles.modalCloseButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+/**
+ * Saved Screen
+ * 
+ * Shows saved insights, activities, and milestone media
+ * Implements the design from the mockup
+ */
+export default function SavedScreen() {
+  const [savedInsights] = useState(mockSavedContent.insights);
+  const [savedActivities] = useState(mockSavedContent.activities);
+  const [milestoneMedia] = useState(mockSavedContent.milestoneMedia);
+  
+  const [selectedInsight, setSelectedInsight] = useState(null);
+  const [selectedActivity, setSelectedActivity] = useState(null);
+  const [selectedMedia, setSelectedMedia] = useState(null);
+  
+  const [insightModalVisible, setInsightModalVisible] = useState(false);
+  const [activityModalVisible, setActivityModalVisible] = useState(false);
+  const [mediaModalVisible, setMediaModalVisible] = useState(false);
+  
+  // Handle insight selection
+  const handleInsightPress = (insight) => {
+    setSelectedInsight(insight);
+    setInsightModalVisible(true);
+  };
+  
+  // Handle activity selection
+  const handleActivityPress = (activity) => {
+    setSelectedActivity(activity);
+    setActivityModalVisible(true);
+  };
+  
+  // Handle media selection
+  const handleMediaPress = (media) => {
+    setSelectedMedia(media);
+    setMediaModalVisible(true);
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Text style={styles.headerTitle}>Saved</Text>
+        
+        {/* Saved Insights */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Saved Insights</Text>
+          {savedInsights.length > 0 ? (
+            savedInsights.map(insight => (
+              <SavedItemCard 
+                key={insight.id}
+                item={insight}
+                onPress={handleInsightPress}
+              />
+            ))
+          ) : (
+            <Text style={styles.emptyStateText}>No saved insights yet</Text>
+          )}
+        </View>
+        
+        {/* Saved Activities */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Saved Activities</Text>
+          {savedActivities.length > 0 ? (
+            savedActivities.map(activity => (
+              <SavedItemCard 
+                key={activity.id}
+                item={activity}
+                onPress={handleActivityPress}
+              />
+            ))
+          ) : (
+            <Text style={styles.emptyStateText}>No saved activities yet</Text>
+          )}
+        </View>
+        
+        {/* Milestone Media */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Captured Milestone Media</Text>
+          {milestoneMedia.length > 0 ? (
+            <View style={styles.mediaGrid}>
+              {milestoneMedia.map(media => (
+                <MediaThumbnail 
+                  key={media.id}
+                  item={media}
+                  onPress={handleMediaPress}
+                />
+              ))}
+            </View>
+          ) : (
+            <Text style={styles.emptyStateText}>No milestone media yet</Text>
+          )}
+        </View>
+        
+        {/* Modals */}
+        <InsightDetailModal 
+          insight={selectedInsight}
+          visible={insightModalVisible}
+          onClose={() => setInsightModalVisible(false)}
+        />
+        
+        <ActivityDetailModal 
+          activity={selectedActivity}
+          visible={activityModalVisible}
+          onClose={() => setActivityModalVisible(false)}
+        />
+        
+        <MediaDetailModal 
+          media={selectedMedia}
+          visible={mediaModalVisible}
+          onClose={() => setMediaModalVisible(false)}
+        />
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.primary.main,
+    backgroundColor: theme.colors.neutral.white,
   },
-  backgroundElements: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-  },
-  decorativeElement: {
-    position: 'absolute',
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-  },
-  decorativeStar: {
-    position: 'absolute',
-    width: 12,
-    height: 12,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderLeftWidth: 6,
-    borderRightWidth: 6,
-    borderBottomWidth: 10,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: 'rgba(255, 255, 255, 0.3)',
-    transform: [{ rotate: '180deg' }],
-  },
-  decorativeLeaf: {
-    position: 'absolute',
-    width: 20,
-    height: 10,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    transform: [{ rotate: '45deg' }],
-  },
-  header: {
-    paddingTop: 60,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+  scrollContent: {
+    padding: theme.spacing.spacing.screenPadding,
+    paddingBottom: theme.spacing.spacing.xxxl,
   },
   headerTitle: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+    ...theme.typography.textVariants.h2,
+    color: theme.colors.neutral.darkest,
+    marginBottom: theme.spacing.spacing.lg,
+    marginTop: theme.spacing.spacing.md,
   },
-  tabContainer: {
-    flexDirection: 'column',
-    paddingHorizontal: 20,
-    marginBottom: 15,
+  section: {
+    marginBottom: theme.spacing.spacing.xl,
   },
-  tab: {
-    paddingVertical: 10,
-    marginBottom: 5,
+  sectionTitle: {
+    ...theme.typography.textVariants.h4,
+    color: theme.colors.neutral.darkest,
+    marginBottom: theme.spacing.spacing.md,
   },
-  activeTab: {
-    borderBottomWidth: 2,
-    borderBottomColor: theme.colors.secondary.main,
-  },
-  tabText: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: 'rgba(255, 255, 255, 0.7)',
-  },
-  activeTabText: {
-    color: '#FFFFFF',
-  },
-  contentContainer: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 20,
-    paddingTop: 20,
-  },
-  emptyState: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 50,
-  },
-  emptyStateTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: theme.colors.neutral.dark,
-    marginTop: 15,
-    marginBottom: 5,
-  },
-  emptyStateText: {
-    color: theme.colors.neutral.medium,
-    textAlign: 'center',
-    maxWidth: '80%',
-  },
-  insightCard: {
+  savedItemContainer: {
     flexDirection: 'row',
     backgroundColor: theme.colors.neutral.lightest,
-    borderRadius: 15,
-    marginBottom: 15,
+    borderRadius: 12,
+    marginBottom: theme.spacing.spacing.md,
+    shadowColor: theme.colors.neutral.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
     overflow: 'hidden',
   },
-  insightIconContainer: {
-    width: 60,
+  iconContainer: {
+    width: 80,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  insightIcon: {
-    fontSize: 24,
+  icon: {
+    fontSize: 32,
   },
-  insightContent: {
+  savedItemContent: {
     flex: 1,
-    padding: 15,
+    padding: theme.spacing.spacing.md,
+    justifyContent: 'center',
   },
-  insightTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: theme.colors.primary.dark,
-    marginBottom: 5,
+  savedItemTitle: {
+    ...theme.typography.textVariants.h5,
+    color: theme.colors.neutral.darkest,
+    marginBottom: theme.spacing.spacing.xxs,
   },
-  insightType: {
-    fontSize: 14,
+  savedItemType: {
+    ...theme.typography.textVariants.body2,
     color: theme.colors.neutral.dark,
   },
   mediaGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    marginHorizontal: -theme.spacing.spacing.xs,
   },
   mediaItem: {
-    width: '48%',
+    width: '25%',
+    padding: theme.spacing.spacing.xs,
+  },
+  mediaImage: {
+    width: '100%',
     aspectRatio: 1,
-    marginBottom: 10,
-    borderRadius: 10,
-    overflow: 'hidden',
+    borderRadius: 8,
   },
   mediaPlaceholder: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: theme.colors.secondary.light,
+    aspectRatio: 1,
+    backgroundColor: theme.colors.neutral.lighter,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
   mediaPlaceholderText: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+  },
+  emptyStateText: {
+    ...theme.typography.textVariants.body1,
+    color: theme.colors.neutral.medium,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    padding: theme.spacing.spacing.lg,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: theme.colors.neutral.white,
+    borderRadius: 16,
+    width: '90%',
+    maxHeight: '80%',
+    padding: theme.spacing.spacing.lg,
+  },
+  mediaModalContent: {
+    backgroundColor: theme.colors.neutral.white,
+    borderRadius: 16,
+    width: '90%',
+    maxHeight: '90%',
+    padding: theme.spacing.spacing.lg,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing.spacing.md,
+  },
+  modalTitle: {
+    ...theme.typography.textVariants.h4,
+    color: theme.colors.neutral.darkest,
+    flex: 1,
+    marginRight: theme.spacing.spacing.sm,
+  },
+  panelSelectorContainer: {
+    flexDirection: 'row',
+    marginBottom: theme.spacing.spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.neutral.lighter,
+  },
+  panelTab: {
+    paddingVertical: theme.spacing.spacing.sm,
+    paddingHorizontal: theme.spacing.spacing.md,
+    marginRight: theme.spacing.spacing.sm,
+  },
+  panelTabActive: {
+    borderBottomWidth: 2,
+    borderBottomColor: theme.colors.primary.main,
+  },
+  panelTabText: {
+    ...theme.typography.textVariants.button,
+    color: theme.colors.neutral.dark,
+  },
+  panelTabTextActive: {
+    color: theme.colors.primary.main,
+  },
+  panelContent: {
+    maxHeight: 300,
+    marginBottom: theme.spacing.spacing.md,
+  },
+  panelContentTitle: {
+    ...theme.typography.textVariants.h5,
+    color: theme.colors.neutral.darkest,
+    marginBottom: theme.spacing.spacing.sm,
+  },
+  panelContentText: {
+    ...theme.typography.textVariants.body1,
+    color: theme.colors.neutral.dark,
+  },
+  activityContent: {
+    maxHeight: 300,
+    marginBottom: theme.spacing.spacing.md,
+  },
+  activityDescription: {
+    ...theme.typography.textVariants.body1,
+    color: theme.colors.neutral.dark,
+    marginBottom: theme.spacing.spacing.md,
+  },
+  activitySectionTitle: {
+    ...theme.typography.textVariants.subtitle1,
+    color: theme.colors.primary.dark,
+    marginTop: theme.spacing.spacing.md,
+    marginBottom: theme.spacing.spacing.sm,
+  },
+  bulletItem: {
+    flexDirection: 'row',
+    marginBottom: theme.spacing.spacing.xs,
+  },
+  bulletPoint: {
+    ...theme.typography.textVariants.body1,
+    color: theme.colors.primary.main,
+    marginRight: theme.spacing.spacing.xs,
+    width: 15,
+  },
+  bulletText: {
+    ...theme.typography.textVariants.body1,
+    color: theme.colors.neutral.dark,
+    flex: 1,
+  },
+  mediaContainer: {
+    alignItems: 'center',
+    marginVertical: theme.spacing.spacing.lg,
+  },
+  mediaImageLarge: {
+    width: '100%',
+    height: 300,
+    borderRadius: 8,
+  },
+  mediaPlaceholderLarge: {
+    width: '100%',
+    height: 300,
+    backgroundColor: theme.colors.neutral.lighter,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  mediaPlaceholderTextLarge: {
+    fontSize: 48,
+  },
+  mediaDetails: {
+    marginBottom: theme.spacing.spacing.lg,
+  },
+  mediaDate: {
+    ...theme.typography.textVariants.caption,
+    color: theme.colors.neutral.medium,
+    marginBottom: theme.spacing.spacing.xs,
+  },
+  mediaDescription: {
+    ...theme.typography.textVariants.body1,
+    color: theme.colors.neutral.dark,
+  },
+  modalCloseButton: {
+    backgroundColor: theme.colors.primary.main,
+    borderRadius: 8,
+    paddingVertical: theme.spacing.spacing.sm,
+    alignItems: 'center',
+  },
+  modalCloseButtonText: {
+    ...theme.typography.textVariants.button,
+    color: theme.colors.neutral.white,
   },
 });
-
-export default SavedScreen;

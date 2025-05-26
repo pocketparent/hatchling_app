@@ -1,503 +1,458 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   View, 
   Text, 
   StyleSheet, 
+  SafeAreaView, 
   ScrollView, 
   TouchableOpacity,
+  Dimensions,
+  Animated,
   Image
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useContext } from 'react';
-import { AppContext } from '../../../App';
 import theme from '../../theme';
+import mockMilestones from '../../data/mockMilestones';
 
-const JourneyScreen = () => {
-  const { babyName, babyAge } = useContext(AppContext);
-  const [selectedPhase, setSelectedPhase] = useState('current');
-  const [selectedDomain, setSelectedDomain] = useState('all');
-  
-  // Calculate baby's age in months
-  const ageInMonths = Math.floor(babyAge / 30);
-  
-  // Determine current phase based on age
-  const getCurrentPhase = () => {
-    if (babyAge < 90) return 'newborn';
-    if (babyAge < 180) return 'infant';
-    if (babyAge < 365) return 'crawler';
-    return 'toddler';
-  };
-  
-  const currentPhase = getCurrentPhase();
-  
-  // Phase data
-  const phases = [
-    { id: 'newborn', label: 'Newborn', range: '0-3m' },
-    { id: 'infant', label: 'Infant', range: '3-6m' },
-    { id: 'crawler', label: 'Crawler', range: '6-12m' },
-    { id: 'toddler', label: 'Toddler', range: '12m+' }
-  ];
-  
-  // Domain data
-  const domains = [
-    { id: 'all', label: 'All', icon: 'apps-outline' },
-    { id: 'physical', label: 'Physical', icon: 'body-outline' },
-    { id: 'cognitive', label: 'Cognitive', icon: 'bulb-outline' },
-    { id: 'social', label: 'Social', icon: 'people-outline' },
-    { id: 'language', label: 'Language', icon: 'chatbubble-outline' }
-  ];
-  
-  // Mock milestone data
-  const milestones = [
-    {
-      id: 'milestone_001',
-      title: 'Rolling Over',
-      description: 'Baby can roll from back to tummy and tummy to back',
-      domain: 'physical',
-      phase: 'infant',
-      completed: true,
-      whatItLooksLike: 'Your baby may first roll from tummy to back, usually around 4 months. Rolling from back to tummy typically comes later, around 5-6 months. They might accidentally roll at first, then begin to do it intentionally.',
-      howToSupport: 'Give plenty of supervised tummy time to build strength. Place toys just out of reach during floor play to encourage movement. Celebrate when your baby rolls, even if it startles them at first!'
-    },
-    {
-      id: 'milestone_002',
-      title: 'Responds to Name',
-      description: 'Baby turns head when their name is called',
-      domain: 'language',
-      phase: 'infant',
-      completed: false,
-      whatItLooksLike: 'Around 4-6 months, your baby will begin to recognize their name and turn toward the person saying it. They may pause what they\'re doing, make eye contact, or smile in response.',
-      howToSupport: 'Use your baby\'s name frequently during the day. Say their name before giving instructions or starting interactions. Make a game of calling their name gently from different directions during playtime.'
-    },
-    {
-      id: 'milestone_003',
-      title: 'Sitting Unassisted',
-      description: 'Baby can sit without support',
-      domain: 'physical',
-      phase: 'infant',
-      completed: false,
-      whatItLooksLike: 'Around 6 months, babies begin to sit momentarily without support. By 8 months, most can sit steadily and may use their hands to reach for toys while sitting.',
-      howToSupport: 'Practice supported sitting, gradually reducing your support as baby gains strength. Place baby in a tripod position (leaning forward on their hands) to help them learn balance. Surround them with pillows for safety during practice.'
-    }
-  ];
-  
-  // Filter milestones based on selected phase and domain
-  const filteredMilestones = milestones.filter(milestone => 
-    (selectedPhase === 'current' ? milestone.phase === currentPhase : milestone.phase === selectedPhase) &&
-    (selectedDomain === 'all' || milestone.domain === selectedDomain)
-  );
-  
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = width - (theme.spacing.spacing.screenPadding * 2);
+
+/**
+ * MilestonePhaseSelector Component
+ * 
+ * Horizontal scrollable selector for age phases
+ */
+const MilestonePhaseSelector = ({ phases, selectedPhase, onSelectPhase }) => {
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.backgroundElements}>
-        {/* Decorative elements */}
-        <View style={[styles.decorativeElement, { top: 50, left: 20 }]} />
-        <View style={[styles.decorativeElement, { top: 120, right: 30 }]} />
-        <View style={[styles.decorativeStar, { top: 80, right: 50 }]} />
-        <View style={[styles.decorativeLeaf, { top: 100, right: 20 }]} />
-      </View>
-      
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Milestone Journey</Text>
-        <Text style={styles.headerSubtitle}>{babyName}, {ageInMonths} months</Text>
-      </View>
-      
-      {/* Phase selector */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.phaseContainer}
-      >
-        <TouchableOpacity
+    <ScrollView 
+      horizontal 
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.phaseContainer}
+    >
+      {phases.map(phase => (
+        <TouchableOpacity 
+          key={phase.id} 
           style={[
-            styles.phaseButton,
-            selectedPhase === 'current' && styles.phaseButtonActive
+            styles.phaseButton, 
+            selectedPhase.id === phase.id && styles.phaseButtonActive
           ]}
-          onPress={() => setSelectedPhase('current')}
+          onPress={() => onSelectPhase(phase)}
         >
           <Text style={[
-            styles.phaseButtonText,
-            selectedPhase === 'current' && styles.phaseButtonTextActive
-          ]}>Current</Text>
+            styles.phaseText,
+            selectedPhase.id === phase.id && styles.phaseTextActive
+          ]}>
+            {phase.name}
+          </Text>
         </TouchableOpacity>
-        
-        {phases.map(phase => (
-          <TouchableOpacity
-            key={phase.id}
-            style={[
-              styles.phaseButton,
-              selectedPhase === phase.id && styles.phaseButtonActive,
-              phase.id === currentPhase && styles.currentPhaseIndicator
-            ]}
-            onPress={() => setSelectedPhase(phase.id)}
-          >
-            <Text style={[
-              styles.phaseButtonText,
-              selectedPhase === phase.id && styles.phaseButtonTextActive
-            ]}>{phase.label}</Text>
-            <Text style={styles.phaseRange}>{phase.range}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-      
-      {/* Domain selector */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.domainContainer}
-      >
-        {domains.map(domain => (
-          <TouchableOpacity
-            key={domain.id}
-            style={[
-              styles.domainButton,
-              selectedDomain === domain.id && styles.domainButtonActive
-            ]}
-            onPress={() => setSelectedDomain(domain.id)}
-          >
-            <Ionicons 
-              name={domain.icon} 
-              size={24} 
-              color={selectedDomain === domain.id ? theme.colors.primary.main : theme.colors.neutral.dark} 
-            />
-            <Text style={[
-              styles.domainButtonText,
-              selectedDomain === domain.id && styles.domainButtonTextActive
-            ]}>{domain.label}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-      
-      {/* Milestones list */}
-      <View style={styles.milestonesContainer}>
-        <Text style={styles.sectionTitle}>
-          {selectedPhase === 'current' ? 'Current Phase Milestones' : `${phases.find(p => p.id === selectedPhase)?.label} Milestones`}
-        </Text>
-        
-        {filteredMilestones.length === 0 ? (
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyStateText}>No milestones found for the selected filters</Text>
-          </View>
-        ) : (
-          filteredMilestones.map(milestone => (
-            <TouchableOpacity 
-              key={milestone.id}
-              style={styles.milestoneCard}
-            >
-              <View style={[
-                styles.milestoneStatus,
-                milestone.completed ? styles.milestoneCompleted : styles.milestoneUpcoming
-              ]}>
-                {milestone.completed && (
-                  <Ionicons name="checkmark" size={16} color="#FFFFFF" />
-                )}
-              </View>
-              
-              <View style={styles.milestoneContent}>
-                <View style={styles.milestoneHeader}>
-                  <Text style={styles.milestoneTitle}>{milestone.title}</Text>
-                  <View style={styles.domainTag}>
-                    <Text style={styles.domainTagText}>
-                      {domains.find(d => d.id === milestone.domain)?.label}
-                    </Text>
-                  </View>
-                </View>
-                
-                <Text style={styles.milestoneDescription}>{milestone.description}</Text>
-                
-                <View style={styles.milestoneDetails}>
-                  <View style={styles.detailSection}>
-                    <Text style={styles.detailTitle}>What it looks like:</Text>
-                    <Text style={styles.detailText}>{milestone.whatItLooksLike}</Text>
-                  </View>
-                  
-                  <View style={styles.detailSection}>
-                    <Text style={styles.detailTitle}>How to support:</Text>
-                    <Text style={styles.detailText}>{milestone.howToSupport}</Text>
-                  </View>
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))
-        )}
-      </View>
-      
-      {/* Weekly focus */}
-      <View style={styles.weeklyFocusContainer}>
-        <Text style={styles.sectionTitle}>This Week's Focus</Text>
-        
-        <View style={styles.weeklyFocusCard}>
-          {/* Using a placeholder View instead of Image to avoid asset errors */}
-          <View style={styles.weeklyFocusImage}>
-            <Text style={styles.placeholderText}>Tummy Time Image</Text>
-          </View>
-          
-          <View style={styles.weeklyFocusContent}>
-            <Text style={styles.weeklyFocusTitle}>Tummy Time</Text>
-            <Text style={styles.weeklyFocusDescription}>
-              Tummy time helps develop neck, shoulder, and core strength, which are essential for rolling, sitting, and crawling.
-            </Text>
-            
-            <TouchableOpacity style={styles.weeklyFocusButton}>
-              <Text style={styles.weeklyFocusButtonText}>View Activities</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-      
-      {/* Spacing at bottom */}
-      <View style={{ height: 100 }} />
+      ))}
     </ScrollView>
   );
 };
 
+/**
+ * DomainProgressCard Component
+ * 
+ * Card showing progress in a developmental domain
+ */
+const DomainProgressCard = ({ domain, progress, onExplore }) => {
+  return (
+    <View style={styles.domainCard}>
+      <View style={styles.domainHeader}>
+        <Text style={styles.domainTitle}>{domain.name}</Text>
+        <TouchableOpacity 
+          style={styles.exploreButton}
+          onPress={() => onExplore(domain)}
+        >
+          <Text style={styles.exploreButtonText}>Explore</Text>
+        </TouchableOpacity>
+      </View>
+      
+      {/* Progress bar */}
+      <View style={styles.progressContainer}>
+        <View 
+          style={[
+            styles.progressBar, 
+            { width: `${progress * 100}%` }
+          ]} 
+        />
+      </View>
+      
+      {/* Milestone count */}
+      <Text style={styles.milestoneCount}>
+        {domain.milestones.length} key milestones in this phase
+      </Text>
+    </View>
+  );
+};
+
+/**
+ * WeeklyFocusCard Component
+ * 
+ * Card showing the weekly focus activity
+ */
+const WeeklyFocusCard = ({ focus }) => {
+  return (
+    <View style={styles.focusCard}>
+      <Text style={styles.focusCardTitle}>Weekly Focus</Text>
+      <Text style={styles.focusCardHeading}>{focus.title}</Text>
+      <Text style={styles.focusCardDescription}>{focus.description}</Text>
+      
+      {/* Tummy time image */}
+      <View style={styles.focusImageContainer}>
+        <Image 
+          source={require('../../assets/images/tummy_time.png')} 
+          style={styles.focusImage}
+          resizeMode="contain"
+        />
+      </View>
+    </View>
+  );
+};
+
+/**
+ * DomainDetailModal Component
+ * 
+ * Modal showing detailed milestones for a domain
+ */
+const DomainDetailModal = ({ domain, visible, onClose }) => {
+  if (!visible) return null;
+  
+  return (
+    <Animated.View style={styles.modalContainer}>
+      <View style={styles.modalContent}>
+        <View style={styles.modalHeader}>
+          <Text style={styles.modalTitle}>{domain.name} Milestones</Text>
+          <TouchableOpacity onPress={onClose}>
+            <Ionicons name="close" size={24} color={theme.colors.neutral.dark} />
+          </TouchableOpacity>
+        </View>
+        
+        <ScrollView style={styles.modalBody}>
+          {domain.milestones.map(milestone => (
+            <View key={milestone.id} style={styles.milestoneItem}>
+              <Text style={styles.milestoneTitle}>{milestone.title}</Text>
+              <Text style={styles.milestoneDescription}>{milestone.description}</Text>
+              
+              <View style={styles.milestoneSection}>
+                <Text style={styles.milestoneSectionTitle}>What it looks like:</Text>
+                <Text style={styles.milestoneSectionText}>{milestone.whatItLooksLike}</Text>
+              </View>
+              
+              <View style={styles.milestoneSection}>
+                <Text style={styles.milestoneSectionTitle}>How to support:</Text>
+                <Text style={styles.milestoneSectionText}>{milestone.howToSupport}</Text>
+              </View>
+              
+              {milestone.nextMilestone && (
+                <View style={styles.milestoneSection}>
+                  <Text style={styles.milestoneSectionTitle}>Coming next:</Text>
+                  <Text style={styles.milestoneSectionText}>{milestone.nextMilestone}</Text>
+                </View>
+              )}
+            </View>
+          ))}
+        </ScrollView>
+        
+        <TouchableOpacity 
+          style={styles.modalCloseButton}
+          onPress={onClose}
+        >
+          <Text style={styles.modalCloseButtonText}>Close</Text>
+        </TouchableOpacity>
+      </View>
+    </Animated.View>
+  );
+};
+
+/**
+ * Journey Screen
+ * 
+ * Shows milestone journey navigator with developmental phases
+ * Non-tracking, exploration-focused approach
+ */
+export default function JourneyScreen() {
+  const [phases] = useState(mockMilestones.phases);
+  const [selectedPhase, setSelectedPhase] = useState(phases[2]); // Default to 4-6 months
+  const [selectedDomain, setSelectedDomain] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  
+  // Calculate domain progress (mock data)
+  const getDomainProgress = (domainId) => {
+    // In a real app, this would be calculated based on observed milestones
+    // For now, return random progress between 0.3 and 0.8
+    return 0.3 + Math.random() * 0.5;
+  };
+  
+  // Handle domain exploration
+  const handleExplore = (domain) => {
+    setSelectedDomain(domain);
+    setModalVisible(true);
+  };
+  
+  // Close modal
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+  
+  // Get weekly focus for the selected phase
+  const getWeeklyFocus = () => {
+    if (selectedPhase && selectedPhase.weeklyFocus && selectedPhase.weeklyFocus.length > 0) {
+      // In a real app, this would select based on the current week
+      return selectedPhase.weeklyFocus[0];
+    }
+    return null;
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Text style={styles.headerTitle}>Journey</Text>
+        
+        {/* Phase selector */}
+        <MilestonePhaseSelector 
+          phases={phases}
+          selectedPhase={selectedPhase}
+          onSelectPhase={setSelectedPhase}
+        />
+        
+        {/* Phase description */}
+        <View style={styles.phaseDescriptionContainer}>
+          <Text style={styles.phaseDescription}>
+            {selectedPhase.description}
+          </Text>
+        </View>
+        
+        {/* Weekly focus card */}
+        {getWeeklyFocus() && (
+          <WeeklyFocusCard focus={getWeeklyFocus()} />
+        )}
+        
+        {/* Developmental domains */}
+        <View style={styles.domainsContainer}>
+          <Text style={styles.sectionTitle}>Developmental Domains</Text>
+          {selectedPhase.domains.map(domain => (
+            <DomainProgressCard 
+              key={domain.id}
+              domain={domain}
+              progress={getDomainProgress(domain.id)}
+              onExplore={() => handleExplore(domain)}
+            />
+          ))}
+        </View>
+        
+        {/* Domain detail modal */}
+        {selectedDomain && (
+          <DomainDetailModal 
+            domain={selectedDomain}
+            visible={modalVisible}
+            onClose={handleCloseModal}
+          />
+        )}
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.primary.main,
+    backgroundColor: theme.colors.neutral.white,
   },
-  backgroundElements: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-  },
-  decorativeElement: {
-    position: 'absolute',
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-  },
-  decorativeStar: {
-    position: 'absolute',
-    width: 12,
-    height: 12,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderLeftWidth: 6,
-    borderRightWidth: 6,
-    borderBottomWidth: 10,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: 'rgba(255, 255, 255, 0.3)',
-    transform: [{ rotate: '180deg' }],
-  },
-  decorativeLeaf: {
-    position: 'absolute',
-    width: 20,
-    height: 10,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    transform: [{ rotate: '45deg' }],
-  },
-  header: {
-    paddingTop: 60,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+  scrollContent: {
+    padding: theme.spacing.spacing.screenPadding,
+    paddingBottom: theme.spacing.spacing.xxxl,
   },
   headerTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'center',
-  },
-  headerSubtitle: {
-    fontSize: 18,
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginTop: 5,
+    ...theme.typography.textVariants.h2,
+    color: theme.colors.neutral.darkest,
+    marginBottom: theme.spacing.spacing.lg,
+    marginTop: theme.spacing.spacing.md,
   },
   phaseContainer: {
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingBottom: theme.spacing.spacing.md,
   },
   phaseButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingHorizontal: theme.spacing.spacing.md,
+    paddingVertical: theme.spacing.spacing.sm,
     borderRadius: 20,
-    marginHorizontal: 5,
-    alignItems: 'center',
+    marginRight: theme.spacing.spacing.sm,
+    backgroundColor: theme.colors.neutral.lighter,
   },
   phaseButtonActive: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: theme.colors.primary.main,
   },
-  currentPhaseIndicator: {
-    borderWidth: 2,
-    borderColor: theme.colors.secondary.main,
+  phaseText: {
+    ...theme.typography.textVariants.button,
+    color: theme.colors.neutral.dark,
   },
-  phaseButtonText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
+  phaseTextActive: {
+    color: theme.colors.neutral.white,
   },
-  phaseButtonTextActive: {
-    color: theme.colors.primary.main,
+  phaseDescriptionContainer: {
+    marginVertical: theme.spacing.spacing.md,
   },
-  phaseRange: {
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontSize: 12,
-    marginTop: 2,
+  phaseDescription: {
+    ...theme.typography.textVariants.body1,
+    color: theme.colors.neutral.dark,
   },
-  domainContainer: {
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+  focusCard: {
+    backgroundColor: theme.colors.secondary.light,
+    borderRadius: 16,
+    padding: theme.spacing.spacing.lg,
+    marginVertical: theme.spacing.spacing.lg,
+    shadowColor: theme.colors.neutral.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  domainButton: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 20,
-    marginHorizontal: 5,
-    flexDirection: 'row',
+  focusCardTitle: {
+    ...theme.typography.textVariants.overline,
+    color: theme.colors.secondary.dark,
+    marginBottom: theme.spacing.spacing.xs,
+  },
+  focusCardHeading: {
+    ...theme.typography.textVariants.h4,
+    color: theme.colors.neutral.darkest,
+    marginBottom: theme.spacing.spacing.sm,
+  },
+  focusCardDescription: {
+    ...theme.typography.textVariants.body1,
+    color: theme.colors.neutral.dark,
+  },
+  focusImageContainer: {
+    marginTop: theme.spacing.spacing.md,
     alignItems: 'center',
   },
-  domainButtonActive: {
-    backgroundColor: theme.colors.neutral.lightest,
-    borderWidth: 2,
-    borderColor: theme.colors.primary.main,
-  },
-  domainButtonText: {
-    color: theme.colors.neutral.dark,
-    fontWeight: '500',
-    marginLeft: 5,
-  },
-  domainButtonTextActive: {
-    color: theme.colors.primary.main,
-  },
-  milestonesContainer: {
-    padding: 20,
+  focusImage: {
+    width: '100%',
+    height: 150,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 15,
+    ...theme.typography.textVariants.h4,
+    color: theme.colors.neutral.darkest,
+    marginBottom: theme.spacing.spacing.md,
   },
-  emptyState: {
+  domainsContainer: {
+    marginTop: theme.spacing.spacing.lg,
+  },
+  domainCard: {
     backgroundColor: theme.colors.neutral.lightest,
-    padding: 20,
-    borderRadius: 15,
-    alignItems: 'center',
+    borderRadius: 16,
+    padding: theme.spacing.spacing.lg,
+    marginBottom: theme.spacing.spacing.md,
+    shadowColor: theme.colors.neutral.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  emptyStateText: {
-    color: theme.colors.neutral.dark,
-    textAlign: 'center',
-  },
-  milestoneCard: {
-    backgroundColor: theme.colors.neutral.lightest,
-    borderRadius: 15,
-    marginBottom: 15,
-    overflow: 'hidden',
-  },
-  milestoneStatus: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    top: 15,
-    right: 15,
-    zIndex: 1,
-  },
-  milestoneCompleted: {
-    backgroundColor: theme.colors.status.success,
-  },
-  milestoneUpcoming: {
-    backgroundColor: theme.colors.neutral.medium,
-  },
-  milestoneContent: {
-    padding: 15,
-  },
-  milestoneHeader: {
+  domainHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: theme.spacing.spacing.md,
   },
-  milestoneTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: theme.colors.primary.dark,
-    flex: 1,
+  domainTitle: {
+    ...theme.typography.textVariants.h5,
+    color: theme.colors.neutral.darkest,
   },
-  domainTag: {
-    backgroundColor: theme.colors.primary.lightest,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 10,
+  exploreButton: {
+    backgroundColor: theme.colors.primary.light,
+    paddingHorizontal: theme.spacing.spacing.md,
+    paddingVertical: theme.spacing.spacing.xs,
+    borderRadius: 16,
   },
-  domainTagText: {
+  exploreButtonText: {
+    ...theme.typography.textVariants.button,
     color: theme.colors.primary.dark,
     fontSize: 12,
-    fontWeight: '500',
   },
-  milestoneDescription: {
-    color: theme.colors.neutral.dark,
-    marginBottom: 15,
-  },
-  milestoneDetails: {
+  progressContainer: {
+    height: 6,
     backgroundColor: theme.colors.neutral.lighter,
-    padding: 15,
-    borderRadius: 10,
-  },
-  detailSection: {
-    marginBottom: 10,
-  },
-  detailTitle: {
-    fontWeight: 'bold',
-    color: theme.colors.primary.dark,
-    marginBottom: 5,
-  },
-  detailText: {
-    color: theme.colors.neutral.darker,
-    lineHeight: 20,
-  },
-  weeklyFocusContainer: {
-    padding: 20,
-  },
-  weeklyFocusCard: {
-    backgroundColor: theme.colors.neutral.lightest,
-    borderRadius: 15,
+    borderRadius: 3,
+    marginBottom: theme.spacing.spacing.sm,
     overflow: 'hidden',
   },
-  weeklyFocusImage: {
-    width: '100%',
-    height: 150,
-    backgroundColor: theme.colors.neutral.light,
+  progressBar: {
+    height: '100%',
+    backgroundColor: theme.colors.primary.main,
+    borderRadius: 3,
+  },
+  milestoneCount: {
+    ...theme.typography.textVariants.caption,
+    color: theme.colors.neutral.medium,
+  },
+  modalContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 1000,
   },
-  placeholderText: {
-    color: theme.colors.neutral.medium,
-    fontWeight: '500',
+  modalContent: {
+    backgroundColor: theme.colors.neutral.white,
+    borderRadius: 16,
+    width: '90%',
+    maxHeight: '80%',
+    padding: theme.spacing.spacing.lg,
   },
-  weeklyFocusContent: {
-    padding: 15,
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing.spacing.md,
   },
-  weeklyFocusTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: theme.colors.primary.dark,
-    marginBottom: 10,
+  modalTitle: {
+    ...theme.typography.textVariants.h4,
+    color: theme.colors.neutral.darkest,
   },
-  weeklyFocusDescription: {
+  modalBody: {
+    maxHeight: 400,
+  },
+  milestoneItem: {
+    marginBottom: theme.spacing.spacing.lg,
+    paddingBottom: theme.spacing.spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.neutral.lighter,
+  },
+  milestoneTitle: {
+    ...theme.typography.textVariants.h5,
+    color: theme.colors.neutral.darkest,
+    marginBottom: theme.spacing.spacing.xs,
+  },
+  milestoneDescription: {
+    ...theme.typography.textVariants.body1,
     color: theme.colors.neutral.dark,
-    marginBottom: 15,
-    lineHeight: 22,
+    marginBottom: theme.spacing.spacing.md,
   },
-  weeklyFocusButton: {
+  milestoneSection: {
+    marginBottom: theme.spacing.spacing.sm,
+  },
+  milestoneSectionTitle: {
+    ...theme.typography.textVariants.subtitle1,
+    color: theme.colors.primary.dark,
+    marginBottom: theme.spacing.spacing.xxs,
+  },
+  milestoneSectionText: {
+    ...theme.typography.textVariants.body2,
+    color: theme.colors.neutral.dark,
+  },
+  modalCloseButton: {
     backgroundColor: theme.colors.primary.main,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    alignSelf: 'flex-start',
+    borderRadius: 8,
+    paddingVertical: theme.spacing.spacing.sm,
+    alignItems: 'center',
+    marginTop: theme.spacing.spacing.md,
   },
-  weeklyFocusButtonText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
+  modalCloseButtonText: {
+    ...theme.typography.textVariants.button,
+    color: theme.colors.neutral.white,
   },
 });
-
-export default JourneyScreen;
