@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   View, 
   Text, 
@@ -9,7 +9,8 @@ import {
   Image,
   Animated,
   Dimensions,
-  ImageBackground
+  ImageBackground,
+  PanResponder
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../theme';
@@ -22,27 +23,70 @@ const CARD_WIDTH = width - (theme.spacing.spacing.screenPadding * 2);
 /**
  * InsightCard Component
  * 
- * Card showing daily insights with navigation arrows
+ * Card showing daily insights with swipe navigation
  */
 const InsightCard = ({ insight, onSave, isSaved, onMarkHelpful }) => {
   const [currentPanel, setCurrentPanel] = useState('challenge');
+  const [panelIndex, setPanelIndex] = useState(0);
   
   // Available panels for this insight
   const availablePanels = ['challenge', 'why', 'try', 'reassurance'];
-  const currentIndex = availablePanels.indexOf(currentPanel);
   
+  // Animation values
+  const position = useRef(new Animated.ValueXY()).current;
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (evt, gestureState) => {
+        position.setValue({ x: gestureState.dx, y: 0 });
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        if (gestureState.dx < -50 && panelIndex < availablePanels.length - 1) {
+          // Swipe left to next panel
+          goToNextPanel();
+        } else if (gestureState.dx > 50 && panelIndex > 0) {
+          // Swipe right to previous panel
+          goToPrevPanel();
+        } else {
+          // Return to original position
+          Animated.spring(position, {
+            toValue: { x: 0, y: 0 },
+            friction: 5,
+            useNativeDriver: true
+          }).start();
+        }
+      }
+    })
+  ).current;
+
   // Handle panel navigation
-  const handleNextPanel = () => {
-    const nextIndex = currentIndex + 1;
+  const goToNextPanel = () => {
+    const nextIndex = panelIndex + 1;
     if (nextIndex < availablePanels.length) {
-      setCurrentPanel(availablePanels[nextIndex]);
+      Animated.timing(position, {
+        toValue: { x: -CARD_WIDTH, y: 0 },
+        duration: 300,
+        useNativeDriver: true
+      }).start(() => {
+        position.setValue({ x: 0, y: 0 });
+        setPanelIndex(nextIndex);
+        setCurrentPanel(availablePanels[nextIndex]);
+      });
     }
   };
   
-  const handlePrevPanel = () => {
-    const prevIndex = currentIndex - 1;
+  const goToPrevPanel = () => {
+    const prevIndex = panelIndex - 1;
     if (prevIndex >= 0) {
-      setCurrentPanel(availablePanels[prevIndex]);
+      Animated.timing(position, {
+        toValue: { x: CARD_WIDTH, y: 0 },
+        duration: 300,
+        useNativeDriver: true
+      }).start(() => {
+        position.setValue({ x: 0, y: 0 });
+        setPanelIndex(prevIndex);
+        setCurrentPanel(availablePanels[prevIndex]);
+      });
     }
   };
 
@@ -56,35 +100,21 @@ const InsightCard = ({ insight, onSave, isSaved, onMarkHelpful }) => {
       {/* Card title */}
       <Text style={styles.cardTitle}>{insight.title}</Text>
       
-      {/* Card content with navigation */}
-      <View style={styles.cardContent}>
-        {currentIndex > 0 && (
-          <TouchableOpacity 
-            style={styles.navArrowLeft}
-            onPress={handlePrevPanel}
-            hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
-          >
-            <Text style={styles.navArrowText}>{'<'}</Text>
-          </TouchableOpacity>
-        )}
-        
+      {/* Card content with swipe navigation */}
+      <Animated.View 
+        style={[
+          styles.cardContent,
+          { transform: position.getTranslateTransform() }
+        ]}
+        {...panResponder.panHandlers}
+      >
         <Text style={styles.cardChallenge}>{insight[currentPanel]}</Text>
-        
-        {currentIndex < availablePanels.length - 1 && (
-          <TouchableOpacity 
-            style={styles.navArrowRight}
-            onPress={handleNextPanel}
-            hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
-          >
-            <Text style={styles.navArrowText}>{'>'}</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      </Animated.View>
       
       {/* Pagination indicator */}
       <View style={styles.paginationContainer}>
         <Text style={styles.paginationText}>
-          {currentIndex + 1} / {availablePanels.length}
+          {panelIndex + 1} / {availablePanels.length}
         </Text>
       </View>
       
@@ -256,65 +286,40 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
     fontSize: 16,
     fontWeight: '600',
-    color: '#A05B41', // Rust color for header text
+    color: theme.colors.primary.main, // Teal color for header text
     letterSpacing: 1,
     textAlign: 'center',
   },
   cardTitle: {
     fontFamily: 'System',
-    fontSize: 36,
+    fontSize: 40,
     fontWeight: '700',
-    color: theme.colors.primary.dark,
+    color: theme.colors.neutral.darkest,
     paddingHorizontal: theme.spacing.spacing.lg,
     paddingTop: theme.spacing.spacing.md,
     paddingBottom: theme.spacing.spacing.lg,
     textAlign: 'center',
     letterSpacing: -0.5,
-    lineHeight: 44,
+    lineHeight: 48,
   },
   cardContent: {
     paddingHorizontal: theme.spacing.spacing.lg,
     paddingBottom: theme.spacing.spacing.xl,
-    minHeight: 120,
+    minHeight: 150,
     justifyContent: 'center',
-  },
-  navArrowLeft: {
-    position: 'absolute',
-    left: theme.spacing.spacing.md,
-    top: '50%',
-    marginTop: -20,
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 10,
-  },
-  navArrowRight: {
-    position: 'absolute',
-    right: theme.spacing.spacing.md,
-    top: '50%',
-    marginTop: -20,
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 10,
-  },
-  navArrowText: {
-    fontSize: 36,
-    color: theme.colors.primary.main,
-    fontWeight: '300',
   },
   cardChallenge: {
     fontFamily: 'System',
     fontSize: 20,
     lineHeight: 28,
     color: theme.colors.neutral.darkest,
-    textAlign: 'center',
-    paddingHorizontal: theme.spacing.spacing.xl,
+    textAlign: 'left',
+    paddingHorizontal: theme.spacing.spacing.md,
     letterSpacing: -0.2,
   },
   paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: theme.spacing.spacing.lg,
   },
