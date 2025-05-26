@@ -8,11 +8,11 @@
 export const mockInsights = [
   {
     id: 'insight_001',
-    title: 'Why Your Good Sleeper Suddenly Isn\'t',
+    title: 'Why Your Good Sleeper Suddenly Isn't',
     challenge: 'Is Emma suddenly waking more frequently?',
     why: 'Around 4 months, babies experience a significant change in sleep patterns called the "4-month sleep regression." Their sleep cycles mature to be more like adult sleep, with distinct light and deep sleep phases. This means they're more likely to wake between cycles and have a harder time connecting sleep cycles without assistance.',
-    try: 'Try to put your baby down drowsy but awake to help them learn to fall asleep independently. Establish a consistent bedtime routine that signals it\'s time to sleep. Consider introducing a lovey or comfort object (if age-appropriate and safe). Remember that responding consistently helps build security.',
-    reassurance: 'This phase is temporary and completely normal. It doesn\'t mean you\'ve done anything wrong or that your baby will always struggle with sleep. Most babies adjust to their new sleep patterns within 2-6 weeks. You\'re doing a great job supporting your baby through this developmental leap!',
+    try: 'Try to put your baby down drowsy but awake to help them learn to fall asleep independently. Establish a consistent bedtime routine that signals it's time to sleep. Consider introducing a lovey or comfort object (if age-appropriate and safe). Remember that responding consistently helps build security.',
+    reassurance: 'This phase is temporary and completely normal. It doesn't mean you've done anything wrong or that your baby will always struggle with sleep. Most babies adjust to their new sleep patterns within 2-6 weeks. You're doing a great job supporting your baby through this developmental leap!',
     category: 'sleep',
     ageRange: [90, 180] // 3-6 months in days
   },
@@ -21,7 +21,7 @@ export const mockInsights = [
     title: 'Understanding Babbling Development',
     challenge: 'Has Emma started making more varied sounds?',
     why: 'Around 4-6 months, babies begin experimenting with their voices in new ways. They discover they can control the sounds they make, leading to more varied vocalizations. This "canonical babbling" (consonant-vowel combinations like "ba-ba" or "ma-ma") is a crucial step toward language development.',
-    try: 'Respond to your baby\'s babbling as if you\'re having a conversation. This "serve and return" interaction teaches turn-taking and encourages more vocalization. Narrate your day to expose your baby to language. Try mimicking their sounds sometimes, which delights babies and encourages more experimentation.',
+    try: 'Respond to your baby's babbling as if you're having a conversation. This "serve and return" interaction teaches turn-taking and encourages more vocalization. Narrate your day to expose your baby to language. Try mimicking their sounds sometimes, which delights babies and encourages more experimentation.',
     reassurance: 'Each baby develops language at their own pace. Some are more vocal than others from the start. What matters most is that your baby is gradually adding new sounds to their repertoire. Your attentive responses to their communication attempts are building the foundation for language development.',
     category: 'development',
     ageRange: [120, 210] // 4-7 months in days
@@ -32,7 +32,7 @@ export const mockInsights = [
     challenge: 'Wondering when and how to start solid foods?',
     why: 'Around 6 months, babies develop the coordination to move food to the back of their mouths and swallow it. They can sit with support, have good head control, show interest in food, and their digestive systems are mature enough to handle simple solids. These are all signs of readiness for introducing complementary foods alongside milk.',
     try: 'Start with single-ingredient foods without added sugar or salt. Iron-rich foods like iron-fortified cereals, pureed meat, or legumes are good first choices. Offer small amounts (1-2 teaspoons) once a day initially, gradually increasing as your baby shows interest. Always watch for allergic reactions when introducing new foods.',
-    reassurance: 'Whether you choose traditional spoon-feeding or baby-led weaning, remember that "food before one is mostly for fun." Breast milk or formula remains the primary source of nutrition throughout the first year. There\'s no rush—follow your baby\'s cues and consult your pediatrician with any concerns.',
+    reassurance: 'Whether you choose traditional spoon-feeding or baby-led weaning, remember that "food before one is mostly for fun." Breast milk or formula remains the primary source of nutrition throughout the first year. There's no rush—follow your baby's cues and consult your pediatrician with any concerns.',
     category: 'feeding',
     ageRange: [150, 240] // 5-8 months in days
   },
