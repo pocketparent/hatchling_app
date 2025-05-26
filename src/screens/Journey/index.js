@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../theme';
-import mockMilestones from '../../data/mockMilestones';
+import { mockMilestones } from '../../data/mockMilestones';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width - (theme.spacing.spacing.screenPadding * 2);
