@@ -227,11 +227,10 @@ const JourneyScreen = () => {
         <Text style={styles.sectionTitle}>This Week's Focus</Text>
         
         <View style={styles.weeklyFocusCard}>
-          <Image 
-            source={require('../../../assets/tummy_time.png')} 
-            style={styles.weeklyFocusImage}
-            defaultSource={require('../../../assets/tummy_time.png')}
-          />
+          {/* Using a placeholder View instead of Image to avoid asset errors */}
+          <View style={styles.weeklyFocusImage}>
+            <Text style={styles.placeholderText}>Tummy Time Image</Text>
+          </View>
           
           <View style={styles.weeklyFocusContent}>
             <Text style={styles.weeklyFocusTitle}>Tummy Time</Text>
@@ -467,6 +466,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 150,
     backgroundColor: theme.colors.neutral.light,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  placeholderText: {
+    color: theme.colors.neutral.medium,
+    fontWeight: '500',
   },
   weeklyFocusContent: {
     padding: 15,
