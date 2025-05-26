@@ -45,46 +45,45 @@ const SavedItemCard = ({ item, onPress }) => {
  * Thumbnail for milestone media
  */
 const MediaThumbnail = ({ item, onPress }) => {
+  // Determine which image to display based on the media ID
+  const getMediaSource = (id) => {
+    switch(id) {
+      case 'media_1':
+        return require('../../assets/images/baby_milestone_1.png');
+      case 'media_2':
+        return require('../../assets/images/baby_milestone_2.png');
+      case 'media_3':
+        return require('../../assets/images/baby_milestone_3.png');
+      case 'media_4':
+        return require('../../assets/images/baby_milestone_4.png');
+      default:
+        return null;
+    }
+  };
+
+  const mediaSource = getMediaSource(item.id);
+
   return (
     <TouchableOpacity 
       style={styles.mediaItem}
       onPress={() => onPress(item)}
     >
-      {item.id === 'media_1' && (
+      {mediaSource ? (
         <Image 
-          source={require('../../assets/images/baby_milestone_1.png')} 
+          source={mediaSource} 
           style={styles.mediaImage}
           resizeMode="cover"
         />
-      )}
-      {item.id === 'media_2' && (
-        <Image 
-          source={require('../../assets/images/baby_milestone_2.png')} 
-          style={styles.mediaImage}
-          resizeMode="cover"
-        />
-      )}
-      {item.id === 'media_3' && (
-        <Image 
-          source={require('../../assets/images/baby_milestone_3.png')} 
-          style={styles.mediaImage}
-          resizeMode="cover"
-        />
-      )}
-      {item.id === 'media_4' && (
-        <Image 
-          source={require('../../assets/images/baby_milestone_4.png')} 
-          style={styles.mediaImage}
-          resizeMode="cover"
-        />
-      )}
-      {!['media_1', 'media_2', 'media_3', 'media_4'].includes(item.id) && (
+      ) : (
         <View style={styles.mediaPlaceholder}>
           <Text style={styles.mediaPlaceholderText}>
             {item.type === 'video' ? '🎬' : '📷'}
           </Text>
         </View>
       )}
+      <Text style={styles.mediaThumbnailCaption} numberOfLines={1}>
+        {item.title}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -236,6 +235,24 @@ const ActivityDetailModal = ({ activity, visible, onClose }) => {
 const MediaDetailModal = ({ media, visible, onClose }) => {
   if (!visible || !media) return null;
   
+  // Determine which image to display based on the media ID
+  const getMediaSource = (id) => {
+    switch(id) {
+      case 'media_1':
+        return require('../../assets/images/baby_milestone_1.png');
+      case 'media_2':
+        return require('../../assets/images/baby_milestone_2.png');
+      case 'media_3':
+        return require('../../assets/images/baby_milestone_3.png');
+      case 'media_4':
+        return require('../../assets/images/baby_milestone_4.png');
+      default:
+        return null;
+    }
+  };
+
+  const mediaSource = getMediaSource(media.id);
+  
   return (
     <Modal
       animationType="slide"
@@ -253,35 +270,13 @@ const MediaDetailModal = ({ media, visible, onClose }) => {
           </View>
           
           <View style={styles.mediaContainer}>
-            {media.id === 'media_1' && (
+            {mediaSource ? (
               <Image 
-                source={require('../../assets/images/baby_milestone_1.png')} 
+                source={mediaSource} 
                 style={styles.mediaImageLarge}
                 resizeMode="contain"
               />
-            )}
-            {media.id === 'media_2' && (
-              <Image 
-                source={require('../../assets/images/baby_milestone_2.png')} 
-                style={styles.mediaImageLarge}
-                resizeMode="contain"
-              />
-            )}
-            {media.id === 'media_3' && (
-              <Image 
-                source={require('../../assets/images/baby_milestone_3.png')} 
-                style={styles.mediaImageLarge}
-                resizeMode="contain"
-              />
-            )}
-            {media.id === 'media_4' && (
-              <Image 
-                source={require('../../assets/images/baby_milestone_4.png')} 
-                style={styles.mediaImageLarge}
-                resizeMode="contain"
-              />
-            )}
-            {!['media_1', 'media_2', 'media_3', 'media_4'].includes(media.id) && (
+            ) : (
               <View style={styles.mediaPlaceholderLarge}>
                 <Text style={styles.mediaPlaceholderTextLarge}>
                   {media.type === 'video' ? '🎬' : '📷'}
@@ -479,21 +474,34 @@ const styles = StyleSheet.create({
     ...theme.typography.textVariants.body2,
     color: theme.colors.neutral.dark,
   },
+  // FIXED: Improved media grid layout
   mediaGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginHorizontal: -theme.spacing.spacing.xs,
   },
+  // FIXED: Improved media item styling
   mediaItem: {
-    width: '25%',
+    width: '33.33%', // Changed from 25% to 33.33% for better sizing
     padding: theme.spacing.spacing.xs,
+    marginBottom: theme.spacing.spacing.sm,
   },
   mediaImage: {
     width: '100%',
     aspectRatio: 1,
     borderRadius: 8,
+    backgroundColor: theme.colors.neutral.lightest,
+  },
+  // FIXED: Added caption for media thumbnails
+  mediaThumbnailCaption: {
+    ...theme.typography.textVariants.caption,
+    color: theme.colors.neutral.dark,
+    textAlign: 'center',
+    marginTop: 4,
+    fontSize: 12,
   },
   mediaPlaceholder: {
+    width: '100%',
     aspectRatio: 1,
     backgroundColor: theme.colors.neutral.lighter,
     borderRadius: 8,
@@ -559,13 +567,13 @@ const styles = StyleSheet.create({
   },
   panelTabText: {
     ...theme.typography.textVariants.button,
-    color: theme.colors.neutral.dark,
+    color: theme.colors.neutral.medium,
   },
   panelTabTextActive: {
     color: theme.colors.primary.main,
   },
   panelContent: {
-    maxHeight: 300,
+    flex: 1,
     marginBottom: theme.spacing.spacing.md,
   },
   panelContentTitle: {
@@ -578,7 +586,7 @@ const styles = StyleSheet.create({
     color: theme.colors.neutral.dark,
   },
   activityContent: {
-    maxHeight: 300,
+    flex: 1,
     marginBottom: theme.spacing.spacing.md,
   },
   activityDescription: {
@@ -587,10 +595,10 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.spacing.md,
   },
   activitySectionTitle: {
-    ...theme.typography.textVariants.subtitle1,
-    color: theme.colors.primary.dark,
-    marginTop: theme.spacing.spacing.md,
+    ...theme.typography.textVariants.h5,
+    color: theme.colors.neutral.darkest,
     marginBottom: theme.spacing.spacing.sm,
+    marginTop: theme.spacing.spacing.md,
   },
   bulletItem: {
     flexDirection: 'row',
@@ -607,20 +615,25 @@ const styles = StyleSheet.create({
     color: theme.colors.neutral.dark,
     flex: 1,
   },
+  // FIXED: Improved media container styling
   mediaContainer: {
+    width: '100%',
+    height: 300,
+    backgroundColor: theme.colors.neutral.lightest,
+    borderRadius: 8,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: theme.spacing.spacing.lg,
+    marginBottom: theme.spacing.spacing.md,
+    overflow: 'hidden',
   },
   mediaImageLarge: {
     width: '100%',
-    height: 300,
-    borderRadius: 8,
+    height: '100%',
   },
   mediaPlaceholderLarge: {
     width: '100%',
-    height: 300,
+    height: '100%',
     backgroundColor: theme.colors.neutral.lighter,
-    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -628,7 +641,7 @@ const styles = StyleSheet.create({
     fontSize: 48,
   },
   mediaDetails: {
-    marginBottom: theme.spacing.spacing.lg,
+    marginBottom: theme.spacing.spacing.md,
   },
   mediaDate: {
     ...theme.typography.textVariants.caption,
