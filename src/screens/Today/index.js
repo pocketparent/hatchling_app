@@ -11,7 +11,6 @@ import Animated, {
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../theme';
-import Svg, { Path, Circle } from 'react-native-svg';
 
 /**
  * Today Screen
@@ -122,49 +121,18 @@ export default function TodayScreen() {
           <View style={[styles.mediumDot, { top: '70%', right: '40%' }]} />
           <View style={[styles.mediumDot, { top: '85%', left: '40%' }]} />
           
-          {/* Star shapes */}
+          {/* Star shapes - using View components instead of SVG */}
           <View style={[styles.star, { top: '8%', right: '20%' }]}>
-            <Svg height="14" width="14" viewBox="0 0 24 24">
-              <Path
-                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-                fill="rgba(255, 255, 255, 0.3)"
-              />
-            </Svg>
+            <View style={styles.starInner} />
           </View>
           <View style={[styles.star, { top: '30%', left: '20%' }]}>
-            <Svg height="12" width="12" viewBox="0 0 24 24">
-              <Path
-                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-                fill="rgba(255, 255, 255, 0.3)"
-              />
-            </Svg>
+            <View style={styles.starInner} />
           </View>
           
-          {/* Leaf shapes */}
-          <View style={[styles.leaf, { top: '25%', right: '15%' }]}>
-            <Svg height="20" width="30" viewBox="0 0 24 24">
-              <Path
-                d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"
-                fill="rgba(255, 255, 255, 0.2)"
-              />
-            </Svg>
-          </View>
-          <View style={[styles.leaf, { top: '60%', left: '15%', transform: [{ rotate: '45deg' }] }]}>
-            <Svg height="20" width="30" viewBox="0 0 24 24">
-              <Path
-                d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"
-                fill="rgba(255, 255, 255, 0.2)"
-              />
-            </Svg>
-          </View>
-          <View style={[styles.leaf, { bottom: '20%', right: '25%', transform: [{ rotate: '-30deg' }] }]}>
-            <Svg height="20" width="30" viewBox="0 0 24 24">
-              <Path
-                d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"
-                fill="rgba(255, 255, 255, 0.2)"
-              />
-            </Svg>
-          </View>
+          {/* Leaf shapes - using View components instead of SVG */}
+          <View style={[styles.leaf, { top: '25%', right: '15%' }]} />
+          <View style={[styles.leaf, { top: '60%', left: '15%', transform: [{ rotate: '45deg' }] }]} />
+          <View style={[styles.leaf, { bottom: '20%', right: '25%', transform: [{ rotate: '-30deg' }] }]} />
         </View>
         
         {/* Hatchling header */}
@@ -271,9 +239,23 @@ const styles = StyleSheet.create({
   },
   star: {
     position: 'absolute',
+    width: 14,
+    height: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  starInner: {
+    width: 12,
+    height: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 6,
   },
   leaf: {
     position: 'absolute',
+    width: 30,
+    height: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 15,
   },
   appHeader: {
     alignItems: 'center',
