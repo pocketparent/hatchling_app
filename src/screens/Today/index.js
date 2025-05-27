@@ -13,16 +13,16 @@ import BottomSheetInsight from '../../components/BottomSheetInsight';
 export default function TodayScreen() {
   const mockInsightPanels = [
     {
-      title: 'Why Is Emma Waking at 4am?',
-      body: 'Around 4 months, babies enter lighter sleep cycles, which can cause early waking. This is a normal part of development as their brain processes the day's learning and experiences. Many parents notice this pattern emerging around this age.',
+      title: "Why Is Emma Waking at 4am?",
+      body: "Around 4 months, babies enter lighter sleep cycles, which can cause early waking. This is a normal part of development as their brain processes the day's learning and experiences. Many parents notice this pattern emerging around this age.",
     },
     {
-      title: 'What's Going On?',
-      body: 'Their brain is busy processing motor learning in light sleep — totally normal! During this developmental phase, babies are learning new skills and their brains are making important neural connections. The 4-month sleep regression is a well-documented phenomenon.',
+      title: "What's Going On?",
+      body: "Their brain is busy processing motor learning in light sleep — totally normal! During this developmental phase, babies are learning new skills and their brains are making important neural connections. The 4-month sleep regression is a well-documented phenomenon.",
     },
     {
-      title: 'Try This',
-      body: 'Try moving bedtime slightly earlier and offer a quiet response at 4am. Keep the room dark and interactions minimal. Consider a gentle pat or shushing rather than picking up. Consistency is key - within a week, many babies adjust to the new sleep pattern.',
+      title: "Try This",
+      body: "Try moving bedtime slightly earlier and offer a quiet response at 4am. Keep the room dark and interactions minimal. Consider a gentle pat or shushing rather than picking up. Consistency is key - within a week, many babies adjust to the new sleep pattern.",
     },
   ];
 
