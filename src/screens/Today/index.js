@@ -11,6 +11,7 @@ import Animated, {
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../theme';
+import Svg, { Path, Circle } from 'react-native-svg';
 
 /**
  * Today Screen
@@ -103,48 +104,67 @@ export default function TodayScreen() {
   return (
     <GestureHandlerRootView style={styles.gestureRoot}>
       <SafeAreaView style={styles.container}>
-        {/* Background decorative elements */}
+        {/* Background decorative elements - Exact match to reference */}
         <View style={styles.backgroundDecorations}>
-          {/* Stars */}
-          <View style={[styles.star, styles.star1]} />
-          <View style={[styles.star, styles.star2]} />
-          <View style={[styles.star, styles.star3]} />
-          <View style={[styles.star, styles.star4]} />
-          <View style={[styles.star, styles.star5]} />
-          <View style={[styles.star, styles.star6]} />
-          <View style={[styles.star, styles.star7]} />
-          <View style={[styles.star, styles.star8]} />
-          <View style={[styles.star, styles.star9]} />
-          <View style={[styles.star, styles.star10]} />
-          <View style={[styles.star, styles.star11]} />
-          <View style={[styles.star, styles.star12]} />
-          <View style={[styles.star, styles.star13]} />
-          <View style={[styles.star, styles.star14]} />
-          <View style={[styles.star, styles.star15]} />
+          {/* Small dots */}
+          <View style={[styles.smallDot, { top: '10%', left: '15%' }]} />
+          <View style={[styles.smallDot, { top: '20%', left: '40%' }]} />
+          <View style={[styles.smallDot, { top: '35%', right: '25%' }]} />
+          <View style={[styles.smallDot, { top: '50%', left: '30%' }]} />
+          <View style={[styles.smallDot, { top: '65%', right: '15%' }]} />
+          <View style={[styles.smallDot, { top: '80%', left: '20%' }]} />
+          <View style={[styles.smallDot, { top: '90%', right: '30%' }]} />
+          <View style={[styles.smallDot, { top: '25%', right: '10%' }]} />
           
-          {/* Leaves */}
-          <View style={[styles.leaf, styles.leaf1]} />
-          <View style={[styles.leaf, styles.leaf2]} />
-          <View style={[styles.leaf, styles.leaf3]} />
-          <View style={[styles.leaf, styles.leaf4]} />
-          <View style={[styles.leaf, styles.leaf5]} />
-          <View style={[styles.leaf, styles.leaf6]} />
-          <View style={[styles.leaf, styles.leaf7]} />
-          <View style={[styles.leaf, styles.leaf8]} />
+          {/* Medium dots */}
+          <View style={[styles.mediumDot, { top: '15%', right: '35%' }]} />
+          <View style={[styles.mediumDot, { top: '45%', left: '10%' }]} />
+          <View style={[styles.mediumDot, { top: '70%', right: '40%' }]} />
+          <View style={[styles.mediumDot, { top: '85%', left: '40%' }]} />
           
-          {/* Dots */}
-          <View style={[styles.dot, styles.dot1]} />
-          <View style={[styles.dot, styles.dot2]} />
-          <View style={[styles.dot, styles.dot3]} />
-          <View style={[styles.dot, styles.dot4]} />
-          <View style={[styles.dot, styles.dot5]} />
-          <View style={[styles.dot, styles.dot6]} />
-          <View style={[styles.dot, styles.dot7]} />
-          <View style={[styles.dot, styles.dot8]} />
-          <View style={[styles.dot, styles.dot9]} />
-          <View style={[styles.dot, styles.dot10]} />
-          <View style={[styles.dot, styles.dot11]} />
-          <View style={[styles.dot, styles.dot12]} />
+          {/* Star shapes */}
+          <View style={[styles.star, { top: '8%', right: '20%' }]}>
+            <Svg height="14" width="14" viewBox="0 0 24 24">
+              <Path
+                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+                fill="rgba(255, 255, 255, 0.3)"
+              />
+            </Svg>
+          </View>
+          <View style={[styles.star, { top: '30%', left: '20%' }]}>
+            <Svg height="12" width="12" viewBox="0 0 24 24">
+              <Path
+                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+                fill="rgba(255, 255, 255, 0.3)"
+              />
+            </Svg>
+          </View>
+          
+          {/* Leaf shapes */}
+          <View style={[styles.leaf, { top: '25%', right: '15%' }]}>
+            <Svg height="20" width="30" viewBox="0 0 24 24">
+              <Path
+                d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"
+                fill="rgba(255, 255, 255, 0.2)"
+              />
+            </Svg>
+          </View>
+          <View style={[styles.leaf, { top: '60%', left: '15%', transform: [{ rotate: '45deg' }] }]}>
+            <Svg height="20" width="30" viewBox="0 0 24 24">
+              <Path
+                d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"
+                fill="rgba(255, 255, 255, 0.2)"
+              />
+            </Svg>
+          </View>
+          <View style={[styles.leaf, { bottom: '20%', right: '25%', transform: [{ rotate: '-30deg' }] }]}>
+            <Svg height="20" width="30" viewBox="0 0 24 24">
+              <Path
+                d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"
+                fill="rgba(255, 255, 255, 0.2)"
+              />
+            </Svg>
+          </View>
         </View>
         
         {/* Hatchling header */}
@@ -213,33 +233,7 @@ export default function TodayScreen() {
           </View>
         </View>
         
-        {/* Bottom navigation - SINGLE NAVIGATION BAR */}
-        <View style={styles.bottomNavigation}>
-          <TouchableOpacity style={styles.navItem}>
-            <Ionicons name="home" size={24} color="#B05E35" />
-            <Text style={[styles.navText, styles.navTextActive]}>Home</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.navItem}>
-            <Ionicons name="pulse" size={24} color="#4A9B9B" />
-            <Text style={styles.navText}>Milestones</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.navItem}>
-            <Ionicons name="chatbubble-outline" size={24} color="#4A9B9B" />
-            <Text style={styles.navText}>Chat</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.navItem}>
-            <Ionicons name="bookmark" size={24} color="#4A9B9B" />
-            <Text style={styles.navText}>Saved</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.navItem}>
-            <Ionicons name="settings-outline" size={24} color="#4A9B9B" />
-            <Text style={styles.navText}>Settings</Text>
-          </TouchableOpacity>
-        </View>
+        {/* REMOVED: Bottom navigation - Now using app-level navigation only */}
       </SafeAreaView>
     </GestureHandlerRootView>
   );
@@ -261,65 +255,26 @@ const styles = StyleSheet.create({
     bottom: 0,
     zIndex: 0,
   },
-  star: {
+  smallDot: {
+    position: 'absolute',
+    width: 6,
+    height: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 3,
+  },
+  mediumDot: {
     position: 'absolute',
     width: 10,
     height: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: 5,
   },
-  star1: { top: '8%', right: '20%' },
-  star2: { top: '15%', left: '15%' },
-  star3: { bottom: '30%', right: '25%' },
-  star4: { top: '45%', right: '10%' },
-  star5: { bottom: '50%', left: '20%' },
-  star6: { top: '10%', left: '30%' },
-  star7: { bottom: '15%', right: '15%' },
-  star8: { top: '35%', left: '25%' },
-  star9: { top: '25%', right: '35%' },
-  star10: { bottom: '35%', left: '10%' },
-  star11: { top: '60%', right: '30%' },
-  star12: { bottom: '25%', left: '35%' },
-  star13: { top: '20%', left: '45%' },
-  star14: { bottom: '45%', right: '40%' },
-  star15: { top: '50%', left: '5%' },
-  
+  star: {
+    position: 'absolute',
+  },
   leaf: {
     position: 'absolute',
-    width: 20,
-    height: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 10,
   },
-  leaf1: { bottom: '20%', left: '10%', transform: [{ rotate: '30deg' }] },
-  leaf2: { top: '40%', right: '10%', transform: [{ rotate: '-30deg' }] },
-  leaf3: { bottom: '40%', left: '30%', transform: [{ rotate: '45deg' }] },
-  leaf4: { top: '20%', right: '30%', transform: [{ rotate: '-45deg' }] },
-  leaf5: { top: '30%', left: '5%', transform: [{ rotate: '60deg' }] },
-  leaf6: { bottom: '30%', right: '5%', transform: [{ rotate: '-60deg' }] },
-  leaf7: { top: '55%', right: '25%', transform: [{ rotate: '15deg' }] },
-  leaf8: { bottom: '55%', left: '25%', transform: [{ rotate: '-15deg' }] },
-  
-  dot: {
-    position: 'absolute',
-    width: 8,
-    height: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 4,
-  },
-  dot1: { bottom: '60%', right: '40%' },
-  dot2: { top: '70%', left: '40%' },
-  dot3: { top: '30%', right: '50%' },
-  dot4: { bottom: '25%', left: '50%' },
-  dot5: { top: '55%', left: '15%' },
-  dot6: { bottom: '65%', left: '25%' },
-  dot7: { top: '75%', right: '15%' },
-  dot8: { bottom: '35%', right: '45%' },
-  dot9: { top: '15%', left: '55%' },
-  dot10: { bottom: '15%', right: '55%' },
-  dot11: { top: '65%', left: '45%' },
-  dot12: { bottom: '45%', right: '20%' },
-  
   appHeader: {
     alignItems: 'center',
     paddingTop: 20,
@@ -374,7 +329,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     paddingHorizontal: 20,
-    paddingBottom: 80, // Space for bottom navigation
+    paddingBottom: 20, // Reduced from 80 since we removed the custom nav bar
     marginTop: 10,
     zIndex: 1,
   },
@@ -457,39 +412,5 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProText-Regular',
     fontSize: 16,
     color: '#FFFFFF',
-  },
-  bottomNavigation: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#F8EFE0',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 12,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    zIndex: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  navItem: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 8,
-  },
-  navText: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 12,
-    color: '#4A9B9B',
-    marginTop: 4,
-    fontWeight: '500',
-  },
-  navTextActive: {
-    color: '#B05E35',
-    fontWeight: '600',
   },
 });

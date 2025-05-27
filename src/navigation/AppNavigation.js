@@ -26,11 +26,11 @@ export default function AppNavigation() {
             let iconName;
 
             // Set icon based on route name
-            if (route.name === 'Today') {
-              iconName = focused ? 'today' : 'today-outline';
-            } else if (route.name === 'Journey') {
-              iconName = focused ? 'map' : 'map-outline';
-            } else if (route.name === 'Ask') {
+            if (route.name === 'Home') {
+              iconName = focused ? 'home' : 'home-outline';
+            } else if (route.name === 'Milestones') {
+              iconName = focused ? 'pulse' : 'pulse-outline';
+            } else if (route.name === 'Chat') {
               iconName = focused ? 'chatbubble' : 'chatbubble-outline';
             } else if (route.name === 'Saved') {
               iconName = focused ? 'bookmark' : 'bookmark-outline';
@@ -40,18 +40,48 @@ export default function AppNavigation() {
 
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: theme.colors.primary.main,
-          tabBarInactiveTintColor: theme.colors.neutral.medium,
+          tabBarActiveTintColor: '#B05E35', // Copper/brown color for active tab
+          tabBarInactiveTintColor: '#4A9B9B', // Teal color for inactive tabs
           headerShown: false,
           tabBarStyle: styles.tabBar,
           tabBarLabelStyle: styles.tabBarLabel,
         })}
       >
-        <Tab.Screen name="Today" component={TodayScreen} />
-        <Tab.Screen name="Journey" component={JourneyScreen} />
-        <Tab.Screen name="Ask" component={AskScreen} />
-        <Tab.Screen name="Saved" component={SavedScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+        <Tab.Screen 
+          name="Home" 
+          component={TodayScreen}
+          options={{
+            tabBarLabel: 'Home'
+          }}
+        />
+        <Tab.Screen 
+          name="Milestones" 
+          component={JourneyScreen}
+          options={{
+            tabBarLabel: 'Milestones'
+          }}
+        />
+        <Tab.Screen 
+          name="Chat" 
+          component={AskScreen}
+          options={{
+            tabBarLabel: 'Chat'
+          }}
+        />
+        <Tab.Screen 
+          name="Saved" 
+          component={SavedScreen}
+          options={{
+            tabBarLabel: 'Saved'
+          }}
+        />
+        <Tab.Screen 
+          name="Settings" 
+          component={SettingsScreen}
+          options={{
+            tabBarLabel: 'Settings'
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
@@ -59,15 +89,26 @@ export default function AppNavigation() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: theme.colors.neutral.white,
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.neutral.lighter,
-    paddingTop: theme.spacing.spacing.xs,
-    height: 60,
+    backgroundColor: '#F8EFE0', // Cream/beige background matching the design
+    borderTopWidth: 0,
+    paddingTop: 12,
+    height: 70,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
   },
   tabBarLabel: {
-    fontSize: theme.typography.fontSizes.xs,
-    fontFamily: theme.typography.fontFamilies.primary,
-    fontWeight: theme.typography.fontWeights.medium,
+    fontSize: 12,
+    fontFamily: 'SFProText-Regular',
+    fontWeight: '500',
+    marginBottom: 5,
   },
 });
