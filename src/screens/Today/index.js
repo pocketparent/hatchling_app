@@ -105,6 +105,7 @@ export default function TodayScreen() {
       <SafeAreaView style={styles.container}>
         {/* Background decorative elements */}
         <View style={styles.backgroundDecorations}>
+          {/* Stars */}
           <View style={[styles.star, styles.star1]} />
           <View style={[styles.star, styles.star2]} />
           <View style={[styles.star, styles.star3]} />
@@ -113,15 +114,37 @@ export default function TodayScreen() {
           <View style={[styles.star, styles.star6]} />
           <View style={[styles.star, styles.star7]} />
           <View style={[styles.star, styles.star8]} />
+          <View style={[styles.star, styles.star9]} />
+          <View style={[styles.star, styles.star10]} />
+          <View style={[styles.star, styles.star11]} />
+          <View style={[styles.star, styles.star12]} />
+          <View style={[styles.star, styles.star13]} />
+          <View style={[styles.star, styles.star14]} />
+          <View style={[styles.star, styles.star15]} />
+          
+          {/* Leaves */}
           <View style={[styles.leaf, styles.leaf1]} />
           <View style={[styles.leaf, styles.leaf2]} />
           <View style={[styles.leaf, styles.leaf3]} />
           <View style={[styles.leaf, styles.leaf4]} />
+          <View style={[styles.leaf, styles.leaf5]} />
+          <View style={[styles.leaf, styles.leaf6]} />
+          <View style={[styles.leaf, styles.leaf7]} />
+          <View style={[styles.leaf, styles.leaf8]} />
+          
+          {/* Dots */}
           <View style={[styles.dot, styles.dot1]} />
           <View style={[styles.dot, styles.dot2]} />
           <View style={[styles.dot, styles.dot3]} />
           <View style={[styles.dot, styles.dot4]} />
           <View style={[styles.dot, styles.dot5]} />
+          <View style={[styles.dot, styles.dot6]} />
+          <View style={[styles.dot, styles.dot7]} />
+          <View style={[styles.dot, styles.dot8]} />
+          <View style={[styles.dot, styles.dot9]} />
+          <View style={[styles.dot, styles.dot10]} />
+          <View style={[styles.dot, styles.dot11]} />
+          <View style={[styles.dot, styles.dot12]} />
         </View>
         
         {/* Hatchling header */}
@@ -190,7 +213,7 @@ export default function TodayScreen() {
           </View>
         </View>
         
-        {/* Bottom navigation */}
+        {/* Bottom navigation - SINGLE NAVIGATION BAR */}
         <View style={styles.bottomNavigation}>
           <TouchableOpacity style={styles.navItem}>
             <Ionicons name="home" size={24} color="#B05E35" />
@@ -245,38 +268,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: 5,
   },
-  star1: {
-    top: '15%',
-    right: '20%',
-  },
-  star2: {
-    top: '25%',
-    left: '15%',
-  },
-  star3: {
-    bottom: '30%',
-    right: '25%',
-  },
-  star4: {
-    top: '45%',
-    right: '10%',
-  },
-  star5: {
-    bottom: '50%',
-    left: '20%',
-  },
-  star6: {
-    top: '10%',
-    left: '30%',
-  },
-  star7: {
-    bottom: '15%',
-    right: '15%',
-  },
-  star8: {
-    top: '35%',
-    left: '25%',
-  },
+  star1: { top: '8%', right: '20%' },
+  star2: { top: '15%', left: '15%' },
+  star3: { bottom: '30%', right: '25%' },
+  star4: { top: '45%', right: '10%' },
+  star5: { bottom: '50%', left: '20%' },
+  star6: { top: '10%', left: '30%' },
+  star7: { bottom: '15%', right: '15%' },
+  star8: { top: '35%', left: '25%' },
+  star9: { top: '25%', right: '35%' },
+  star10: { bottom: '35%', left: '10%' },
+  star11: { top: '60%', right: '30%' },
+  star12: { bottom: '25%', left: '35%' },
+  star13: { top: '20%', left: '45%' },
+  star14: { bottom: '45%', right: '40%' },
+  star15: { top: '50%', left: '5%' },
+  
   leaf: {
     position: 'absolute',
     width: 20,
@@ -284,62 +291,44 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: 10,
   },
-  leaf1: {
-    bottom: '20%',
-    left: '10%',
-    transform: [{ rotate: '30deg' }],
-  },
-  leaf2: {
-    top: '40%',
-    right: '10%',
-    transform: [{ rotate: '-30deg' }],
-  },
-  leaf3: {
-    bottom: '40%',
-    left: '30%',
-    transform: [{ rotate: '45deg' }],
-  },
-  leaf4: {
-    top: '20%',
-    right: '30%',
-    transform: [{ rotate: '-45deg' }],
-  },
+  leaf1: { bottom: '20%', left: '10%', transform: [{ rotate: '30deg' }] },
+  leaf2: { top: '40%', right: '10%', transform: [{ rotate: '-30deg' }] },
+  leaf3: { bottom: '40%', left: '30%', transform: [{ rotate: '45deg' }] },
+  leaf4: { top: '20%', right: '30%', transform: [{ rotate: '-45deg' }] },
+  leaf5: { top: '30%', left: '5%', transform: [{ rotate: '60deg' }] },
+  leaf6: { bottom: '30%', right: '5%', transform: [{ rotate: '-60deg' }] },
+  leaf7: { top: '55%', right: '25%', transform: [{ rotate: '15deg' }] },
+  leaf8: { bottom: '55%', left: '25%', transform: [{ rotate: '-15deg' }] },
+  
   dot: {
     position: 'absolute',
-    width: 15,
-    height: 15,
+    width: 8,
+    height: 8,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 7.5,
+    borderRadius: 4,
   },
-  dot1: {
-    bottom: '60%',
-    right: '40%',
-  },
-  dot2: {
-    top: '70%',
-    left: '40%',
-  },
-  dot3: {
-    top: '30%',
-    right: '50%',
-  },
-  dot4: {
-    bottom: '25%',
-    left: '50%',
-  },
-  dot5: {
-    top: '55%',
-    left: '15%',
-  },
+  dot1: { bottom: '60%', right: '40%' },
+  dot2: { top: '70%', left: '40%' },
+  dot3: { top: '30%', right: '50%' },
+  dot4: { bottom: '25%', left: '50%' },
+  dot5: { top: '55%', left: '15%' },
+  dot6: { bottom: '65%', left: '25%' },
+  dot7: { top: '75%', right: '15%' },
+  dot8: { bottom: '35%', right: '45%' },
+  dot9: { top: '15%', left: '55%' },
+  dot10: { bottom: '15%', right: '55%' },
+  dot11: { top: '65%', left: '45%' },
+  dot12: { bottom: '45%', right: '20%' },
+  
   appHeader: {
     alignItems: 'center',
-    paddingTop: 10,
+    paddingTop: 20,
     marginBottom: 5,
     zIndex: 1,
   },
   appTitle: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 24, // Reduced from 28
+    fontSize: 24,
     fontWeight: '600',
     color: '#FFFFFF',
   },
@@ -413,6 +402,7 @@ const styles = StyleSheet.create({
   insightContent: {
     padding: 24,
     paddingTop: 0,
+    paddingHorizontal: 16,
   },
   insightTitle: {
     fontFamily: 'SFProDisplay-Bold',
