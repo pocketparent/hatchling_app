@@ -108,8 +108,20 @@ export default function TodayScreen() {
           <View style={[styles.star, styles.star1]} />
           <View style={[styles.star, styles.star2]} />
           <View style={[styles.star, styles.star3]} />
+          <View style={[styles.star, styles.star4]} />
+          <View style={[styles.star, styles.star5]} />
+          <View style={[styles.star, styles.star6]} />
+          <View style={[styles.star, styles.star7]} />
+          <View style={[styles.star, styles.star8]} />
           <View style={[styles.leaf, styles.leaf1]} />
           <View style={[styles.leaf, styles.leaf2]} />
+          <View style={[styles.leaf, styles.leaf3]} />
+          <View style={[styles.leaf, styles.leaf4]} />
+          <View style={[styles.dot, styles.dot1]} />
+          <View style={[styles.dot, styles.dot2]} />
+          <View style={[styles.dot, styles.dot3]} />
+          <View style={[styles.dot, styles.dot4]} />
+          <View style={[styles.dot, styles.dot5]} />
         </View>
         
         {/* Hatchling header */}
@@ -245,6 +257,26 @@ const styles = StyleSheet.create({
     bottom: '30%',
     right: '25%',
   },
+  star4: {
+    top: '45%',
+    right: '10%',
+  },
+  star5: {
+    bottom: '50%',
+    left: '20%',
+  },
+  star6: {
+    top: '10%',
+    left: '30%',
+  },
+  star7: {
+    bottom: '15%',
+    right: '15%',
+  },
+  star8: {
+    top: '35%',
+    left: '25%',
+  },
   leaf: {
     position: 'absolute',
     width: 20,
@@ -262,6 +294,43 @@ const styles = StyleSheet.create({
     right: '10%',
     transform: [{ rotate: '-30deg' }],
   },
+  leaf3: {
+    bottom: '40%',
+    left: '30%',
+    transform: [{ rotate: '45deg' }],
+  },
+  leaf4: {
+    top: '20%',
+    right: '30%',
+    transform: [{ rotate: '-45deg' }],
+  },
+  dot: {
+    position: 'absolute',
+    width: 15,
+    height: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 7.5,
+  },
+  dot1: {
+    bottom: '60%',
+    right: '40%',
+  },
+  dot2: {
+    top: '70%',
+    left: '40%',
+  },
+  dot3: {
+    top: '30%',
+    right: '50%',
+  },
+  dot4: {
+    bottom: '25%',
+    left: '50%',
+  },
+  dot5: {
+    top: '55%',
+    left: '15%',
+  },
   appHeader: {
     alignItems: 'center',
     paddingTop: 10,
@@ -270,7 +339,7 @@ const styles = StyleSheet.create({
   },
   appTitle: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 28,
+    fontSize: 24, // Reduced from 28
     fontWeight: '600',
     color: '#FFFFFF',
   },
