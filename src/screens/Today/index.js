@@ -95,6 +95,23 @@ export default function TodayScreen() {
       setCurrentIndex(currentIndex + 1);
     }
   };
+
+  // Render pagination dots
+  const renderPaginationDots = () => {
+    return (
+      <View style={styles.paginationDotsContainer}>
+        {insightPanels.map((_, index) => (
+          <View
+            key={index}
+            style={[
+              styles.paginationDot,
+              index === currentIndex && styles.paginationDotActive
+            ]}
+          />
+        ))}
+      </View>
+    );
+  };
   
   return (
     <GestureHandlerRootView style={styles.gestureRoot}>
@@ -102,6 +119,11 @@ export default function TodayScreen() {
         {/* Background decorative elements */}
         <View style={styles.backgroundDecorations}>
           {/* Decorative elements would go here */}
+        </View>
+        
+        {/* Hatchling header */}
+        <View style={styles.appHeader}>
+          <Text style={styles.appTitle}>Hatchling</Text>
         </View>
         
         {/* Header with baby info */}
@@ -136,7 +158,11 @@ export default function TodayScreen() {
                     onPress={handlePrevious}
                     disabled={currentIndex === 0}
                   >
-                    <Text style={[styles.arrowText, currentIndex === 0 && styles.arrowDisabled]}>{'<'}</Text>
+                    <Ionicons 
+                      name="chevron-back" 
+                      size={28} 
+                      color={currentIndex === 0 ? 'rgba(74, 155, 155, 0.3)' : '#4A9B9B'} 
+                    />
                   </TouchableOpacity>
                   
                   <Text style={styles.insightText}>
@@ -148,13 +174,16 @@ export default function TodayScreen() {
                     onPress={handleNext}
                     disabled={currentIndex === insightPanels.length - 1}
                   >
-                    <Text style={[styles.arrowText, currentIndex === insightPanels.length - 1 && styles.arrowDisabled]}>{'>'}</Text>
+                    <Ionicons 
+                      name="chevron-forward" 
+                      size={28} 
+                      color={currentIndex === insightPanels.length - 1 ? 'rgba(74, 155, 155, 0.3)' : '#4A9B9B'} 
+                    />
                   </TouchableOpacity>
                 </View>
                 
-                <Text style={styles.pagination}>
-                  {currentIndex + 1}/{insightPanels.length}
-                </Text>
+                {/* Pagination dots */}
+                {renderPaginationDots()}
               </Animated.View>
             </PanGestureHandler>
             
@@ -184,7 +213,28 @@ export default function TodayScreen() {
           </View>
         </View>
         
-        {/* Bottom navigation is handled by the tab navigator */}
+        {/* Bottom navigation */}
+        <View style={styles.bottomNavigation}>
+          <TouchableOpacity style={styles.navItem}>
+            <Ionicons name="home" size={24} color="#B05E35" />
+            <Text style={[styles.navText, styles.navTextActive]}>Home</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.navItem}>
+            <Ionicons name="fitness" size={24} color="#4A9B9B" />
+            <Text style={styles.navText}>Milestones</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.navItem}>
+            <Ionicons name="bookmark" size={24} color="#4A9B9B" />
+            <Text style={styles.navText}>Saved</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.navItem}>
+            <Ionicons name="settings" size={24} color="#4A9B9B" />
+            <Text style={styles.navText}>Settings</Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </GestureHandlerRootView>
   );
@@ -205,11 +255,23 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
+  appHeader: {
+    alignItems: 'center',
+    paddingTop: 20,
+    paddingBottom: 10,
+  },
+  appTitle: {
+    fontFamily: 'SFProDisplay-Bold',
+    fontSize: 28,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
-    paddingTop: 30,
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 20,
   },
   avatarContainer: {
     width: 70,
@@ -258,14 +320,15 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   insightLabel: {
-    fontFamily: 'SFProText-Regular',
+    fontFamily: 'SFProText-Medium',
     fontSize: 16,
     fontWeight: '500',
-    color: '#B25B45', // Coral/brown color matching the design
+    color: '#B05E35', // Copper/brown color matching the design
+    textAlign: 'center',
     marginTop: 24,
-    marginLeft: 24,
-    marginBottom: 8,
+    marginBottom: 16,
     textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   insightContent: {
     padding: 24,
@@ -275,7 +338,7 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Bold',
     fontSize: 32,
     fontWeight: '700',
-    color: '#005E5D', // Dark teal matching the design
+    color: '#004D4D', // Dark teal matching the design
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 38,
@@ -284,7 +347,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: 24,
   },
   navArrow: {
     width: 40,
@@ -292,28 +355,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  arrowText: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 24,
-    color: '#4A9B9B', // Teal matching the design
-  },
-  arrowDisabled: {
-    opacity: 0.3,
-  },
   insightText: {
     flex: 1,
     fontFamily: 'SFProText-Regular',
     fontSize: 18,
-    color: '#005E5D', // Dark teal matching the design
+    color: '#004D4D', // Dark teal matching the design
     textAlign: 'center',
     paddingHorizontal: 8,
+    lineHeight: 24,
   },
-  pagination: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 16,
-    color: '#005E5D', // Dark teal matching the design
-    textAlign: 'center',
+  paginationDotsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 16,
+  },
+  paginationDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'rgba(0, 77, 77, 0.2)',
+    marginHorizontal: 4,
+  },
+  paginationDotActive: {
+    backgroundColor: '#004D4D',
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   },
   actionButtonsContainer: {
     flexDirection: 'row',
@@ -329,7 +397,33 @@ const styles = StyleSheet.create({
   },
   actionText: {
     fontFamily: 'SFProText-Regular',
-    fontSize: 14,
+    fontSize: 16,
     color: '#FFFFFF',
+  },
+  bottomNavigation: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#F8EFE0',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 12,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  navItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+  },
+  navText: {
+    fontFamily: 'SFProText-Regular',
+    fontSize: 12,
+    color: '#4A9B9B',
+    marginTop: 4,
+  },
+  navTextActive: {
+    color: '#B05E35',
   },
 });
