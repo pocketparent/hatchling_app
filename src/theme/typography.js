@@ -7,33 +7,15 @@
  * - Focused on readability and content hierarchy
  */
 
-import { Platform } from 'react-native';
-
-// Base font families
+// Font families (using custom-loaded SF Pro)
 const fontFamilies = {
-  // Primary font for most text
-  primary: Platform.select({
-    ios: 'System',
-    android: 'Roboto',
-    default: 'System',
-  }),
-  
-  // Secondary font for headings and emphasis
-  secondary: Platform.select({
-    ios: 'Georgia',
-    android: 'serif',
-    default: 'Georgia',
-  }),
-  
-  // Monospace font for technical content
-  mono: Platform.select({
-    ios: 'Courier',
-    android: 'monospace',
-    default: 'Courier',
-  }),
+  primary: 'SFProText-Regular',
+  secondary: 'SFProDisplay-Regular',
+  secondaryBold: 'SFProDisplay-Bold',
+  mono: 'Courier',
 };
 
-// Font weights
+// Font weights (needed for legacy compatibility in some styles)
 const fontWeights = {
   thin: '100',
   light: '300',
@@ -74,102 +56,82 @@ const letterSpacing = {
 
 // Text variants
 export const textVariants = {
-  // Headings
   h1: {
-    fontFamily: fontFamilies.secondary,
+    fontFamily: fontFamilies.secondaryBold,
     fontSize: fontSizes.giant,
-    fontWeight: fontWeights.bold,
-    lineHeight: lineHeights.tight,
+    lineHeight: fontSizes.giant * lineHeights.tight,
     letterSpacing: letterSpacing.tight,
   },
   h2: {
-    fontFamily: fontFamilies.secondary,
+    fontFamily: fontFamilies.secondaryBold,
     fontSize: fontSizes.display,
-    fontWeight: fontWeights.bold,
-    lineHeight: lineHeights.tight,
+    lineHeight: fontSizes.display * lineHeights.tight,
     letterSpacing: letterSpacing.tight,
   },
   h3: {
     fontFamily: fontFamilies.secondary,
     fontSize: fontSizes.xxxl,
-    fontWeight: fontWeights.semibold,
-    lineHeight: lineHeights.tight,
+    lineHeight: fontSizes.xxxl * lineHeights.tight,
   },
   h4: {
     fontFamily: fontFamilies.secondary,
     fontSize: fontSizes.xxl,
-    fontWeight: fontWeights.semibold,
-    lineHeight: lineHeights.tight,
+    lineHeight: fontSizes.xxl * lineHeights.tight,
   },
   h5: {
     fontFamily: fontFamilies.secondary,
     fontSize: fontSizes.xl,
-    fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.tight,
+    lineHeight: fontSizes.xl * lineHeights.tight,
   },
-  
-  // Body text
   body1: {
     fontFamily: fontFamilies.primary,
     fontSize: fontSizes.md,
-    fontWeight: fontWeights.regular,
-    lineHeight: lineHeights.normal,
+    lineHeight: fontSizes.md * lineHeights.normal,
   },
   body2: {
     fontFamily: fontFamilies.primary,
     fontSize: fontSizes.sm,
-    fontWeight: fontWeights.regular,
-    lineHeight: lineHeights.normal,
+    lineHeight: fontSizes.sm * lineHeights.normal,
   },
-  
-  // Special text styles
   caption: {
     fontFamily: fontFamilies.primary,
     fontSize: fontSizes.xs,
-    fontWeight: fontWeights.regular,
-    lineHeight: lineHeights.normal,
+    lineHeight: fontSizes.xs * lineHeights.normal,
   },
   button: {
     fontFamily: fontFamilies.primary,
     fontSize: fontSizes.md,
-    fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.tight,
+    lineHeight: fontSizes.md * lineHeights.tight,
     letterSpacing: letterSpacing.wide,
   },
   overline: {
     fontFamily: fontFamilies.primary,
     fontSize: fontSizes.xs,
-    fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.normal,
+    lineHeight: fontSizes.xs * lineHeights.normal,
     letterSpacing: letterSpacing.wider,
     textTransform: 'uppercase',
   },
-  
-  // Content-specific styles
   insightTitle: {
     fontFamily: fontFamilies.secondary,
     fontSize: fontSizes.xl,
-    fontWeight: fontWeights.semibold,
-    lineHeight: lineHeights.tight,
+    lineHeight: fontSizes.xl * lineHeights.tight,
   },
   insightBody: {
     fontFamily: fontFamilies.primary,
     fontSize: fontSizes.md,
-    fontWeight: fontWeights.regular,
-    lineHeight: lineHeights.relaxed,
+    lineHeight: fontSizes.md * lineHeights.relaxed,
   },
   milestoneTitle: {
     fontFamily: fontFamilies.secondary,
     fontSize: fontSizes.lg,
-    fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.tight,
+    lineHeight: fontSizes.lg * lineHeights.tight,
   },
 };
 
 export default {
   fontFamilies,
-  fontWeights,
   fontSizes,
+  fontWeights, // ✅ now actually defined above
   lineHeights,
   letterSpacing,
   textVariants,

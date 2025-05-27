@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import theme from '../../theme';
+import SwipeableInsightCard from '../../components/SwipeableInsightCard';
 
 /**
  * Today Screen
@@ -9,21 +10,33 @@ import theme from '../../theme';
  * Non-tracking, content-first approach
  */
 export default function TodayScreen() {
+  const mockInsightPanels = [
+    {
+      title: 'Why Is Emma Waking at 4am?',
+      body: 'Around 4 months, babies enter lighter sleep cycles, which can cause early waking.',
+    },
+    {
+      title: 'What’s Going On?',
+      body: 'Their brain is busy processing motor learning in light sleep — totally normal!',
+    },
+    {
+      title: 'Try This',
+      body: 'Try moving bedtime slightly earlier and offer a quiet response at 4am.',
+    },
+  ];
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Today</Text>
         </View>
-        
+
         <View style={styles.insightCard}>
           <Text style={styles.insightTitle}>Daily Insight</Text>
-          <Text style={styles.insightDescription}>
-            Your daily insight will appear here. Swipe through panels to learn about what your baby
-            might be experiencing today and get gentle guidance.
-          </Text>
+          <SwipeableInsightCard panels={mockInsightPanels} />
         </View>
-        
+
         <View style={styles.weeklyCheckIn}>
           <Text style={styles.sectionTitle}>Weekly Check-In</Text>
           <Text style={styles.sectionDescription}>
@@ -66,10 +79,6 @@ const styles = StyleSheet.create({
     ...theme.typography.textVariants.h4,
     color: theme.colors.neutral.darkest,
     marginBottom: theme.spacing.spacing.sm,
-  },
-  insightDescription: {
-    ...theme.typography.textVariants.body1,
-    color: theme.colors.neutral.dark,
   },
   weeklyCheckIn: {
     backgroundColor: theme.colors.neutral.lightest,
