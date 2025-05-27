@@ -1,96 +1,121 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
-import theme from '../../theme';
+import { StatusBar } from 'expo-status-bar';
+import journeyMock from '../../data/journeyMock';
+import PhaseSelector from '../../components/journey/PhaseSelector';
+import DomainCard from '../../components/journey/DomainCard';
+import MilestoneActivityView from '../../components/journey/MilestoneActivityView';
 
 /**
  * Journey Screen
  * 
- * Shows milestone journey navigator with developmental phases
- * Non-tracking, exploration-focused approach
+ * Shows developmental phases, domains, milestones, and activities
+ * Allows users to track milestones and explore suggested activities
  */
 export default function JourneyScreen() {
-  // Mock data for developmental phases
-  const phases = [
-    { id: '1', name: '0-2 months', active: false },
-    { id: '2', name: '2-4 months', active: true },
-    { id: '3', name: '4-6 months', active: false },
-    { id: '4', name: '6-8 months', active: false },
-    { id: '5', name: '8-10 months', active: false },
-    { id: '6', name: '10-12 months', active: false },
-  ];
-
-  // Mock data for developmental domains
-  const domains = [
-    { id: '1', name: 'Physical', progress: 0.6 },
-    { id: '2', name: 'Cognitive', progress: 0.4 },
-    { id: '3', name: 'Language', progress: 0.3 },
-    { id: '4', name: 'Social & Emotional', progress: 0.5 },
-  ];
-
-  // Mock data for weekly focus
-  const weeklyFocus = {
-    title: 'Tummy Time Exploration',
-    description: 'This week, focus on short, frequent tummy time sessions to help develop neck and shoulder muscles.',
+  // State for selected phase and domain
+  const [selectedPhaseId, setSelectedPhaseId] = useState(journeyMock.phases[1].id); // Default to 4-6 months
+  const [selectedDomainId, setSelectedDomainId] = useState(null);
+  const [milestoneData, setMilestoneData] = useState(journeyMock);
+  
+  // Get current phase data
+  const currentPhase = milestoneData.phases.find(phase => phase.id === selectedPhaseId);
+  
+  // Get selected domain data if any
+  const selectedDomain = selectedDomainId 
+    ? currentPhase.domains.find(domain => domain.id === selectedDomainId)
+    : null;
+  
+  // Handle phase selection
+  const handleSelectPhase = (phaseId) => {
+    setSelectedPhaseId(phaseId);
+    setSelectedDomainId(null); // Reset domain selection when changing phase
   };
-
+  
+  // Handle domain exploration
+  const handleExploreDomain = (domainId) => {
+    setSelectedDomainId(domainId);
+  };
+  
+  // Handle back button from milestone/activity view
+  const handleBackToPhase = () => {
+    setSelectedDomainId(null);
+  };
+  
+  // Handle milestone toggle
+  const handleToggleMilestone = (milestoneId) => {
+    // Create a deep copy of the data to modify
+    const updatedData = JSON.parse(JSON.stringify(milestoneData));
+    
+    // Find the current phase and domain
+    const phaseIndex = updatedData.phases.findIndex(phase => phase.id === selectedPhaseId);
+    const domainIndex = updatedData.phases[phaseIndex].domains.findIndex(domain => domain.id === selectedDomainId);
+    
+    // Find and toggle the milestone
+    const milestoneIndex = updatedData.phases[phaseIndex].domains[domainIndex].milestones.findIndex(
+      milestone => milestone.id === milestoneId
+    );
+    
+    if (milestoneIndex !== -1) {
+      updatedData.phases[phaseIndex].domains[domainIndex].milestones[milestoneIndex].observed = 
+        !updatedData.phases[phaseIndex].domains[domainIndex].milestones[milestoneIndex].observed;
+      
+      // Update progress based on observed milestones
+      const totalMilestones = updatedData.phases[phaseIndex].domains[domainIndex].milestones.length;
+      const observedMilestones = updatedData.phases[phaseIndex].domains[domainIndex].milestones.filter(
+        m => m.observed
+      ).length;
+      
+      updatedData.phases[phaseIndex].domains[domainIndex].progress = totalMilestones > 0 
+        ? observedMilestones / totalMilestones 
+        : 0;
+    }
+    
+    setMilestoneData(updatedData);
+  };
+  
+  // If a domain is selected, show milestone and activity view
+  if (selectedDomain) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <StatusBar style="light" />
+        <MilestoneActivityView 
+          domain={selectedDomain}
+          onToggleMilestone={handleToggleMilestone}
+          onBack={handleBackToPhase}
+        />
+      </SafeAreaView>
+    );
+  }
+  
+  // Otherwise show the phase and domain selection view
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="light" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.headerTitle}>Journey</Text>
-        
         {/* Phase selector */}
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.phaseContainer}
-        >
-          {phases.map(phase => (
-            <TouchableOpacity 
-              key={phase.id} 
-              style={[
-                styles.phaseButton, 
-                phase.active && styles.phaseButtonActive
-              ]}
-            >
-              <Text style={[
-                styles.phaseText,
-                phase.active && styles.phaseTextActive
-              ]}>
-                {phase.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+        <PhaseSelector 
+          phases={milestoneData.phases}
+          selectedPhaseId={selectedPhaseId}
+          onSelectPhase={handleSelectPhase}
+        />
         
-        {/* Weekly focus card */}
-        <View style={styles.focusCard}>
-          <Text style={styles.focusCardTitle}>Weekly Focus</Text>
-          <Text style={styles.focusCardHeading}>{weeklyFocus.title}</Text>
-          <Text style={styles.focusCardDescription}>{weeklyFocus.description}</Text>
+        {/* Domain cards */}
+        <View style={styles.domainsContainer}>
+          {currentPhase.domains.map(domain => (
+            <DomainCard 
+              key={domain.id}
+              domain={domain}
+              onExplore={() => handleExploreDomain(domain.id)}
+            />
+          ))}
         </View>
         
-        {/* Developmental domains */}
-        <View style={styles.domainsContainer}>
-          {domains.map(domain => (
-            <View key={domain.id} style={styles.domainCard}>
-              <View style={styles.domainHeader}>
-                <Text style={styles.domainTitle}>{domain.name}</Text>
-                <TouchableOpacity style={styles.exploreButton}>
-                  <Text style={styles.exploreButtonText}>Explore</Text>
-                </TouchableOpacity>
-              </View>
-              
-              {/* Progress bar */}
-              <View style={styles.progressContainer}>
-                <View 
-                  style={[
-                    styles.progressBar, 
-                    { width: `${domain.progress * 100}%` }
-                  ]} 
-                />
-              </View>
-            </View>
-          ))}
+        {/* Phase description */}
+        <View style={styles.phaseDescriptionContainer}>
+          <Text style={styles.phaseDescription}>
+            {currentPhase.description}
+          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -100,107 +125,25 @@ export default function JourneyScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.neutral.white,
+    backgroundColor: '#4A9B9B', // Teal background matching the design
   },
   scrollContent: {
-    padding: theme.spacing.spacing.screenPadding,
-  },
-  headerTitle: {
-    ...theme.typography.textVariants.h2,
-    color: theme.colors.neutral.darkest,
-    marginBottom: theme.spacing.spacing.lg,
-    marginTop: theme.spacing.spacing.md,
-  },
-  phaseContainer: {
-    paddingBottom: theme.spacing.spacing.md,
-    marginBottom: theme.spacing.spacing.lg,
-  },
-  phaseButton: {
-    paddingHorizontal: theme.spacing.spacing.md,
-    paddingVertical: theme.spacing.spacing.sm,
-    borderRadius: 20,
-    marginRight: theme.spacing.spacing.sm,
-    backgroundColor: theme.colors.neutral.lighter,
-  },
-  phaseButtonActive: {
-    backgroundColor: theme.colors.primary.main,
-  },
-  phaseText: {
-    ...theme.typography.textVariants.button,
-    color: theme.colors.neutral.dark,
-  },
-  phaseTextActive: {
-    color: theme.colors.neutral.white,
-  },
-  focusCard: {
-    backgroundColor: theme.colors.secondary.light,
-    borderRadius: 12,
-    padding: theme.spacing.spacing.lg,
-    marginBottom: theme.spacing.spacing.xl,
-    shadowColor: theme.colors.neutral.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  focusCardTitle: {
-    ...theme.typography.textVariants.overline,
-    color: theme.colors.secondary.dark,
-    marginBottom: theme.spacing.spacing.xs,
-  },
-  focusCardHeading: {
-    ...theme.typography.textVariants.h4,
-    color: theme.colors.neutral.darkest,
-    marginBottom: theme.spacing.spacing.sm,
-  },
-  focusCardDescription: {
-    ...theme.typography.textVariants.body1,
-    color: theme.colors.neutral.dark,
+    paddingBottom: 100, // Extra padding at bottom to account for tab bar
   },
   domainsContainer: {
-    marginBottom: theme.spacing.spacing.xl,
+    padding: 16,
   },
-  domainCard: {
-    backgroundColor: theme.colors.neutral.lightest,
-    borderRadius: 12,
-    padding: theme.spacing.spacing.lg,
-    marginBottom: theme.spacing.spacing.md,
-    shadowColor: theme.colors.neutral.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  domainHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: theme.spacing.spacing.md,
-  },
-  domainTitle: {
-    ...theme.typography.textVariants.h5,
-    color: theme.colors.neutral.darkest,
-  },
-  exploreButton: {
-    backgroundColor: theme.colors.primary.light,
-    paddingHorizontal: theme.spacing.spacing.md,
-    paddingVertical: theme.spacing.spacing.xs,
+  phaseDescriptionContainer: {
+    backgroundColor: '#F8EFE0',
+    margin: 16,
+    marginTop: 0,
     borderRadius: 16,
+    padding: 16,
   },
-  exploreButtonText: {
-    ...theme.typography.textVariants.button,
-    color: theme.colors.primary.dark,
-    fontSize: 12,
-  },
-  progressContainer: {
-    height: 6,
-    backgroundColor: theme.colors.neutral.lighter,
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  progressBar: {
-    height: '100%',
-    backgroundColor: theme.colors.primary.main,
-    borderRadius: 3,
+  phaseDescription: {
+    fontSize: 16,
+    fontFamily: 'SFProText-Regular',
+    color: '#004D4D',
+    lineHeight: 22,
   },
 });

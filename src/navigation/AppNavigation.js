@@ -28,7 +28,7 @@ export default function AppNavigation() {
             // Set icon based on route name
             if (route.name === 'Home') {
               iconName = focused ? 'home' : 'home-outline';
-            } else if (route.name === 'Milestones') {
+            } else if (route.name === 'Journey') {
               iconName = focused ? 'pulse' : 'pulse-outline';
             } else if (route.name === 'Chat') {
               iconName = focused ? 'chatbubble' : 'chatbubble-outline';
@@ -55,10 +55,10 @@ export default function AppNavigation() {
           }}
         />
         <Tab.Screen 
-          name="Milestones" 
+          name="Journey" 
           component={JourneyScreen}
           options={{
-            tabBarLabel: 'Milestones'
+            tabBarLabel: 'Journey'
           }}
         />
         <Tab.Screen 
@@ -91,8 +91,9 @@ const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: '#F8EFE0', // Cream/beige background matching the design
     borderTopWidth: 0,
-    paddingTop: 12,
-    height: 70,
+    paddingTop: 10,
+    paddingBottom: 8, // Added padding at the bottom to prevent text cutoff
+    height: 75, // Increased height slightly
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     position: 'absolute',
@@ -109,6 +110,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'SFProText-Regular',
     fontWeight: '500',
-    marginBottom: 5,
+    marginBottom: 8, // Increased margin to move text up
   },
 });
