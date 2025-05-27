@@ -83,19 +83,6 @@ export default function TodayScreen() {
   // Current insight panel
   const currentPanel = insightPanels[currentIndex];
   
-  // Handle navigation
-  const handlePrevious = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  };
-  
-  const handleNext = () => {
-    if (currentIndex < insightPanels.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  };
-
   // Render pagination dots
   const renderPaginationDots = () => {
     return (
@@ -118,7 +105,11 @@ export default function TodayScreen() {
       <SafeAreaView style={styles.container}>
         {/* Background decorative elements */}
         <View style={styles.backgroundDecorations}>
-          {/* Decorative elements would go here */}
+          <View style={[styles.star, styles.star1]} />
+          <View style={[styles.star, styles.star2]} />
+          <View style={[styles.star, styles.star3]} />
+          <View style={[styles.leaf, styles.leaf1]} />
+          <View style={[styles.leaf, styles.leaf2]} />
         </View>
         
         {/* Hatchling header */}
@@ -152,35 +143,9 @@ export default function TodayScreen() {
                   {currentPanel.title}
                 </Text>
                 
-                <View style={styles.navigationContainer}>
-                  <TouchableOpacity 
-                    style={styles.navArrow}
-                    onPress={handlePrevious}
-                    disabled={currentIndex === 0}
-                  >
-                    <Ionicons 
-                      name="chevron-back" 
-                      size={28} 
-                      color={currentIndex === 0 ? 'rgba(74, 155, 155, 0.3)' : '#4A9B9B'} 
-                    />
-                  </TouchableOpacity>
-                  
-                  <Text style={styles.insightText}>
-                    {currentPanel.content}
-                  </Text>
-                  
-                  <TouchableOpacity 
-                    style={styles.navArrow}
-                    onPress={handleNext}
-                    disabled={currentIndex === insightPanels.length - 1}
-                  >
-                    <Ionicons 
-                      name="chevron-forward" 
-                      size={28} 
-                      color={currentIndex === insightPanels.length - 1 ? 'rgba(74, 155, 155, 0.3)' : '#4A9B9B'} 
-                    />
-                  </TouchableOpacity>
-                </View>
+                <Text style={styles.insightText}>
+                  {currentPanel.content}
+                </Text>
                 
                 {/* Pagination dots */}
                 {renderPaginationDots()}
@@ -221,8 +186,13 @@ export default function TodayScreen() {
           </TouchableOpacity>
           
           <TouchableOpacity style={styles.navItem}>
-            <Ionicons name="fitness" size={24} color="#4A9B9B" />
+            <Ionicons name="pulse" size={24} color="#4A9B9B" />
             <Text style={styles.navText}>Milestones</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.navItem}>
+            <Ionicons name="chatbubble-outline" size={24} color="#4A9B9B" />
+            <Text style={styles.navText}>Chat</Text>
           </TouchableOpacity>
           
           <TouchableOpacity style={styles.navItem}>
@@ -231,7 +201,7 @@ export default function TodayScreen() {
           </TouchableOpacity>
           
           <TouchableOpacity style={styles.navItem}>
-            <Ionicons name="settings" size={24} color="#4A9B9B" />
+            <Ionicons name="settings-outline" size={24} color="#4A9B9B" />
             <Text style={styles.navText}>Settings</Text>
           </TouchableOpacity>
         </View>
@@ -254,11 +224,49 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+    zIndex: 0,
+  },
+  star: {
+    position: 'absolute',
+    width: 10,
+    height: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 5,
+  },
+  star1: {
+    top: '15%',
+    right: '20%',
+  },
+  star2: {
+    top: '25%',
+    left: '15%',
+  },
+  star3: {
+    bottom: '30%',
+    right: '25%',
+  },
+  leaf: {
+    position: 'absolute',
+    width: 20,
+    height: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 10,
+  },
+  leaf1: {
+    bottom: '20%',
+    left: '10%',
+    transform: [{ rotate: '30deg' }],
+  },
+  leaf2: {
+    top: '40%',
+    right: '10%',
+    transform: [{ rotate: '-30deg' }],
   },
   appHeader: {
     alignItems: 'center',
-    paddingTop: 20,
-    paddingBottom: 10,
+    paddingTop: 10,
+    marginBottom: 5,
+    zIndex: 1,
   },
   appTitle: {
     fontFamily: 'SFProDisplay-Bold',
@@ -270,8 +278,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 20,
+    paddingTop: 5,
+    paddingBottom: 10,
+    zIndex: 1,
   },
   avatarContainer: {
     width: 70,
@@ -305,9 +314,11 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
-    paddingBottom: 100, // Space for bottom navigation
+    paddingBottom: 80, // Space for bottom navigation
+    marginTop: 10,
+    zIndex: 1,
   },
   insightCard: {
     backgroundColor: '#F8EFE0', // Cream/beige background matching the design
@@ -343,26 +354,14 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     lineHeight: 38,
   },
-  navigationContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 24,
-  },
-  navArrow: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   insightText: {
-    flex: 1,
     fontFamily: 'SFProText-Regular',
     fontSize: 18,
     color: '#004D4D', // Dark teal matching the design
     textAlign: 'center',
-    paddingHorizontal: 8,
+    paddingHorizontal: 20,
     lineHeight: 24,
+    marginBottom: 24,
   },
   paginationDotsContainer: {
     flexDirection: 'row',
@@ -411,19 +410,27 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    zIndex: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
   },
   navItem: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
   },
   navText: {
     fontFamily: 'SFProText-Regular',
     fontSize: 12,
     color: '#4A9B9B',
     marginTop: 4,
+    fontWeight: '500',
   },
   navTextActive: {
     color: '#B05E35',
+    fontWeight: '600',
   },
 });
