@@ -1,23 +1,30 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
+import { ThemeProvider } from './src/theme/ThemeProvider';
+import { AuthProvider } from './src/context/AuthContext';
+import { OnboardingProvider } from './src/context/OnboardingContext';
 import AppNavigation from './src/navigation/AppNavigation';
 
+// Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  const [appIsReady, setAppIsReady] = useState(false);
+  const [appIsReady, setAppIsReady] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     async function prepare() {
       try {
+        // Load fonts
         await Font.loadAsync({
           'SFProDisplay-Regular': require('./assets/fonts/SFProDisplay-Regular.otf'),
           'SFProDisplay-Bold': require('./assets/fonts/SFProDisplay-Bold.otf'),
           'SFProText-Regular': require('./assets/fonts/SFProText-Regular.otf'),
+          'SFProText-Medium': require('./assets/fonts/SF-Pro-Text-Medium.otf'),
+          'SFProDisplay-Semibold': require('./assets/fonts/SF-Pro-Display-Semibold.otf'),
         });
       } catch (e) {
         console.warn('Font loading error:', e);
@@ -29,7 +36,7 @@ export default function App() {
     prepare();
   }, []);
 
-  const onLayoutRootView = useCallback(async () => {
+  const onLayoutRootView = React.useCallback(async () => {
     if (appIsReady) {
       await SplashScreen.hideAsync();
     }
@@ -41,8 +48,14 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>
-      <StatusBar style="auto" />
-      <AppNavigation />
+      <StatusBar style="light" />
+      <AuthProvider>
+        <OnboardingProvider>
+          <ThemeProvider>
+            <AppNavigation />
+          </ThemeProvider>
+        </OnboardingProvider>
+      </AuthProvider>
     </GestureHandlerRootView>
   );
 }

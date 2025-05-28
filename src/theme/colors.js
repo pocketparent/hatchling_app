@@ -8,24 +8,24 @@
  */
 
 export const colors = {
-  // Primary palette
+  // Primary palette - based on core screen designs
   primary: {
-    light: '#A5D6A7', // Soft, calming green
-    main: '#66BB6A',  // Main brand color - nurturing green
-    dark: '#43A047',  // Deeper green for emphasis
+    light: '#4FBCB5', // Lighter teal
+    main: '#2A9D8F', // Soft teal (primary brand color)
+    dark: '#004D4D', // Dark teal for text and emphasis
   },
   
   // Secondary palette - warm, nurturing colors
   secondary: {
-    light: '#FFCC80', // Soft orange
-    main: '#FFA726',  // Warm orange
-    dark: '#FB8C00',  // Deep orange
+    light: '#F79770', // Light coral
+    main: '#E76F51', // Warm coral (secondary brand color)
+    dark: '#B05E35', // Copper/brown for accents
   },
   
   // Neutral palette - clean, minimalist grays
   neutral: {
     white: '#FFFFFF',
-    lightest: '#F5F5F5',
+    lightest: '#F8EFE0', // Cream/beige for cards
     lighter: '#EEEEEE',
     light: '#E0E0E0',
     medium: '#9E9E9E',
@@ -51,11 +51,11 @@ export const colors = {
     emotional: '#BA68C8', // Soft purple for emotional content
   },
   
-  // Background gradients
-  gradients: {
-    primary: ['#66BB6A', '#43A047'],
-    calm: ['#BBDEFB', '#90CAF9'],
-    warm: ['#FFECB3', '#FFE082'],
+  // Background colors
+  background: {
+    primary: '#4A9B9B', // Teal background
+    card: '#F8EFE0',    // Cream/beige for cards
+    accent: '#F79770',  // Coral for accents
   },
   
   // Transparency utilities

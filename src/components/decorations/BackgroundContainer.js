@@ -1,11 +1,12 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-
 /**
- * BackgroundContainer Component
+ * Hatchling App Background Container
  * 
  * Creates a consistent plain teal background for all screens
  */
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import theme from '../../theme';
+
 const BackgroundContainer = ({ children }) => {
   return (
     <View style={styles.container}>
@@ -17,7 +18,7 @@ const BackgroundContainer = ({ children }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#4A9B9B', // Teal background color
+    backgroundColor: theme.colors.background.primary, // Teal background color
   },
 });
 
