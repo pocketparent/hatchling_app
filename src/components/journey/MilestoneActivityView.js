@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import BackgroundDecorations from '../../components/decorations/BackgroundDecorations';
 
 /**
  * MilestoneList Component
@@ -79,37 +80,7 @@ const ActivityList = ({ activities }) => {
 const MilestoneActivityView = ({ domain, onToggleMilestone, onBack }) => {
   return (
     <View style={styles.mainContainer}>
-      {/* Background decorative elements - matching Today screen */}
-      <View style={styles.backgroundDecorations}>
-        {/* Small dots */}
-        <View style={[styles.smallDot, { top: '10%', left: '15%' }]} />
-        <View style={[styles.smallDot, { top: '20%', left: '40%' }]} />
-        <View style={[styles.smallDot, { top: '35%', right: '25%' }]} />
-        <View style={[styles.smallDot, { top: '50%', left: '30%' }]} />
-        <View style={[styles.smallDot, { top: '65%', right: '15%' }]} />
-        <View style={[styles.smallDot, { top: '80%', left: '20%' }]} />
-        <View style={[styles.smallDot, { top: '90%', right: '30%' }]} />
-        <View style={[styles.smallDot, { top: '25%', right: '10%' }]} />
-        
-        {/* Medium dots */}
-        <View style={[styles.mediumDot, { top: '15%', right: '35%' }]} />
-        <View style={[styles.mediumDot, { top: '45%', left: '10%' }]} />
-        <View style={[styles.mediumDot, { top: '70%', right: '40%' }]} />
-        <View style={[styles.mediumDot, { top: '85%', left: '40%' }]} />
-        
-        {/* Star shapes */}
-        <View style={[styles.star, { top: '8%', right: '20%' }]}>
-          <View style={styles.starInner} />
-        </View>
-        <View style={[styles.star, { top: '30%', left: '20%' }]}>
-          <View style={styles.starInner} />
-        </View>
-        
-        {/* Leaf shapes */}
-        <View style={[styles.leaf, { top: '25%', right: '15%' }]} />
-        <View style={[styles.leaf, { top: '60%', left: '15%', transform: [{ rotate: '45deg' }] }]} />
-        <View style={[styles.leaf, { bottom: '20%', right: '25%', transform: [{ rotate: '-30deg' }] }]} />
-      </View>
+      {/* Background decorations are now handled by the BackgroundDecorations component */}
       
       <View style={styles.header}>
         <TouchableOpacity 
@@ -143,48 +114,6 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: '#4A9B9B', // Teal background matching the Today screen
-  },
-  backgroundDecorations: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 0,
-  },
-  smallDot: {
-    position: 'absolute',
-    width: 6,
-    height: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 3,
-  },
-  mediumDot: {
-    position: 'absolute',
-    width: 10,
-    height: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 5,
-  },
-  star: {
-    position: 'absolute',
-    width: 14,
-    height: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  starInner: {
-    width: 12,
-    height: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: 6,
-  },
-  leaf: {
-    position: 'absolute',
-    width: 30,
-    height: 15,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 15,
   },
   header: {
     flexDirection: 'row',
