@@ -6,15 +6,19 @@ import journeyMock from '../../data/journeyMock';
 import PhaseSelector from '../../components/journey/PhaseSelector';
 import DomainCard from '../../components/journey/DomainCard';
 import MilestoneActivityView from '../../components/journey/MilestoneActivityView';
+import PeriodSummary from '../../components/journey/PeriodSummary';
+import WeeklyFocus from '../../components/journey/WeeklyFocus';
 import BackgroundContainer from '../../components/decorations/BackgroundContainer';
+import { ScreenErrorWrapper } from '../../components/error/ErrorComponents';
 
 /**
  * Journey Screen
  * 
  * Shows developmental phases, domains, milestones, and activities
  * Allows users to track milestones and explore suggested activities
+ * Includes period summary and weekly focus areas
  */
-export default function JourneyScreen() {
+export default function JourneyScreen({ navigation }) {
   // State for selected phase and domain
   const [selectedPhaseId, setSelectedPhaseId] = useState(journeyMock.phases[1].id); // Default to 2-4 months
   const [selectedDomainId, setSelectedDomainId] = useState(null);
@@ -75,62 +79,82 @@ export default function JourneyScreen() {
     
     setMilestoneData(updatedData);
   };
+
+  // Handle view all milestones
+  const handleViewAllMilestones = () => {
+    // In a real app, this would navigate to a comprehensive milestones view
+    console.log('View all milestones');
+  };
   
   // If a domain is selected, show milestone and activity view
   if (selectedDomain) {
     return (
-      <BackgroundContainer>
-        <SafeAreaView style={styles.container}>
-          <StatusBar style="light" />
-          <MilestoneActivityView 
-            domain={selectedDomain}
-            onToggleMilestone={handleToggleMilestone}
-            onBack={handleBackToPhase}
-          />
-        </SafeAreaView>
-      </BackgroundContainer>
+      <ScreenErrorWrapper screenName="Journey Domain" navigation={navigation}>
+        <BackgroundContainer>
+          <SafeAreaView style={styles.container}>
+            <StatusBar style="light" />
+            <MilestoneActivityView 
+              domain={selectedDomain}
+              onToggleMilestone={handleToggleMilestone}
+              onBack={handleBackToPhase}
+            />
+          </SafeAreaView>
+        </BackgroundContainer>
+      </ScreenErrorWrapper>
     );
   }
   
   // Otherwise show the phase and domain selection view
   return (
-    <BackgroundContainer>
-      <SafeAreaView style={styles.container}>
-        <StatusBar style="light" />
-        
-        {/* App header */}
-        <View style={styles.appHeader}>
-          <Text style={styles.appTitle}>Hatchling</Text>
-        </View>
-        
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          {/* Phase selector */}
-          <PhaseSelector 
-            phases={milestoneData.phases}
-            selectedPhaseId={selectedPhaseId}
-            onSelectPhase={handleSelectPhase}
-          />
+    <ScreenErrorWrapper screenName="Journey" navigation={navigation}>
+      <BackgroundContainer>
+        <SafeAreaView style={styles.container}>
+          <StatusBar style="light" />
           
-          {/* Domain cards */}
-          <View style={styles.domainsContainer}>
-            {currentPhase.domains.map(domain => (
-              <DomainCard 
-                key={domain.id}
-                domain={domain}
-                onExplore={() => handleExploreDomain(domain.id)}
-              />
-            ))}
+          {/* App header */}
+          <View style={styles.appHeader}>
+            <Text style={styles.appTitle}>Hatchling</Text>
           </View>
           
-          {/* Phase description */}
-          <View style={styles.phaseDescriptionContainer}>
-            <Text style={styles.phaseDescription}>
-              {currentPhase.description}
-            </Text>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </BackgroundContainer>
+          <ScrollView contentContainerStyle={styles.scrollContent}>
+            {/* Period Summary */}
+            <PeriodSummary 
+              phase={currentPhase}
+              onViewAllMilestones={handleViewAllMilestones}
+            />
+            
+            {/* Phase selector */}
+            <PhaseSelector 
+              phases={milestoneData.phases}
+              selectedPhaseId={selectedPhaseId}
+              onSelectPhase={handleSelectPhase}
+            />
+            
+            {/* Domain cards */}
+            <View style={styles.domainsContainer}>
+              {currentPhase.domains.map(domain => (
+                <DomainCard 
+                  key={domain.id}
+                  domain={domain}
+                  onExplore={() => handleExploreDomain(domain.id)}
+                />
+              ))}
+            </View>
+            
+            {/* Weekly Focus */}
+            <WeeklyFocus phase={currentPhase} />
+            
+            {/* Phase description */}
+            <View style={styles.phaseDescriptionContainer}>
+              <Text style={styles.phaseDescriptionTitle}>About This Period</Text>
+              <Text style={styles.phaseDescription}>
+                {currentPhase.description}
+              </Text>
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      </BackgroundContainer>
+    </ScreenErrorWrapper>
   );
 }
 
@@ -168,6 +192,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,
+  },
+  phaseDescriptionTitle: {
+    fontFamily: 'SFProDisplay-Bold',
+    fontSize: 18,
+    color: '#004D4D', // Dark teal matching the design
+    marginBottom: 8,
   },
   phaseDescription: {
     fontSize: 16,
