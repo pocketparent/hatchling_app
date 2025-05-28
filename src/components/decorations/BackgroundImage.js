@@ -11,7 +11,7 @@ const BackgroundImage = ({ children }) => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require('../../../assets/backgrounds/background_pattern.png')}
+        source={require('../../../assets/background_pattern.png')}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
