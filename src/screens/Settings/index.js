@@ -275,7 +275,10 @@ export default function SettingsScreen({ navigation }) {
               <Text style={styles.profileDetails}>{babyProfile.age}</Text>
               <Text style={styles.profileDetails}>Born: {babyProfile.birthDate}</Text>
             </View>
-            <TouchableOpacity style={styles.editProfileButton}>
+            <TouchableOpacity 
+              style={styles.editProfileButton}
+              onPress={() => navigation.navigate('EditProfile')}
+            >
               <Ionicons name="pencil" size={20} color={theme.colors.primary.main} />
             </TouchableOpacity>
           </View>
