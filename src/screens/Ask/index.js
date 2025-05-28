@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, FlatList } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import BackgroundContainer from '../../components/decorations/BackgroundContainer';
 import theme from '../../theme';
@@ -11,7 +11,7 @@ import { ScreenErrorWrapper } from '../../components/error/ErrorComponents';
  * Q&A system with pre-written answers to common parenting questions
  * Enhanced with chat-like interface and interactive elements
  */
-export default function AskScreen() {
+export default function AskScreen({ navigation }) {
   const [activeCategory, setActiveCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
@@ -245,8 +245,9 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
   };
 
   // Render question item
-  const renderQuestionItem = ({ item }) => (
+  const renderQuestionItem = (item) => (
     <TouchableOpacity 
+      key={item.id}
       style={styles.questionCard}
       onPress={() => handleQuestionSelect(item)}
     >
@@ -322,7 +323,7 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
               </Text>
               {getFilteredQuestions().length > 0 ? (
                 <View style={styles.questionsList}>
-                  {getFilteredQuestions().map(item => renderQuestionItem({item}))}
+                  {getFilteredQuestions().map(item => renderQuestionItem(item))}
                 </View>
               ) : (
                 <View style={styles.noResultsContainer}>
@@ -349,7 +350,7 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
                 {categories.find(c => c.id === activeCategory)?.name} Questions
               </Text>
               <View style={styles.questionsList}>
-                {getQuestionsByCategory(activeCategory).map(item => renderQuestionItem({item}))}
+                {getQuestionsByCategory(activeCategory).map(item => renderQuestionItem(item))}
               </View>
             </>
           )}
@@ -359,12 +360,12 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
             <>
               <Text style={styles.sectionTitle}>Recent Questions</Text>
               <View style={styles.questionsList}>
-                {recentQuestions.map(item => renderQuestionItem({item}))}
+                {recentQuestions.map(item => renderQuestionItem(item))}
               </View>
               
               <Text style={styles.sectionTitle}>Common Questions</Text>
               <View style={styles.questionsList}>
-                {commonQuestions.map(item => renderQuestionItem({item}))}
+                {commonQuestions.map(item => renderQuestionItem(item))}
               </View>
               
               <View style={styles.askDirectlySection}>
