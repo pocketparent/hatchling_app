@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
@@ -142,25 +141,23 @@ const OnboardingNavigator = () => {
   );
 };
 
-// Root navigator
+// Root navigator - without NavigationContainer (moved to App.js)
 const AppNavigation = () => {
   const { isAuthenticated } = useAuth();
   const { hasCompletedOnboarding } = useOnboarding();
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {isAuthenticated ? (
-          hasCompletedOnboarding ? (
-            <Stack.Screen name="Main" component={MainTabNavigator} />
-          ) : (
-            <Stack.Screen name="Onboarding" component={OnboardingNavigator} />
-          )
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {isAuthenticated ? (
+        hasCompletedOnboarding ? (
+          <Stack.Screen name="Main" component={MainTabNavigator} />
         ) : (
-          <Stack.Screen name="Auth" component={AuthNavigator} />
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+          <Stack.Screen name="Onboarding" component={OnboardingNavigator} />
+        )
+      ) : (
+        <Stack.Screen name="Auth" component={AuthNavigator} />
+      )}
+    </Stack.Navigator>
   );
 };
 
