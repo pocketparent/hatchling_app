@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import BackgroundContainer from '../../components/decorations/BackgroundContainer';
 import theme from '../../theme';
+import { ScreenErrorWrapper } from '../../components/error/ErrorComponents';
 
 /**
  * Ask Screen
@@ -33,7 +34,17 @@ export default function AskScreen() {
       category: '1',
       question: 'Why is my baby waking up every hour at night?',
       preview: 'Sleep patterns change as your baby develops. Around 4 months...',
-      fullAnswer: 'Sleep patterns change as your baby develops. Around 4 months, many babies experience a sleep regression due to developmental leaps and changes in sleep cycles. This is completely normal and temporary.\n\nDuring this time, babies begin to cycle through light and deep sleep more like adults do, which can cause them to wake more frequently. They may also be developing new skills like rolling over or becoming more aware of their surroundings, which can disrupt sleep.\n\nWhat you can do:\n• Maintain a consistent bedtime routine\n• Ensure the sleep environment is comfortable and conducive to sleep\n• Consider an earlier bedtime if overtiredness might be a factor\n• Practice putting baby down drowsy but awake to help them learn to self-soothe\n\nRemember that this phase is temporary and usually resolves within 2-6 weeks as your baby adjusts to their new sleep patterns.'
+      fullAnswer: `Sleep patterns change as your baby develops. Around 4 months, many babies experience a sleep regression due to developmental leaps and changes in sleep cycles. This is completely normal and temporary.
+
+During this time, babies begin to cycle through light and deep sleep more like adults do, which can cause them to wake more frequently. They may also be developing new skills like rolling over or becoming more aware of their surroundings, which can disrupt sleep.
+
+What you can do:
+• Maintain a consistent bedtime routine
+• Ensure the sleep environment is comfortable and conducive to sleep
+• Consider an earlier bedtime if overtiredness might be a factor
+• Practice putting baby down drowsy but awake to help them learn to self-soothe
+
+Remember that this phase is temporary and usually resolves within 2-6 weeks as your baby adjusts to their new sleep patterns.`
     },
     { 
       id: '2', 
@@ -183,27 +194,29 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
           style={styles.backButton} 
           onPress={handleBackFromDetail}
         >
-          <Ionicons name="arrow-back" size={24} color={theme.colors.neutral.darkest} />
-          <Text style={styles.backButtonText}>Back</Text>
+          <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+          <Text style={styles.backButtonText}>Back to Questions</Text>
         </TouchableOpacity>
         
-        <Text style={styles.detailQuestion}>{selectedQuestion.question}</Text>
-        
-        <ScrollView style={styles.answerScrollView}>
-          <Text style={styles.detailAnswer}>{selectedQuestion.fullAnswer}</Text>
-        </ScrollView>
-        
-        <View style={styles.feedbackContainer}>
-          <Text style={styles.feedbackQuestion}>Was this helpful?</Text>
-          <View style={styles.feedbackButtons}>
-            <TouchableOpacity style={styles.feedbackButton}>
-              <Ionicons name="thumbs-up-outline" size={20} color={theme.colors.primary.main} />
-              <Text style={styles.feedbackButtonText}>Yes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.feedbackButton}>
-              <Ionicons name="thumbs-down-outline" size={20} color={theme.colors.primary.main} />
-              <Text style={styles.feedbackButtonText}>No</Text>
-            </TouchableOpacity>
+        <View style={styles.detailCard}>
+          <Text style={styles.detailQuestion}>{selectedQuestion.question}</Text>
+          
+          <ScrollView style={styles.answerScrollView}>
+            <Text style={styles.detailAnswer}>{selectedQuestion.fullAnswer}</Text>
+          </ScrollView>
+          
+          <View style={styles.feedbackContainer}>
+            <Text style={styles.feedbackQuestion}>Was this helpful?</Text>
+            <View style={styles.feedbackButtons}>
+              <TouchableOpacity style={styles.feedbackButton}>
+                <Ionicons name="thumbs-up-outline" size={20} color={theme.colors.primary.main} />
+                <Text style={styles.feedbackButtonText}>Yes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.feedbackButton}>
+                <Ionicons name="thumbs-down-outline" size={20} color={theme.colors.primary.main} />
+                <Text style={styles.feedbackButtonText}>No</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
         
@@ -231,11 +244,28 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
     );
   };
 
+  // Render question item
+  const renderQuestionItem = ({ item }) => (
+    <TouchableOpacity 
+      style={styles.questionCard}
+      onPress={() => handleQuestionSelect(item)}
+    >
+      <Text style={styles.questionText}>{item.question}</Text>
+      <Text style={styles.answerPreview}>{item.preview}</Text>
+      <View style={styles.readMoreContainer}>
+        <Text style={styles.readMoreText}>Read more</Text>
+        <Ionicons name="chevron-forward" size={16} color={theme.colors.primary.main} />
+      </View>
+    </TouchableOpacity>
+  );
+
   // Render main content
   const renderMainContent = () => {
     return (
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.headerTitle}>Ask Hatchling</Text>
+      <View style={styles.mainContentContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerTitle}>Ask Hatchling</Text>
+        </View>
         
         {/* Search bar */}
         <View style={styles.searchBarContainer}>
@@ -258,147 +288,119 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
         {/* Categories */}
         <Text style={styles.sectionTitle}>Browse by Topic</Text>
         <ScrollView 
-          horizontal 
+          horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.categoriesContainer}
         >
-          {categories.map(category => (
+          {categories.map(item => (
             <TouchableOpacity 
-              key={category.id} 
+              key={item.id}
               style={[
                 styles.categoryButton,
-                activeCategory === category.id && styles.categoryButtonActive
+                activeCategory === item.id && styles.categoryButtonActive
               ]}
-              onPress={() => handleCategorySelect(category.id)}
+              onPress={() => handleCategorySelect(item.id)}
             >
-              <Text style={styles.categoryIcon}>{category.icon}</Text>
+              <Text style={styles.categoryIcon}>{item.icon}</Text>
               <Text style={[
                 styles.categoryName,
-                activeCategory === category.id && styles.categoryNameActive
+                activeCategory === item.id && styles.categoryNameActive
               ]}>
-                {category.name}
+                {item.name}
               </Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
         
-        {/* Search Results */}
-        {showSearchResults && (
-          <>
-            <Text style={styles.sectionTitle}>
-              Search Results for "{searchQuery}"
-            </Text>
-            {getFilteredQuestions().length > 0 ? (
-              getFilteredQuestions().map(item => (
-                <TouchableOpacity 
-                  key={item.id} 
-                  style={styles.questionCard}
-                  onPress={() => handleQuestionSelect(item)}
-                >
-                  <Text style={styles.questionText}>{item.question}</Text>
-                  <Text style={styles.answerPreview}>{item.preview}</Text>
-                  <Text style={styles.readMoreText}>Read more</Text>
-                </TouchableOpacity>
-              ))
-            ) : (
-              <View style={styles.noResultsContainer}>
-                <Text style={styles.noResultsText}>
-                  No results found for "{searchQuery}"
+        {/* Content based on selection */}
+        <ScrollView style={styles.questionsContainer} showsVerticalScrollIndicator={false}>
+          {/* Search Results */}
+          {showSearchResults && (
+            <>
+              <Text style={styles.sectionTitle}>
+                Search Results for "{searchQuery}"
+              </Text>
+              {getFilteredQuestions().length > 0 ? (
+                <View style={styles.questionsList}>
+                  {getFilteredQuestions().map(item => renderQuestionItem({item}))}
+                </View>
+              ) : (
+                <View style={styles.noResultsContainer}>
+                  <Text style={styles.noResultsText}>
+                    No results found for "{searchQuery}"
+                  </Text>
+                  <TouchableOpacity 
+                    style={styles.askDirectlyButton}
+                    onPress={() => setUserMessage(searchQuery)}
+                  >
+                    <Text style={styles.askDirectlyButtonText}>
+                      Ask this question directly
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </>
+          )}
+          
+          {/* Category Questions */}
+          {activeCategory && (
+            <>
+              <Text style={styles.sectionTitle}>
+                {categories.find(c => c.id === activeCategory)?.name} Questions
+              </Text>
+              <View style={styles.questionsList}>
+                {getQuestionsByCategory(activeCategory).map(item => renderQuestionItem({item}))}
+              </View>
+            </>
+          )}
+          
+          {/* Recent and Common questions - show only if not searching or filtering by category */}
+          {!showSearchResults && !activeCategory && (
+            <>
+              <Text style={styles.sectionTitle}>Recent Questions</Text>
+              <View style={styles.questionsList}>
+                {recentQuestions.map(item => renderQuestionItem({item}))}
+              </View>
+              
+              <Text style={styles.sectionTitle}>Common Questions</Text>
+              <View style={styles.questionsList}>
+                {commonQuestions.map(item => renderQuestionItem({item}))}
+              </View>
+              
+              <View style={styles.askDirectlySection}>
+                <Text style={styles.askDirectlySectionTitle}>
+                  Don't see what you're looking for?
                 </Text>
                 <TouchableOpacity 
-                  style={styles.askDirectlyButton}
-                  onPress={() => setUserMessage(searchQuery)}
+                  style={styles.askNewQuestionButton}
+                  onPress={() => setUserMessage("I have a question about...")}
                 >
-                  <Text style={styles.askDirectlyButtonText}>
-                    Ask this question directly
+                  <Ionicons 
+                    name="chatbubble-ellipses-outline" 
+                    size={20} 
+                    color="#FFFFFF" 
+                    style={styles.askNewQuestionIcon} 
+                  />
+                  <Text style={styles.askNewQuestionText}>
+                    Ask a New Question
                   </Text>
                 </TouchableOpacity>
               </View>
-            )}
-          </>
-        )}
-        
-        {/* Category Questions */}
-        {activeCategory && (
-          <>
-            <Text style={styles.sectionTitle}>
-              {categories.find(c => c.id === activeCategory)?.name} Questions
-            </Text>
-            {getQuestionsByCategory(activeCategory).map(item => (
-              <TouchableOpacity 
-                key={item.id} 
-                style={styles.questionCard}
-                onPress={() => handleQuestionSelect(item)}
-              >
-                <Text style={styles.questionText}>{item.question}</Text>
-                <Text style={styles.answerPreview}>{item.preview}</Text>
-                <Text style={styles.readMoreText}>Read more</Text>
-              </TouchableOpacity>
-            ))}
-          </>
-        )}
-        
-        {/* Recent questions - show only if not searching or filtering by category */}
-        {!showSearchResults && !activeCategory && (
-          <>
-            <Text style={styles.sectionTitle}>Recent Questions</Text>
-            {recentQuestions.map(item => (
-              <TouchableOpacity 
-                key={item.id} 
-                style={styles.questionCard}
-                onPress={() => handleQuestionSelect(item)}
-              >
-                <Text style={styles.questionText}>{item.question}</Text>
-                <Text style={styles.answerPreview}>{item.preview}</Text>
-                <Text style={styles.readMoreText}>Read more</Text>
-              </TouchableOpacity>
-            ))}
-            
-            {/* Common questions */}
-            <Text style={styles.sectionTitle}>Common Questions</Text>
-            {commonQuestions.map(item => (
-              <TouchableOpacity 
-                key={item.id} 
-                style={styles.questionCard}
-                onPress={() => handleQuestionSelect(item)}
-              >
-                <Text style={styles.questionText}>{item.question}</Text>
-                <Text style={styles.answerPreview}>{item.preview}</Text>
-                <Text style={styles.readMoreText}>Read more</Text>
-              </TouchableOpacity>
-            ))}
-          </>
-        )}
-        
-        {/* Ask directly section */}
-        <View style={styles.askDirectlySection}>
-          <Text style={styles.askDirectlyTitle}>
-            Don't see what you're looking for?
-          </Text>
-          <TouchableOpacity 
-            style={styles.askDirectlyMainButton}
-            onPress={() => {
-              setSelectedQuestion(null);
-              setUserMessage('');
-              // In a real app, this would focus the message input
-            }}
-          >
-            <Ionicons name="chatbubble-ellipses-outline" size={20} color={theme.colors.neutral.white} style={styles.askDirectlyIcon} />
-            <Text style={styles.askDirectlyMainButtonText}>
-              Ask a new question
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+            </>
+          )}
+        </ScrollView>
+      </View>
     );
   };
 
   return (
-    <BackgroundContainer>
-      <SafeAreaView style={styles.container}>
-        {selectedQuestion ? renderQuestionDetail() : renderMainContent()}
-      </SafeAreaView>
-    </BackgroundContainer>
+    <ScreenErrorWrapper screenName="Ask" navigation={navigation}>
+      <BackgroundContainer>
+        <SafeAreaView style={styles.container}>
+          {selectedQuestion ? renderQuestionDetail() : renderMainContent()}
+        </SafeAreaView>
+      </BackgroundContainer>
+    </ScreenErrorWrapper>
   );
 }
 
@@ -406,246 +408,294 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scrollContent: {
-    padding: theme.spacing.spacing.screenPadding,
-    paddingBottom: 100, // Extra padding for bottom tab bar
+  mainContentContainer: {
+    flex: 1,
+  },
+  headerContainer: {
+    alignItems: 'center',
+    paddingTop: 20,
+    paddingBottom: 16,
   },
   headerTitle: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 28,
-    color: theme.colors.neutral.white,
-    marginBottom: theme.spacing.spacing.lg,
-    marginTop: theme.spacing.spacing.md,
+    fontSize: 24,
+    color: '#FFFFFF',
   },
   searchBarContainer: {
     flexDirection: 'row',
-    marginBottom: theme.spacing.spacing.lg,
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 20,
   },
   searchInput: {
     flex: 1,
-    backgroundColor: theme.colors.neutral.white,
-    borderRadius: 8,
-    padding: theme.spacing.spacing.md,
-    marginRight: 8,
-    fontFamily: 'SFProText-Regular',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     fontSize: 16,
+    fontFamily: 'SFProText-Regular',
+    marginRight: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   searchButton: {
-    backgroundColor: theme.colors.secondary.main,
-    borderRadius: 8,
-    padding: theme.spacing.spacing.md,
+    backgroundColor: theme.colors.primary.main,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 50,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   sectionTitle: {
     fontFamily: 'SFProDisplay-Bold',
     fontSize: 20,
-    color: theme.colors.neutral.white,
-    marginBottom: theme.spacing.spacing.md,
+    color: '#FFFFFF',
+    marginHorizontal: 20,
+    marginBottom: 12,
+    marginTop: 8,
   },
   categoriesContainer: {
-    paddingBottom: theme.spacing.spacing.md,
-    marginBottom: theme.spacing.spacing.lg,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   categoryButton: {
-    alignItems: 'center',
-    marginRight: theme.spacing.spacing.lg,
-    width: 70,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 12,
-    padding: theme.spacing.spacing.sm,
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginHorizontal: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   categoryButtonActive: {
-    backgroundColor: theme.colors.neutral.white,
+    backgroundColor: '#FFFFFF',
   },
   categoryIcon: {
-    fontSize: 28,
-    marginBottom: theme.spacing.spacing.xs,
+    fontSize: 18,
+    marginRight: 6,
   },
   categoryName: {
     fontFamily: 'SFProText-Medium',
-    fontSize: 14,
-    color: theme.colors.neutral.white,
-    textAlign: 'center',
+    fontSize: 16,
+    color: '#FFFFFF',
   },
   categoryNameActive: {
     color: theme.colors.primary.main,
   },
+  questionsContainer: {
+    flex: 1,
+    paddingBottom: 20,
+  },
+  questionsList: {
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+  },
   questionCard: {
-    backgroundColor: theme.colors.neutral.lightest,
-    borderRadius: 12,
-    padding: theme.spacing.spacing.lg,
-    marginBottom: theme.spacing.spacing.md,
-    shadowColor: theme.colors.neutral.black,
+    backgroundColor: '#F8EFE0',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 2,
+    elevation: 3,
   },
   questionText: {
     fontFamily: 'SFProDisplay-Bold',
     fontSize: 18,
-    color: theme.colors.neutral.darkest,
-    marginBottom: theme.spacing.spacing.sm,
+    color: '#004D4D',
+    marginBottom: 8,
   },
   answerPreview: {
     fontFamily: 'SFProText-Regular',
-    fontSize: 16,
-    color: theme.colors.neutral.dark,
-    marginBottom: theme.spacing.spacing.sm,
+    fontSize: 14,
+    color: '#004D4D',
+    opacity: 0.8,
+    marginBottom: 12,
+    lineHeight: 20,
+  },
+  readMoreContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   readMoreText: {
     fontFamily: 'SFProText-Medium',
     fontSize: 14,
     color: theme.colors.primary.main,
+    marginRight: 4,
   },
   noResultsContainer: {
-    backgroundColor: theme.colors.neutral.lightest,
-    borderRadius: 12,
-    padding: theme.spacing.spacing.lg,
-    marginBottom: theme.spacing.spacing.lg,
+    backgroundColor: '#F8EFE0',
+    borderRadius: 16,
+    padding: 20,
+    marginHorizontal: 20,
     alignItems: 'center',
   },
   noResultsText: {
-    fontFamily: 'SFProText-Regular',
+    fontFamily: 'SFProText-Medium',
     fontSize: 16,
-    color: theme.colors.neutral.dark,
-    marginBottom: theme.spacing.spacing.md,
+    color: '#004D4D',
     textAlign: 'center',
+    marginBottom: 16,
   },
   askDirectlyButton: {
     backgroundColor: theme.colors.primary.main,
-    borderRadius: 8,
+    borderRadius: 20,
     paddingVertical: 10,
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
   },
   askDirectlyButtonText: {
     fontFamily: 'SFProText-Medium',
     fontSize: 14,
-    color: theme.colors.neutral.white,
+    color: '#FFFFFF',
   },
   askDirectlySection: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 12,
-    padding: theme.spacing.spacing.lg,
-    marginTop: theme.spacing.spacing.lg,
-    marginBottom: theme.spacing.spacing.xl,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 16,
+    padding: 20,
+    marginHorizontal: 20,
+    marginTop: 16,
+    marginBottom: 24,
     alignItems: 'center',
   },
-  askDirectlyTitle: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
-    color: theme.colors.neutral.white,
-    marginBottom: theme.spacing.spacing.md,
+  askDirectlySectionTitle: {
+    fontFamily: 'SFProText-Medium',
+    fontSize: 16,
+    color: '#FFFFFF',
     textAlign: 'center',
+    marginBottom: 16,
   },
-  askDirectlyMainButton: {
-    backgroundColor: theme.colors.secondary.main,
-    borderRadius: 8,
+  askNewQuestionButton: {
+    backgroundColor: theme.colors.primary.main,
+    borderRadius: 20,
     paddingVertical: 12,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  askDirectlyIcon: {
+  askNewQuestionIcon: {
     marginRight: 8,
   },
-  askDirectlyMainButtonText: {
+  askNewQuestionText: {
     fontFamily: 'SFProText-Medium',
     fontSize: 16,
-    color: theme.colors.neutral.white,
+    color: '#FFFFFF',
   },
   detailContainer: {
     flex: 1,
-    padding: theme.spacing.spacing.screenPadding,
+    padding: 16,
   },
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: theme.spacing.spacing.md,
+    marginBottom: 16,
   },
   backButtonText: {
     fontFamily: 'SFProText-Medium',
     fontSize: 16,
-    color: theme.colors.neutral.darkest,
+    color: '#FFFFFF',
     marginLeft: 8,
+  },
+  detailCard: {
+    backgroundColor: '#F8EFE0',
+    borderRadius: 20,
+    padding: 20,
+    flex: 1,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   detailQuestion: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 24,
-    color: theme.colors.neutral.white,
-    marginBottom: theme.spacing.spacing.lg,
+    fontSize: 22,
+    color: '#004D4D',
+    marginBottom: 16,
+    lineHeight: 28,
   },
   answerScrollView: {
     flex: 1,
-    backgroundColor: theme.colors.neutral.white,
-    borderRadius: 12,
-    padding: theme.spacing.spacing.lg,
-    marginBottom: theme.spacing.spacing.md,
   },
   detailAnswer: {
     fontFamily: 'SFProText-Regular',
     fontSize: 16,
-    color: theme.colors.neutral.darkest,
+    color: '#004D4D',
     lineHeight: 24,
   },
   feedbackContainer: {
-    backgroundColor: theme.colors.neutral.lightest,
-    borderRadius: 12,
-    padding: theme.spacing.spacing.md,
-    marginBottom: theme.spacing.spacing.md,
-    alignItems: 'center',
+    marginTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0, 77, 77, 0.1)',
+    paddingTop: 16,
   },
   feedbackQuestion: {
     fontFamily: 'SFProText-Medium',
     fontSize: 16,
-    color: theme.colors.neutral.darkest,
-    marginBottom: theme.spacing.spacing.sm,
+    color: '#004D4D',
+    marginBottom: 12,
+    textAlign: 'center',
   },
   feedbackButtons: {
     flexDirection: 'row',
+    justifyContent: 'center',
   },
   feedbackButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: theme.spacing.spacing.md,
+    backgroundColor: 'rgba(74, 155, 155, 0.1)',
+    borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    borderRadius: 20,
+    marginHorizontal: 8,
   },
   feedbackButtonText: {
     fontFamily: 'SFProText-Medium',
     fontSize: 14,
     color: theme.colors.primary.main,
-    marginLeft: 4,
+    marginLeft: 6,
   },
   messageInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.colors.neutral.white,
-    borderRadius: 12,
-    padding: 8,
-    marginBottom: theme.spacing.spacing.lg,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   messageInput: {
     flex: 1,
-    fontFamily: 'SFProText-Regular',
     fontSize: 16,
+    fontFamily: 'SFProText-Regular',
     maxHeight: 100,
-    padding: 8,
+    paddingVertical: 8,
   },
   sendButton: {
     backgroundColor: theme.colors.primary.main,
-    borderRadius: 20,
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 8,
   },
   sendButtonDisabled: {
-    backgroundColor: theme.colors.neutral.medium,
+    backgroundColor: 'rgba(74, 155, 155, 0.5)',
   },
 });

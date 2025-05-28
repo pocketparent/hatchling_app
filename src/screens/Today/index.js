@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Dimensions, ScrollView, Alert } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -12,14 +12,13 @@ import { PanGestureHandler } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../theme';
 import BackgroundContainer from '../../components/decorations/BackgroundContainer';
-import ThisWeekMilestones from '../../components/today/ThisWeekMilestones';
 import { ScreenErrorWrapper } from '../../components/error/ErrorComponents';
 
 /**
  * Today Screen
  * 
- * Main landing screen showing daily insight card and weekly milestone summary
- * Matches the design from the provided screenshots
+ * Main landing screen showing daily insight card and upcoming check-ins
+ * Matches the design from the provided screenshots with requested modifications
  */
 export default function TodayScreen({ navigation }) {
   // State for tracking current insight panel
@@ -103,6 +102,25 @@ export default function TodayScreen({ navigation }) {
     );
   };
   
+  // Handle weekly check-in
+  const handleWeeklyCheckIn = () => {
+    Alert.alert(
+      "Weekly Check-in",
+      "How is Emma doing this week? This will help us personalize your experience.",
+      [
+        {
+          text: "Complete Check-in",
+          onPress: () => console.log("Weekly check-in started"),
+          style: "default"
+        },
+        {
+          text: "Remind Me Later",
+          style: "cancel"
+        }
+      ]
+    );
+  };
+  
   return (
     <ScreenErrorWrapper screenName="Today" navigation={navigation}>
       <GestureHandlerRootView style={styles.gestureRoot}>
@@ -174,8 +192,24 @@ export default function TodayScreen({ navigation }) {
                   </View>
                 </View>
                 
-                {/* This Week Milestones */}
-                <ThisWeekMilestones navigation={navigation} />
+                {/* Weekly Check-in Card */}
+                <TouchableOpacity 
+                  style={styles.weeklyCheckInCard}
+                  onPress={handleWeeklyCheckIn}
+                >
+                  <View style={styles.weeklyCheckInContent}>
+                    <View style={styles.weeklyCheckInIconContainer}>
+                      <Ionicons name="clipboard-outline" size={24} color="#FFFFFF" />
+                    </View>
+                    <View style={styles.weeklyCheckInTextContainer}>
+                      <Text style={styles.weeklyCheckInTitle}>Weekly Check-in</Text>
+                      <Text style={styles.weeklyCheckInDescription}>
+                        Tell us how Emma is doing this week
+                      </Text>
+                    </View>
+                  </View>
+                  <Ionicons name="chevron-forward" size={24} color="#FFFFFF" />
+                </TouchableOpacity>
                 
                 {/* Upcoming check-ins reminder */}
                 <View style={styles.upcomingCheckInsCard}>
@@ -355,6 +389,47 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProText-Regular',
     fontSize: 16,
     color: '#FFFFFF',
+  },
+  weeklyCheckInCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#2E7D7D', // Darker teal for contrast
+    borderRadius: 20,
+    padding: 16,
+    marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  weeklyCheckInContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  weeklyCheckInIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  weeklyCheckInTextContainer: {
+    flex: 1,
+  },
+  weeklyCheckInTitle: {
+    fontFamily: 'SFProDisplay-Bold',
+    fontSize: 18,
+    color: '#FFFFFF',
+    marginBottom: 4,
+  },
+  weeklyCheckInDescription: {
+    fontFamily: 'SFProText-Regular',
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.9)',
   },
   upcomingCheckInsCard: {
     backgroundColor: '#F8EFE0',
