@@ -1,67 +1,125 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import * as SplashScreen from 'expo-splash-screen';
-import * as Font from 'expo-font';
+/**
+ * Hatchling App - App.js with Data Integration
+ * 
+ * Updated App.js with all providers and data integration
+ * Includes ThemeProvider, AuthProvider, OnboardingProvider, and DataProvider
+ */
+
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider } from './src/theme/ThemeProvider';
-import { AuthProvider } from './src/context/AuthContext';
+import { AuthProvider, useAuth } from './src/context/AuthContext';
 import { OnboardingProvider } from './src/context/OnboardingContext';
+import { DataProvider } from './src/context/DataContext';
 import AppNavigation from './src/navigation/AppNavigation';
+import theme from './src/theme';
+import { validateAll } from './src/utils/ExpoValidator';
 
-// Prevent splash screen from auto-hiding
-SplashScreen.preventAutoHideAsync();
-
+// Main app component
 export default function App() {
-  const [appIsReady, setAppIsReady] = React.useState(false);
+  // State for Expo compatibility validation
+  const [validationResults, setValidationResults] = useState(null);
+  const [validationComplete, setValidationComplete] = useState(false);
 
-  React.useEffect(() => {
-    async function prepare() {
+  // Validate Expo compatibility on app start
+  useEffect(() => {
+    const validateExpoCompatibility = async () => {
       try {
-        // Load fonts
-        await Font.loadAsync({
-          'SFProDisplay-Regular': require('./assets/fonts/SFProDisplay-Regular.otf'),
-          'SFProDisplay-Bold': require('./assets/fonts/SFProDisplay-Bold.otf'),
-          'SFProText-Regular': require('./assets/fonts/SFProText-Regular.otf'),
-          'SFProText-Medium': require('./assets/fonts/SF-Pro-Text-Medium.otf'),
-          'SFProDisplay-Semibold': require('./assets/fonts/SF-Pro-Display-Semibold.otf'),
-        });
-      } catch (e) {
-        console.warn('Font loading error:', e);
+        const results = await validateAll();
+        setValidationResults(results);
+      } catch (error) {
+        console.error('Validation error:', error);
+        setValidationResults({ success: false, error: error.message });
       } finally {
-        setAppIsReady(true);
+        setValidationComplete(true);
       }
-    }
+    };
 
-    prepare();
+    validateExpoCompatibility();
   }, []);
 
-  const onLayoutRootView = React.useCallback(async () => {
-    if (appIsReady) {
-      await SplashScreen.hideAsync();
-    }
-  }, [appIsReady]);
-
-  if (!appIsReady) {
-    return null;
+  // Show validation screen if validation is not complete
+  if (!validationComplete) {
+    return (
+      <View style={styles.validationContainer}>
+        <ActivityIndicator size="large" color={theme.colors.primary.main} />
+        <Text style={styles.validationText}>Validating app compatibility...</Text>
+      </View>
+    );
   }
 
+  // Show validation error if validation failed
+  if (validationResults && !validationResults.success) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorTitle}>Compatibility Issue</Text>
+        <Text style={styles.errorText}>
+          There was an issue with app compatibility. Please try restarting the app.
+        </Text>
+        <Text style={styles.errorDetails}>
+          {JSON.stringify(validationResults, null, 2)}
+        </Text>
+      </View>
+    );
+  }
+
+  // Main app with all providers
   return (
-    <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>
+    <NavigationContainer>
       <StatusBar style="light" />
-      <AuthProvider>
-        <OnboardingProvider>
-          <ThemeProvider>
-            <AppNavigation />
-          </ThemeProvider>
-        </OnboardingProvider>
-      </AuthProvider>
-    </GestureHandlerRootView>
+      <ThemeProvider>
+        <AuthProvider>
+          <OnboardingProvider>
+            <DataProvider>
+              <AppNavigation />
+            </DataProvider>
+          </OnboardingProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  validationContainer: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.colors.background.primary,
+  },
+  validationText: {
+    marginTop: 20,
+    fontSize: 16,
+    color: theme.colors.neutral.white,
+    fontFamily: 'SFProText-Regular',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.colors.background.primary,
+    padding: 20,
+  },
+  errorTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: theme.colors.feedback.error,
+    marginBottom: 16,
+    fontFamily: 'SFProDisplay-Bold',
+  },
+  errorText: {
+    fontSize: 16,
+    color: theme.colors.neutral.white,
+    textAlign: 'center',
+    marginBottom: 24,
+    fontFamily: 'SFProText-Regular',
+  },
+  errorDetails: {
+    fontSize: 12,
+    color: theme.colors.neutral.lightest,
+    textAlign: 'left',
+    fontFamily: 'SFProText-Regular',
   },
 });
