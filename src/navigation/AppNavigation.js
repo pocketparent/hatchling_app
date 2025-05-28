@@ -17,6 +17,7 @@ import JourneyScreen from '../screens/Journey';
 import AskScreen from '../screens/Ask';
 import SavedScreen from '../screens/Saved';
 import SettingsScreen from '../screens/Settings';
+import EditProfileScreen from '../screens/Settings/EditProfile';
 
 // Import auth screens
 import { 
@@ -45,6 +46,29 @@ import theme from '../theme';
 // Create navigators
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+// Settings stack navigator
+const SettingsStackNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <Stack.Screen name="SettingsMain" component={SettingsScreen} />
+      <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+      <Stack.Screen name="AddChild" component={EditProfileScreen} />
+      <Stack.Screen name="ContentPreferences" component={SettingsScreen} />
+      <Stack.Screen name="Subscription" component={SettingsScreen} />
+      <Stack.Screen name="PrivacySettings" component={SettingsScreen} />
+      <Stack.Screen name="HelpCenter" component={SettingsScreen} />
+      <Stack.Screen name="ContactUs" component={SettingsScreen} />
+      <Stack.Screen name="About" component={SettingsScreen} />
+      <Stack.Screen name="PrivacyPolicy" component={SettingsScreen} />
+      <Stack.Screen name="Terms" component={SettingsScreen} />
+    </Stack.Navigator>
+  );
+};
 
 // Main tab navigator
 const MainTabNavigator = () => {
@@ -106,7 +130,7 @@ const MainTabNavigator = () => {
       />
       <Tab.Screen 
         name="Settings" 
-        component={SettingsScreen}
+        component={SettingsStackNavigator}
         options={{
           tabBarLabel: 'Settings'
         }}

@@ -12,7 +12,7 @@ import { ScreenErrorWrapper } from '../../components/error/ErrorComponents';
  * Enhanced version showing saved insights and activities
  * Includes swipe-to-delete functionality and detailed insight viewing
  */
-export default function SavedScreen() {
+export default function SavedScreen({ navigation }) {
   // State for active filter
   const [activeFilter, setActiveFilter] = useState('all');
   // State for selected insight (for detailed view)
@@ -279,7 +279,7 @@ If your baby dislikes tummy time, start with very short sessions and gradually b
 
   // Render a saved item (insight or activity) with swipe-to-delete
   const renderSavedItem = (item, type) => {
-    let row = useRef(null);
+    const row = useRef(null);
     
     return (
       <Swipeable
@@ -362,74 +362,81 @@ If your baby dislikes tummy time, start with very short sessions and gradually b
   // Check if there are no items to display
   const noItemsToDisplay = insights.length === 0 && activities.length === 0;
 
+  // Render content based on whether an insight is selected
+  const renderContent = () => {
+    if (selectedInsight) {
+      return renderInsightDetail();
+    }
+    
+    return (
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Text style={styles.headerTitle}>Saved</Text>
+        
+        {/* Filter tabs */}
+        <View style={styles.filterContainer}>
+          {filterOptions.map(option => (
+            <TouchableOpacity
+              key={option.id}
+              style={[
+                styles.filterOption,
+                activeFilter === option.id && styles.filterOptionActive
+              ]}
+              onPress={() => setActiveFilter(option.id)}
+            >
+              <Text style={[
+                styles.filterOptionText,
+                activeFilter === option.id && styles.filterOptionTextActive
+              ]}>
+                {option.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        
+        {/* Swipe tip */}
+        <View style={styles.organizationTip}>
+          <Ionicons name="information-circle-outline" size={20} color="#FFFFFF" />
+          <Text style={styles.organizationTipText}>
+            Swipe left on an item to delete it from your saved collection.
+          </Text>
+        </View>
+        
+        {/* Insights section */}
+        {insights.length > 0 && (
+          <>
+            <Text style={styles.sectionTitle}>Insights</Text>
+            {insights.map(insight => renderSavedItem(insight, 'insight'))}
+          </>
+        )}
+        
+        {/* Activities section */}
+        {activities.length > 0 && (
+          <>
+            <Text style={styles.sectionTitle}>Activities</Text>
+            {activities.map(activity => renderSavedItem(activity, 'activity'))}
+          </>
+        )}
+        
+        {/* Empty state */}
+        {noItemsToDisplay && (
+          <View style={styles.emptyStateContainer}>
+            <Ionicons name="bookmark-outline" size={60} color="#FFFFFF" />
+            <Text style={styles.emptyStateTitle}>No saved items</Text>
+            <Text style={styles.emptyStateText}>
+              Items you save from the Today and Journey screens will appear here.
+            </Text>
+          </View>
+        )}
+      </ScrollView>
+    );
+  };
+
   return (
-    <ScreenErrorWrapper screenName="Saved" navigation={null}>
+    <ScreenErrorWrapper screenName="Saved" navigation={navigation}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <BackgroundContainer>
           <SafeAreaView style={styles.container}>
-            {selectedInsight ? (
-              renderInsightDetail()
-            ) : (
-              <ScrollView contentContainerStyle={styles.scrollContent}>
-                <Text style={styles.headerTitle}>Saved</Text>
-                
-                {/* Filter tabs */}
-                <View style={styles.filterContainer}>
-                  {filterOptions.map(option => (
-                    <TouchableOpacity
-                      key={option.id}
-                      style={[
-                        styles.filterOption,
-                        activeFilter === option.id && styles.filterOptionActive
-                      ]}
-                      onPress={() => setActiveFilter(option.id)}
-                    >
-                      <Text style={[
-                        styles.filterOptionText,
-                        activeFilter === option.id && styles.filterOptionTextActive
-                      ]}>
-                        {option.label}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-                
-                {/* Swipe tip */}
-                <View style={styles.organizationTip}>
-                  <Ionicons name="information-circle-outline" size={20} color="#FFFFFF" />
-                  <Text style={styles.organizationTipText}>
-                    Swipe left on an item to delete it from your saved collection.
-                  </Text>
-                </View>
-                
-                {/* Insights section */}
-                {insights.length > 0 && (
-                  <>
-                    <Text style={styles.sectionTitle}>Insights</Text>
-                    {insights.map(insight => renderSavedItem(insight, 'insight'))}
-                  </>
-                )}
-                
-                {/* Activities section */}
-                {activities.length > 0 && (
-                  <>
-                    <Text style={styles.sectionTitle}>Activities</Text>
-                    {activities.map(activity => renderSavedItem(activity, 'activity'))}
-                  </>
-                )}
-                
-                {/* Empty state */}
-                {noItemsToDisplay && (
-                  <View style={styles.emptyStateContainer}>
-                    <Ionicons name="bookmark-outline" size={60} color="#FFFFFF" />
-                    <Text style={styles.emptyStateTitle}>No saved items</Text>
-                    <Text style={styles.emptyStateText}>
-                      Items you save from the Today and Journey screens will appear here.
-                    </Text>
-                  </View>
-                )}
-              </ScrollView>
-            )}
+            {renderContent()}
           </SafeAreaView>
         </BackgroundContainer>
       </GestureHandlerRootView>
