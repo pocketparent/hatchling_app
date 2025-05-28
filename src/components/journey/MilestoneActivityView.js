@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import BackgroundDecorations from '../../components/decorations/BackgroundDecorations';
 
 /**
  * MilestoneList Component
@@ -80,7 +79,7 @@ const ActivityList = ({ activities }) => {
 const MilestoneActivityView = ({ domain, onToggleMilestone, onBack }) => {
   return (
     <View style={styles.mainContainer}>
-      {/* Background decorations are now handled by the BackgroundDecorations component */}
+      {/* Plain teal background is now handled by the parent container */}
       
       <View style={styles.header}>
         <TouchableOpacity 

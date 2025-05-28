@@ -11,7 +11,7 @@ import Animated, {
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../theme';
-import BackgroundImage from '../../components/decorations/BackgroundImage';
+import BackgroundContainer from '../../components/decorations/BackgroundContainer';
 
 /**
  * Today Screen
@@ -103,7 +103,7 @@ export default function TodayScreen() {
   
   return (
     <GestureHandlerRootView style={styles.gestureRoot}>
-      <BackgroundImage>
+      <BackgroundContainer>
         <SafeAreaView style={styles.container}>
           {/* Hatchling header */}
           <View style={styles.appHeader}>
@@ -171,7 +171,7 @@ export default function TodayScreen() {
             </View>
           </View>
         </SafeAreaView>
-      </BackgroundImage>
+      </BackgroundContainer>
     </GestureHandlerRootView>
   );
 }

@@ -6,7 +6,7 @@ import journeyMock from '../../data/journeyMock';
 import PhaseSelector from '../../components/journey/PhaseSelector';
 import DomainCard from '../../components/journey/DomainCard';
 import MilestoneActivityView from '../../components/journey/MilestoneActivityView';
-import BackgroundImage from '../../components/decorations/BackgroundImage';
+import BackgroundContainer from '../../components/decorations/BackgroundContainer';
 
 /**
  * Journey Screen
@@ -79,7 +79,7 @@ export default function JourneyScreen() {
   // If a domain is selected, show milestone and activity view
   if (selectedDomain) {
     return (
-      <BackgroundImage>
+      <BackgroundContainer>
         <SafeAreaView style={styles.container}>
           <StatusBar style="light" />
           <MilestoneActivityView 
@@ -88,13 +88,13 @@ export default function JourneyScreen() {
             onBack={handleBackToPhase}
           />
         </SafeAreaView>
-      </BackgroundImage>
+      </BackgroundContainer>
     );
   }
   
   // Otherwise show the phase and domain selection view
   return (
-    <BackgroundImage>
+    <BackgroundContainer>
       <SafeAreaView style={styles.container}>
         <StatusBar style="light" />
         
@@ -130,7 +130,7 @@ export default function JourneyScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </BackgroundImage>
+    </BackgroundContainer>
   );
 }
 
