@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import theme from '../../theme';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 /**
  * PhaseSelector Component
  * 
  * Horizontal selector for developmental phases (age ranges)
  * Shows timeline visualization with dots and labels
+ * Styled to match the Today screen's visual language
  */
 const PhaseSelector = ({ phases, selectedPhaseId, onSelectPhase }) => {
   return (
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   phaseItem: {
     alignItems: 'center',
     zIndex: 2,
-    width: '22%',
+    width: '16%', // Adjusted for 6 phases instead of 4
   },
   timelineDot: {
     width: 16,
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
   },
   phaseLabel: {
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: 'SFProText-Medium',
     color: 'rgba(255, 255, 255, 0.7)',
     textAlign: 'center',
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   phaseLabelSelected: {
     color: '#FFFFFF',
     fontFamily: 'SFProText-Semibold',
-    fontSize: 16,
+    fontSize: 14,
   },
 });
 

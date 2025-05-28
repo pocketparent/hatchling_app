@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
  * 
  * Card displaying a developmental domain with icon, title, progress bar, and explore button
  * Used in the Journey screen to navigate to domain-specific milestones and activities
+ * Styled to match the Today screen's visual language
  */
 const DomainCard = ({ domain, onExplore }) => {
   // Custom icon based on domain name
@@ -82,15 +83,15 @@ const DomainCard = ({ domain, onExplore }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F8EFE0',
-    borderRadius: 16,
+    backgroundColor: '#F8EFE0', // Cream/beige background matching the Today screen cards
+    borderRadius: 20,
     padding: 20,
     marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowRadius: 8,
+    elevation: 5,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontFamily: 'SFProDisplay-Semibold',
-    color: '#004D4D',
+    color: '#004D4D', // Dark teal matching the Today screen text
   },
   progressContainer: {
     marginBottom: 16,
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#4A9B9B',
+    backgroundColor: '#4A9B9B', // Teal matching the app theme
     borderRadius: 4,
   },
   progressText: {
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   exploreButton: {
-    backgroundColor: '#4A9B9B',
+    backgroundColor: '#4A9B9B', // Teal matching the app theme
     borderRadius: 24,
     paddingVertical: 12,
     alignItems: 'center',

@@ -8,29 +8,29 @@
 const journeyMock = {
   phases: [
     {
-      id: "phase-0-3",
-      label: "0–3 Months",
+      id: "phase-0-2",
+      label: "0–2 Months",
       description: "During this time, babies are developing their senses and beginning to discover the world around them.",
       domains: [
         {
-          id: "domain-physical-0-3",
+          id: "domain-physical-0-2",
           name: "Physical",
           progress: 0.7,
           milestones: [
             { 
-              id: "m-physical-0-3-1", 
+              id: "m-physical-0-2-1", 
               title: "Lifts head briefly", 
               description: "Baby can lift their head briefly when placed on their tummy.",
               observed: true 
             },
             { 
-              id: "m-physical-0-3-2", 
+              id: "m-physical-0-2-2", 
               title: "Moves arms and legs", 
               description: "Baby moves arms and legs in smooth, rhythmic movements.",
               observed: true 
             },
             { 
-              id: "m-physical-0-3-3", 
+              id: "m-physical-0-2-3", 
               title: "Brings hands to face", 
               description: "Baby can bring hands to face and mouth.",
               observed: false 
@@ -38,30 +38,30 @@ const journeyMock = {
           ],
           activities: [
             { 
-              id: "a-physical-0-3-1", 
+              id: "a-physical-0-2-1", 
               title: "Tummy time", 
               description: "Place baby on their belly for short stretches to strengthen neck and shoulder muscles." 
             },
             { 
-              id: "a-physical-0-3-2", 
+              id: "a-physical-0-2-2", 
               title: "Gentle stretches", 
               description: "Gently move baby's arms and legs in a bicycling motion to promote flexibility." 
             }
           ]
         },
         {
-          id: "domain-cognitive-0-3",
+          id: "domain-cognitive-0-2",
           name: "Cognitive",
           progress: 0.5,
           milestones: [
             { 
-              id: "m-cognitive-0-3-1", 
+              id: "m-cognitive-0-2-1", 
               title: "Watches faces intently", 
               description: "Baby watches faces with interest and follows moving objects with eyes.",
               observed: true 
             },
             { 
-              id: "m-cognitive-0-3-2", 
+              id: "m-cognitive-0-2-2", 
               title: "Recognizes familiar objects", 
               description: "Baby begins to recognize familiar objects and people at a distance.",
               observed: false 
@@ -69,30 +69,30 @@ const journeyMock = {
           ],
           activities: [
             { 
-              id: "a-cognitive-0-3-1", 
+              id: "a-cognitive-0-2-1", 
               title: "Black and white patterns", 
               description: "Show baby high-contrast black and white patterns to stimulate visual development." 
             },
             { 
-              id: "a-cognitive-0-3-2", 
+              id: "a-cognitive-0-2-2", 
               title: "Mirror play", 
               description: "Let baby look at themselves in a baby-safe mirror to develop self-recognition." 
             }
           ]
         },
         {
-          id: "domain-language-0-3",
+          id: "domain-language-0-2",
           name: "Language",
           progress: 0.3,
           milestones: [
             { 
-              id: "m-language-0-3-1", 
+              id: "m-language-0-2-1", 
               title: "Makes cooing sounds", 
               description: "Baby begins to make cooing sounds in response to voices.",
               observed: true 
             },
             { 
-              id: "m-language-0-3-2", 
+              id: "m-language-0-2-2", 
               title: "Responds to sounds", 
               description: "Baby startles or turns head toward sudden sounds.",
               observed: false 
@@ -100,30 +100,30 @@ const journeyMock = {
           ],
           activities: [
             { 
-              id: "a-language-0-3-1", 
+              id: "a-language-0-2-1", 
               title: "Talk and sing", 
               description: "Talk and sing to your baby throughout the day, even during routine activities." 
             },
             { 
-              id: "a-language-0-3-2", 
+              id: "a-language-0-2-2", 
               title: "Read aloud", 
               description: "Read simple books with large pictures, even though baby won't understand the words yet." 
             }
           ]
         },
         {
-          id: "domain-social-0-3",
+          id: "domain-social-0-2",
           name: "Social/Emotional",
           progress: 0.6,
           milestones: [
             { 
-              id: "m-social-0-3-1", 
+              id: "m-social-0-2-1", 
               title: "Begins to smile", 
               description: "Baby begins to smile at people in response to their smiles.",
               observed: true 
             },
             { 
-              id: "m-social-0-3-2", 
+              id: "m-social-0-2-2", 
               title: "Self-soothes", 
               description: "Baby may bring hands to mouth to self-soothe.",
               observed: true 
@@ -131,14 +131,151 @@ const journeyMock = {
           ],
           activities: [
             { 
-              id: "a-social-0-3-1", 
+              id: "a-social-0-2-1", 
               title: "Skin-to-skin contact", 
               description: "Hold baby against your bare chest to promote bonding and emotional security." 
             },
             { 
-              id: "a-social-0-3-2", 
+              id: "a-social-0-2-2", 
               title: "Responsive caregiving", 
               description: "Respond promptly to baby's cries to build trust and security." 
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "phase-2-4",
+      label: "2–4 Months",
+      description: "During this time, babies are becoming more alert and interactive, developing stronger neck muscles and more purposeful movements.",
+      domains: [
+        {
+          id: "domain-physical-2-4",
+          name: "Physical",
+          progress: 0.6,
+          milestones: [
+            { 
+              id: "m-physical-2-4-1", 
+              title: "Holds head steady", 
+              description: "Baby can hold head steady when supported in a sitting position.",
+              observed: true 
+            },
+            { 
+              id: "m-physical-2-4-2", 
+              title: "Pushes up on arms", 
+              description: "Baby can push up on arms when lying on tummy.",
+              observed: true 
+            },
+            { 
+              id: "m-physical-2-4-3", 
+              title: "Opens and closes hands", 
+              description: "Baby can open and close hands and bring hands to mouth.",
+              observed: false 
+            }
+          ],
+          activities: [
+            { 
+              id: "a-physical-2-4-1", 
+              title: "Extended tummy time", 
+              description: "Increase tummy time duration to strengthen neck, back, and shoulder muscles." 
+            },
+            { 
+              id: "a-physical-2-4-2", 
+              title: "Reaching practice", 
+              description: "Hold toys slightly out of reach to encourage baby to reach and grasp." 
+            }
+          ]
+        },
+        {
+          id: "domain-cognitive-2-4",
+          name: "Cognitive",
+          progress: 0.5,
+          milestones: [
+            { 
+              id: "m-cognitive-2-4-1", 
+              title: "Follows moving objects", 
+              description: "Baby can follow moving objects with eyes from side to side.",
+              observed: true 
+            },
+            { 
+              id: "m-cognitive-2-4-2", 
+              title: "Shows boredom", 
+              description: "Baby cries or fusses when activity changes or stops.",
+              observed: false 
+            }
+          ],
+          activities: [
+            { 
+              id: "a-cognitive-2-4-1", 
+              title: "Visual tracking games", 
+              description: "Move colorful toys slowly from side to side for baby to follow with their eyes." 
+            },
+            { 
+              id: "a-cognitive-2-4-2", 
+              title: "Different positions", 
+              description: "Change baby's position and surroundings throughout the day to provide new perspectives." 
+            }
+          ]
+        },
+        {
+          id: "domain-language-2-4",
+          name: "Language",
+          progress: 0.4,
+          milestones: [
+            { 
+              id: "m-language-2-4-1", 
+              title: "Coos and gurgles", 
+              description: "Baby makes cooing and gurgling sounds, especially when talked to.",
+              observed: true 
+            },
+            { 
+              id: "m-language-2-4-2", 
+              title: "Different cries", 
+              description: "Baby has different cries for different needs (hunger, tiredness).",
+              observed: false 
+            }
+          ],
+          activities: [
+            { 
+              id: "a-language-2-4-1", 
+              title: "Conversation practice", 
+              description: "Pause after speaking to give baby a chance to 'respond' with their own sounds." 
+            },
+            { 
+              id: "a-language-2-4-2", 
+              title: "Sound imitation", 
+              description: "Imitate the sounds baby makes to encourage more vocalizations." 
+            }
+          ]
+        },
+        {
+          id: "domain-social-2-4",
+          name: "Social/Emotional",
+          progress: 0.7,
+          milestones: [
+            { 
+              id: "m-social-2-4-1", 
+              title: "Smiles spontaneously", 
+              description: "Baby smiles spontaneously, especially at people.",
+              observed: true 
+            },
+            { 
+              id: "m-social-2-4-2", 
+              title: "Enjoys play", 
+              description: "Baby enjoys playing with people and may cry when playing stops.",
+              observed: true 
+            }
+          ],
+          activities: [
+            { 
+              id: "a-social-2-4-1", 
+              title: "Face-to-face time", 
+              description: "Spend time face-to-face with baby, making expressions for them to observe and imitate." 
+            },
+            { 
+              id: "a-social-2-4-2", 
+              title: "Gentle games", 
+              description: "Play gentle games like peek-a-boo to encourage social interaction." 
             }
           ]
         }
@@ -282,85 +419,216 @@ const journeyMock = {
       ]
     },
     {
-      id: "phase-7-9",
-      label: "7–9 Months",
-      description: "During this time, babies typically begin to crawl, understand simple words, and play interactive games.",
+      id: "phase-6-8",
+      label: "6–8 Months",
+      description: "During this time, babies typically begin to sit independently, start crawling, and show more interest in exploring their environment.",
       domains: [
         {
-          id: "domain-physical-7-9",
+          id: "domain-physical-6-8",
           name: "Physical",
           progress: 0.4,
           milestones: [
             { 
-              id: "m-physical-7-9-1", 
+              id: "m-physical-6-8-1", 
               title: "Sits without support", 
               description: "Baby can sit steadily without support.",
               observed: false 
             },
             { 
-              id: "m-physical-7-9-2", 
-              title: "Crawls or scoots", 
-              description: "Baby moves around by crawling, scooting, or rolling.",
+              id: "m-physical-6-8-2", 
+              title: "Begins crawling", 
+              description: "Baby may begin to crawl or scoot backward.",
               observed: false 
             }
           ],
           activities: [
             { 
-              id: "a-physical-7-9-1", 
-              title: "Crawling course", 
-              description: "Create a simple obstacle course with pillows and toys to encourage crawling." 
+              id: "a-physical-6-8-1", 
+              title: "Crawling encouragement", 
+              description: "Place toys just out of reach to encourage baby to move toward them." 
             },
             { 
-              id: "a-physical-7-9-2", 
-              title: "Pull to stand", 
-              description: "Place toys on low surfaces to encourage baby to pull themselves up to standing." 
+              id: "a-physical-6-8-2", 
+              title: "Sitting practice", 
+              description: "Help baby practice sitting independently with toys within reach." 
             }
           ]
         },
         {
-          id: "domain-cognitive-7-9",
+          id: "domain-cognitive-6-8",
           name: "Cognitive",
           progress: 0.3,
           milestones: [
             { 
-              id: "m-cognitive-7-9-1", 
-              title: "Finds hidden objects", 
+              id: "m-cognitive-6-8-1", 
+              title: "Finds partially hidden objects", 
               description: "Baby can find toys that are partially hidden.",
               observed: false 
             },
             { 
-              id: "m-cognitive-7-9-2", 
+              id: "m-cognitive-6-8-2", 
               title: "Explores objects", 
-              description: "Baby explores objects in different ways (shaking, banging, throwing).",
+              description: "Baby explores objects by banging, shaking, and transferring from hand to hand.",
               observed: false 
             }
           ],
           activities: [
             { 
-              id: "a-cognitive-7-9-1", 
-              title: "Hide and seek", 
-              description: "Hide toys under blankets and encourage baby to find them." 
+              id: "a-cognitive-6-8-1", 
+              title: "Simple hide and seek", 
+              description: "Partially hide toys under a blanket and encourage baby to find them." 
             },
             { 
-              id: "a-cognitive-7-9-2", 
-              title: "Stacking and nesting", 
-              description: "Provide cups or blocks that can be stacked or nested inside each other." 
+              id: "a-cognitive-6-8-2", 
+              title: "Cause and effect toys", 
+              description: "Provide toys that respond when baby performs an action (like pressing a button)." 
             }
           ]
         },
         {
-          id: "domain-language-7-9",
+          id: "domain-language-6-8",
           name: "Language",
           progress: 0.2,
           milestones: [
             { 
-              id: "m-language-7-9-1", 
+              id: "m-language-6-8-1", 
+              title: "Babbles with consonants", 
+              description: "Baby babbles with consonant sounds like 'ba', 'da', and 'ga'.",
+              observed: false 
+            },
+            { 
+              id: "m-language-6-8-2", 
+              title: "Responds to sounds", 
+              description: "Baby turns and looks in the direction of sounds.",
+              observed: false 
+            }
+          ],
+          activities: [
+            { 
+              id: "a-language-6-8-1", 
+              title: "Sound games", 
+              description: "Make different sounds from various positions to encourage baby to locate the source." 
+            },
+            { 
+              id: "a-language-6-8-2", 
+              title: "Naming objects", 
+              description: "Name objects as you give them to baby to build vocabulary." 
+            }
+          ]
+        },
+        {
+          id: "domain-social-6-8",
+          name: "Social/Emotional",
+          progress: 0.3,
+          milestones: [
+            { 
+              id: "m-social-6-8-1", 
+              title: "Distinguishes emotions", 
+              description: "Baby can distinguish between happy and angry tones.",
+              observed: false 
+            },
+            { 
+              id: "m-social-6-8-2", 
+              title: "Enjoys social play", 
+              description: "Baby enjoys playing social games and may initiate interaction.",
+              observed: false 
+            }
+          ],
+          activities: [
+            { 
+              id: "a-social-6-8-1", 
+              title: "Emotional expressions", 
+              description: "Use exaggerated facial expressions to help baby learn about emotions." 
+            },
+            { 
+              id: "a-social-6-8-2", 
+              title: "Social games", 
+              description: "Play games like peek-a-boo and pat-a-cake to encourage social interaction." 
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "phase-8-10",
+      label: "8–10 Months",
+      description: "During this time, babies are developing more mobility, understanding simple words, and showing stronger preferences.",
+      domains: [
+        {
+          id: "domain-physical-8-10",
+          name: "Physical",
+          progress: 0.3,
+          milestones: [
+            { 
+              id: "m-physical-8-10-1", 
+              title: "Crawls efficiently", 
+              description: "Baby crawls forward on belly or hands and knees.",
+              observed: false 
+            },
+            { 
+              id: "m-physical-8-10-2", 
+              title: "Pulls to stand", 
+              description: "Baby can pull to stand using furniture for support.",
+              observed: false 
+            }
+          ],
+          activities: [
+            { 
+              id: "a-physical-8-10-1", 
+              title: "Crawling obstacle course", 
+              description: "Create a simple obstacle course with pillows and tunnels for baby to navigate." 
+            },
+            { 
+              id: "a-physical-8-10-2", 
+              title: "Standing practice", 
+              description: "Place toys on low surfaces to encourage baby to pull up to standing." 
+            }
+          ]
+        },
+        {
+          id: "domain-cognitive-8-10",
+          name: "Cognitive",
+          progress: 0.3,
+          milestones: [
+            { 
+              id: "m-cognitive-8-10-1", 
+              title: "Finds hidden objects", 
+              description: "Baby can find toys that are completely hidden.",
+              observed: false 
+            },
+            { 
+              id: "m-cognitive-8-10-2", 
+              title: "Explores objects thoroughly", 
+              description: "Baby explores objects in detail, finding hidden features.",
+              observed: false 
+            }
+          ],
+          activities: [
+            { 
+              id: "a-cognitive-8-10-1", 
+              title: "Hide and seek", 
+              description: "Hide toys completely under blankets or in containers for baby to find." 
+            },
+            { 
+              id: "a-cognitive-8-10-2", 
+              title: "Nesting toys", 
+              description: "Provide cups or boxes that fit inside each other to explore spatial relationships." 
+            }
+          ]
+        },
+        {
+          id: "domain-language-8-10",
+          name: "Language",
+          progress: 0.2,
+          milestones: [
+            { 
+              id: "m-language-8-10-1", 
               title: "Responds to simple words", 
               description: "Baby responds to simple verbal requests like 'come here'.",
               observed: false 
             },
             { 
-              id: "m-language-7-9-2", 
+              id: "m-language-8-10-2", 
               title: "Makes 'mama' or 'dada' sounds", 
               description: "Baby makes specific consonant-vowel combinations that sound like 'mama' or 'dada'.",
               observed: false 
@@ -368,45 +636,45 @@ const journeyMock = {
           ],
           activities: [
             { 
-              id: "a-language-7-9-1", 
-              title: "Name objects", 
-              description: "Name objects as you give them to baby to build vocabulary." 
-            },
-            { 
-              id: "a-language-7-9-2", 
+              id: "a-language-8-10-1", 
               title: "Simple instructions", 
               description: "Give simple, one-step instructions like 'give me the ball' and celebrate when baby responds." 
+            },
+            { 
+              id: "a-language-8-10-2", 
+              title: "Name family members", 
+              description: "Regularly use names of family members to help baby associate names with people." 
             }
           ]
         },
         {
-          id: "domain-social-7-9",
+          id: "domain-social-8-10",
           name: "Social/Emotional",
           progress: 0.3,
           milestones: [
             { 
-              id: "m-social-7-9-1", 
+              id: "m-social-8-10-1", 
               title: "Shows stranger anxiety", 
               description: "Baby may become clingy with familiar adults and show anxiety around strangers.",
               observed: false 
             },
             { 
-              id: "m-social-7-9-2", 
-              title: "Plays interactive games", 
-              description: "Baby enjoys interactive games like pat-a-cake and peek-a-boo.",
+              id: "m-social-8-10-2", 
+              title: "Shows preferences", 
+              description: "Baby clearly shows preferences for certain people and toys.",
               observed: false 
             }
           ],
           activities: [
             { 
-              id: "a-social-7-9-1", 
+              id: "a-social-8-10-1", 
               title: "Gentle introductions", 
               description: "Introduce new people gradually while holding baby to help with stranger anxiety." 
             },
             { 
-              id: "a-social-7-9-2", 
-              title: "Interactive play", 
-              description: "Play turn-taking games to develop social interaction skills." 
+              id: "a-social-8-10-2", 
+              title: "Comfort objects", 
+              description: "Introduce a comfort object like a small blanket or soft toy for security." 
             }
           ]
         }
@@ -424,8 +692,8 @@ const journeyMock = {
           milestones: [
             { 
               id: "m-physical-10-12-1", 
-              title: "Pulls to stand", 
-              description: "Baby pulls to stand and may walk holding onto furniture.",
+              title: "Stands alone briefly", 
+              description: "Baby may stand alone for a few seconds without support.",
               observed: false 
             },
             { 

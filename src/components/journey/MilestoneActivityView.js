@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
  * 
  * Displays a list of milestones with toggle buttons for observed/not yet status
  * Used in the Journey screen after selecting a domain to explore
+ * Styled to match the Today screen's visual language
  */
 const MilestoneList = ({ milestones, onToggleMilestone }) => {
   return (
@@ -46,6 +47,7 @@ const MilestoneList = ({ milestones, onToggleMilestone }) => {
  * 
  * Displays a list of suggested activities for a domain
  * Used in the Journey screen after selecting a domain to explore
+ * Styled to match the Today screen's visual language
  */
 const ActivityList = ({ activities }) => {
   return (
@@ -68,61 +70,70 @@ const ActivityList = ({ activities }) => {
 };
 
 /**
- * ToggleButton Component
- * 
- * A custom toggle button for milestone observed/not yet status
- * Used in the MilestoneList component
- */
-const ToggleButton = ({ value, onToggle, activeLabel, inactiveLabel }) => {
-  return (
-    <TouchableOpacity 
-      style={[
-        styles.toggleButton,
-        value ? styles.toggleButtonActive : styles.toggleButtonInactive
-      ]}
-      onPress={onToggle}
-      activeOpacity={0.8}
-    >
-      <Text style={[
-        styles.toggleButtonText,
-        value ? styles.toggleButtonTextActive : styles.toggleButtonTextInactive
-      ]}>
-        {value ? activeLabel : inactiveLabel}
-      </Text>
-    </TouchableOpacity>
-  );
-};
-
-/**
  * MilestoneActivityView Component
  * 
  * Container component that displays both milestones and activities for a domain
  * Used in the Journey screen after selecting a domain to explore
+ * Styled to match the Today screen's visual language
  */
 const MilestoneActivityView = ({ domain, onToggleMilestone, onBack }) => {
   return (
     <View style={styles.mainContainer}>
+      {/* Background decorative elements - matching Today screen */}
+      <View style={styles.backgroundDecorations}>
+        {/* Small dots */}
+        <View style={[styles.smallDot, { top: '10%', left: '15%' }]} />
+        <View style={[styles.smallDot, { top: '20%', left: '40%' }]} />
+        <View style={[styles.smallDot, { top: '35%', right: '25%' }]} />
+        <View style={[styles.smallDot, { top: '50%', left: '30%' }]} />
+        <View style={[styles.smallDot, { top: '65%', right: '15%' }]} />
+        <View style={[styles.smallDot, { top: '80%', left: '20%' }]} />
+        <View style={[styles.smallDot, { top: '90%', right: '30%' }]} />
+        <View style={[styles.smallDot, { top: '25%', right: '10%' }]} />
+        
+        {/* Medium dots */}
+        <View style={[styles.mediumDot, { top: '15%', right: '35%' }]} />
+        <View style={[styles.mediumDot, { top: '45%', left: '10%' }]} />
+        <View style={[styles.mediumDot, { top: '70%', right: '40%' }]} />
+        <View style={[styles.mediumDot, { top: '85%', left: '40%' }]} />
+        
+        {/* Star shapes */}
+        <View style={[styles.star, { top: '8%', right: '20%' }]}>
+          <View style={styles.starInner} />
+        </View>
+        <View style={[styles.star, { top: '30%', left: '20%' }]}>
+          <View style={styles.starInner} />
+        </View>
+        
+        {/* Leaf shapes */}
+        <View style={[styles.leaf, { top: '25%', right: '15%' }]} />
+        <View style={[styles.leaf, { top: '60%', left: '15%', transform: [{ rotate: '45deg' }] }]} />
+        <View style={[styles.leaf, { bottom: '20%', right: '25%', transform: [{ rotate: '-30deg' }] }]} />
+      </View>
+      
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
           onPress={onBack}
           activeOpacity={0.7}
         >
-          <Ionicons name="chevron-back" size={24} color="#4A9B9B" />
+          <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{domain.name}</Text>
       </View>
       
       <ScrollView style={styles.scrollContainer}>
-        <MilestoneList 
-          milestones={domain.milestones} 
-          onToggleMilestone={onToggleMilestone} 
-        />
-        
-        <View style={styles.divider} />
-        
-        <ActivityList activities={domain.activities} />
+        <View style={styles.contentContainer}>
+          <MilestoneList 
+            milestones={domain.milestones} 
+            onToggleMilestone={onToggleMilestone} 
+          />
+          
+          <View style={styles.divider} />
+          
+          <ActivityList activities={domain.activities} />
+        </View>
       </ScrollView>
     </View>
   );
@@ -131,15 +142,56 @@ const MilestoneActivityView = ({ domain, onToggleMilestone, onBack }) => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#4A9B9B', // Teal background matching the Today screen
+  },
+  backgroundDecorations: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 0,
+  },
+  smallDot: {
+    position: 'absolute',
+    width: 6,
+    height: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 3,
+  },
+  mediumDot: {
+    position: 'absolute',
+    width: 10,
+    height: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 5,
+  },
+  star: {
+    position: 'absolute',
+    width: 14,
+    height: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  starInner: {
+    width: 12,
+    height: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 6,
+  },
+  leaf: {
+    position: 'absolute',
+    width: 30,
+    height: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 15,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    zIndex: 1,
   },
   backButton: {
     flexDirection: 'row',
@@ -148,34 +200,44 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 16,
     fontFamily: 'SFProText-Medium',
-    color: '#4A9B9B',
+    color: '#FFFFFF',
     marginLeft: 4,
   },
   headerTitle: {
     flex: 1,
-    fontSize: 20,
-    fontFamily: 'SFProDisplay-Semibold',
-    color: '#004D4D',
+    fontSize: 24,
+    fontFamily: 'SFProDisplay-Bold',
+    color: '#FFFFFF',
     textAlign: 'center',
     marginRight: 40, // To offset the back button and center the title
   },
   scrollContainer: {
     flex: 1,
+    zIndex: 1,
+  },
+  contentContainer: {
+    padding: 16,
+    paddingBottom: 100, // Extra padding at bottom to account for tab bar
   },
   container: {
-    padding: 16,
+    marginBottom: 16,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: 'SFProDisplay-Semibold',
-    color: '#004D4D',
+    color: '#FFFFFF',
     marginBottom: 16,
   },
   milestoneItem: {
-    backgroundColor: '#F8EFE0',
-    borderRadius: 12,
+    backgroundColor: '#F8EFE0', // Cream/beige background matching the Today screen cards
+    borderRadius: 20,
     padding: 16,
     marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   milestoneContent: {
     marginBottom: 12,
@@ -183,7 +245,7 @@ const styles = StyleSheet.create({
   milestoneTitle: {
     fontSize: 16,
     fontFamily: 'SFProText-Semibold',
-    color: '#004D4D',
+    color: '#004D4D', // Dark teal matching the Today screen text
     marginBottom: 4,
   },
   milestoneDescription: {
@@ -207,41 +269,22 @@ const styles = StyleSheet.create({
   toggleLabelInactive: {
     color: '#9E9E9E',
   },
-  toggleButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  toggleButtonActive: {
-    backgroundColor: 'rgba(74, 155, 155, 0.1)',
-  },
-  toggleButtonInactive: {
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-  },
-  toggleButtonText: {
-    fontSize: 14,
-    fontFamily: 'SFProText-Medium',
-  },
-  toggleButtonTextActive: {
-    color: '#4A9B9B',
-  },
-  toggleButtonTextInactive: {
-    color: '#9E9E9E',
-  },
   divider: {
     height: 1,
-    backgroundColor: '#F0F0F0',
-    marginVertical: 16,
-    marginHorizontal: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    marginVertical: 24,
   },
   activityItem: {
     flexDirection: 'row',
-    backgroundColor: '#F8EFE0',
-    borderRadius: 12,
+    backgroundColor: '#F8EFE0', // Cream/beige background matching the Today screen cards
+    borderRadius: 20,
     padding: 16,
     marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   activityIconContainer: {
     width: 40,
@@ -258,7 +301,7 @@ const styles = StyleSheet.create({
   activityTitle: {
     fontSize: 16,
     fontFamily: 'SFProText-Semibold',
-    color: '#B05E35',
+    color: '#B05E35', // Copper/brown color matching the Today screen
     marginBottom: 4,
   },
   activityDescription: {
@@ -268,5 +311,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export { MilestoneList, ActivityList, ToggleButton, MilestoneActivityView };
+export { MilestoneList, ActivityList, MilestoneActivityView };
 export default MilestoneActivityView;
