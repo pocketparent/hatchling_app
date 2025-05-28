@@ -40,14 +40,40 @@ export default function AskScreen() {
       category: '2',
       question: 'How do I know if my baby is getting enough milk?',
       preview: 'Look for these signs of satisfaction after feeding...',
-      fullAnswer: 'It can be challenging to know exactly how much milk your baby is getting, especially if you're breastfeeding. Here are reliable indicators that your baby is getting enough milk:\n\nPhysical signs:\n• Steady weight gain following initial newborn weight loss\n• At least 6-8 wet diapers per day after the first week\n• Regular bowel movements (frequency varies by age and feeding method)\n• Your baby appears satisfied after feedings\n• Good skin elasticity and moist mouth\n\nFeeding behavior:\n• You can hear or see your baby swallowing during feeds\n• Your baby seems content after most feedings\n• Feeding sessions last approximately 20-40 minutes (breastfeeding) or your baby finishes the expected amount of formula\n\nIf you're concerned about your baby's intake, tracking wet/dirty diapers and regular weight checks can provide reassurance. Always consult your pediatrician if you have ongoing concerns about feeding or weight gain.'
+      fullAnswer: `It can be challenging to know exactly how much milk your baby is getting, especially if you're breastfeeding. Here are reliable indicators that your baby is getting enough milk:
+
+Physical signs:
+• Steady weight gain following initial newborn weight loss
+• At least 6-8 wet diapers per day after the first week
+• Regular bowel movements (frequency varies by age and feeding method)
+• Your baby appears satisfied after feedings
+• Good skin elasticity and moist mouth
+
+Feeding behavior:
+• You can hear or see your baby swallowing during feeds
+• Your baby seems content after most feedings
+• Feeding sessions last approximately 20-40 minutes (breastfeeding) or your baby finishes the expected amount of formula
+
+If you're concerned about your baby's intake, tracking wet/dirty diapers and regular weight checks can provide reassurance. Always consult your pediatrician if you have ongoing concerns about feeding or weight gain.`
     },
     { 
       id: '3', 
       category: '3',
       question: 'When should my baby start rolling over?',
       preview: 'Most babies begin rolling from tummy to back around 4 months...',
-      fullAnswer: 'Rolling over is an important milestone in your baby's physical development. Here's what you can expect:\n\n• Most babies start rolling from tummy to back between 4-5 months\n• Rolling from back to tummy typically happens between 5-6 months\n• Some babies may roll as early as 3 months or as late as 7 months\n• Some babies may skip rolling from tummy to back and go straight to rolling from back to tummy\n\nTo encourage rolling:\n• Provide plenty of supervised tummy time daily\n• Place toys slightly out of reach during floor play to encourage movement\n• Gently assist your baby by showing them how to shift their weight to the side\n\nRemember that all babies develop at their own pace. If your baby hasn't started rolling by 6-7 months, or if they roll one way but not the other by 8 months, it's a good idea to mention it to your pediatrician at your next visit.'
+      fullAnswer: `Rolling over is an important milestone in your baby's physical development. Here's what you can expect:
+
+• Most babies start rolling from tummy to back between 4-5 months
+• Rolling from back to tummy typically happens between 5-6 months
+• Some babies may roll as early as 3 months or as late as 7 months
+• Some babies may skip rolling from tummy to back and go straight to rolling from back to tummy
+
+To encourage rolling:
+• Provide plenty of supervised tummy time daily
+• Place toys slightly out of reach during floor play to encourage movement
+• Gently assist your baby by showing them how to shift their weight to the side
+
+Remember that all babies develop at their own pace. If your baby hasn't started rolling by 6-7 months, or if they roll one way but not the other by 8 months, it's a good idea to mention it to your pediatrician at your next visit.`
     },
   ];
 
@@ -58,14 +84,41 @@ export default function AskScreen() {
       category: '1',
       question: 'When will my baby start sleeping through the night?',
       preview: 'Every baby is different, but most begin to sleep for longer stretches...',
-      fullAnswer: 'The timeline for sleeping through the night varies significantly from baby to baby. Here's a general guideline:\n\n• Newborns (0-3 months): Sleep is irregular with frequent wakings every 2-4 hours to feed\n• 3-6 months: Many babies begin to have longer sleep stretches of 5-6 hours\n• 6-9 months: Some babies may sleep 8-10 hours without feeding\n• 9-12 months: Many babies can sleep 10-12 hours through the night\n\nFactors that influence when a baby sleeps through the night include:\n• Individual temperament and development\n• Feeding method and schedule\n• Sleep environment and routines\n• Growth spurts and developmental milestones\n\nIt's important to have realistic expectations and understand that night wakings are normal and necessary for many babies, especially those who are breastfed. Consistent bedtime routines, age-appropriate sleep schedules, and gradually helping your baby learn to self-soothe can support the development of healthy sleep patterns.'
+      fullAnswer: `The timeline for sleeping through the night varies significantly from baby to baby. Here's a general guideline:
+
+• Newborns (0-3 months): Sleep is irregular with frequent wakings every 2-4 hours to feed
+• 3-6 months: Many babies begin to have longer sleep stretches of 5-6 hours
+• 6-9 months: Some babies may sleep 8-10 hours without feeding
+• 9-12 months: Many babies can sleep 10-12 hours through the night
+
+Factors that influence when a baby sleeps through the night include:
+• Individual temperament and development
+• Feeding method and schedule
+• Sleep environment and routines
+• Growth spurts and developmental milestones
+
+It's important to have realistic expectations and understand that night wakings are normal and necessary for many babies, especially those who are breastfed. Consistent bedtime routines, age-appropriate sleep schedules, and gradually helping your baby learn to self-soothe can support the development of healthy sleep patterns.`
     },
     { 
       id: '5', 
       category: '2',
       question: 'When should I start solid foods?',
       preview: 'Most pediatricians recommend introducing solids around 6 months...',
-      fullAnswer: 'The American Academy of Pediatrics recommends introducing solid foods around 6 months of age. Here are signs your baby is ready for solids:\n\n• Can sit up with minimal support\n• Has good head control\n• Shows interest in food (watches you eat, reaches for food)\n• Has lost the tongue-thrust reflex (no longer automatically pushes food out of mouth)\n• Seems hungry after a full day of milk feedings\n\nWhen starting solids:\n• Begin with single-ingredient foods without added sugar or salt\n• Wait 3-5 days between introducing new foods to watch for allergic reactions\n• Offer a variety of flavors and textures as your baby becomes more experienced\n• Continue breast milk or formula as the primary source of nutrition through the first year\n\nCommon first foods include iron-fortified infant cereal, pureed vegetables and fruits, and soft, mashed foods. Some families choose to follow a baby-led weaning approach with appropriate finger foods instead of purees. Discuss your plans with your pediatrician to determine the best approach for your baby.'
+      fullAnswer: `The American Academy of Pediatrics recommends introducing solid foods around 6 months of age. Here are signs your baby is ready for solids:
+
+• Can sit up with minimal support
+• Has good head control
+• Shows interest in food (watches you eat, reaches for food)
+• Has lost the tongue-thrust reflex (no longer automatically pushes food out of mouth)
+• Seems hungry after a full day of milk feedings
+
+When starting solids:
+• Begin with single-ingredient foods without added sugar or salt
+• Wait 3-5 days between introducing new foods to watch for allergic reactions
+• Offer a variety of flavors and textures as your baby becomes more experienced
+• Continue breast milk or formula as the primary source of nutrition through the first year
+
+Common first foods include iron-fortified infant cereal, pureed vegetables and fruits, and soft, mashed foods. Some families choose to follow a baby-led weaning approach with appropriate finger foods instead of purees. Discuss your plans with your pediatrician to determine the best approach for your baby.`
     },
   ];
 
