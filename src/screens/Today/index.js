@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -12,14 +12,16 @@ import { PanGestureHandler } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../theme';
 import BackgroundContainer from '../../components/decorations/BackgroundContainer';
+import ThisWeekMilestones from '../../components/today/ThisWeekMilestones';
+import { ScreenErrorWrapper } from '../../components/error/ErrorComponents';
 
 /**
  * Today Screen
  * 
- * Main landing screen showing daily insight card
+ * Main landing screen showing daily insight card and weekly milestone summary
  * Matches the design from the provided screenshots
  */
-export default function TodayScreen() {
+export default function TodayScreen({ navigation }) {
   // State for tracking current insight panel
   const [currentIndex, setCurrentIndex] = useState(0);
   
@@ -102,77 +104,107 @@ export default function TodayScreen() {
   };
   
   return (
-    <GestureHandlerRootView style={styles.gestureRoot}>
-      <BackgroundContainer>
-        <SafeAreaView style={styles.container}>
-          {/* Hatchling header */}
-          <View style={styles.appHeader}>
-            <Text style={styles.appTitle}>Hatchling</Text>
-          </View>
-          
-          {/* Header with baby info */}
-          <View style={styles.header}>
-            <View style={styles.avatarContainer}>
-              <Image 
-                source={require('../../../assets/baby-avatar.png')} 
-                style={styles.avatar}
-                defaultSource={require('../../../assets/baby-avatar.png')}
-              />
-            </View>
-            <View style={styles.babyInfo}>
-              <Text style={styles.babyName}>Emma,</Text>
-              <Text style={styles.babyAge}>4 months</Text>
-            </View>
-          </View>
-          
-          {/* Main insight card */}
-          <View style={styles.cardContainer}>
-            <View style={styles.insightCard}>
-              <Text style={styles.insightLabel}>DAILY INSIGHT</Text>
-              
-              <PanGestureHandler onGestureEvent={gestureHandler}>
-                <Animated.View style={[styles.insightContent, animatedStyle]}>
-                  <Text style={styles.insightTitle}>
-                    {currentPanel.title}
-                  </Text>
-                  
-                  <Text style={styles.insightText}>
-                    {currentPanel.content}
-                  </Text>
-                  
-                  {/* Pagination dots */}
-                  {renderPaginationDots()}
-                </Animated.View>
-              </PanGestureHandler>
-              
-              {/* Action buttons */}
-              <View style={styles.actionButtonsContainer}>
-                <TouchableOpacity style={styles.actionButton}>
-                  <View style={styles.iconContainer}>
-                    <Ionicons name="bookmark-outline" size={24} color="#FFFFFF" />
-                  </View>
-                  <Text style={styles.actionText}>Save</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity style={styles.actionButton}>
-                  <View style={styles.iconContainer}>
-                    <Ionicons name="share-outline" size={24} color="#FFFFFF" />
-                  </View>
-                  <Text style={styles.actionText}>Share</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity style={styles.actionButton}>
-                  <View style={styles.iconContainer}>
-                    <Ionicons name="happy-outline" size={24} color="#FFFFFF" />
-                  </View>
-                  <Text style={styles.actionText}>Helpful</Text>
-                </TouchableOpacity>
+    <ScreenErrorWrapper screenName="Today" navigation={navigation}>
+      <GestureHandlerRootView style={styles.gestureRoot}>
+        <BackgroundContainer>
+          <SafeAreaView style={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+              {/* Hatchling header */}
+              <View style={styles.appHeader}>
+                <Text style={styles.appTitle}>Hatchling</Text>
               </View>
-            </View>
-          </View>
-        </SafeAreaView>
-      </BackgroundContainer>
-    </GestureHandlerRootView>
+              
+              {/* Header with baby info */}
+              <View style={styles.header}>
+                <View style={styles.avatarContainer}>
+                  <Image 
+                    source={require('../../../assets/baby-avatar.png')} 
+                    style={styles.avatar}
+                    defaultSource={require('../../../assets/baby-avatar.png')}
+                  />
+                </View>
+                <View style={styles.babyInfo}>
+                  <Text style={styles.babyName}>Emma,</Text>
+                  <Text style={styles.babyAge}>4 months</Text>
+                </View>
+              </View>
+              
+              {/* Main insight card */}
+              <View style={styles.cardContainer}>
+                <View style={styles.insightCard}>
+                  <Text style={styles.insightLabel}>DAILY INSIGHT</Text>
+                  
+                  <PanGestureHandler onGestureEvent={gestureHandler}>
+                    <Animated.View style={[styles.insightContent, animatedStyle]}>
+                      <Text style={styles.insightTitle}>
+                        {currentPanel.title}
+                      </Text>
+                      
+                      <Text style={styles.insightText}>
+                        {currentPanel.content}
+                      </Text>
+                      
+                      {/* Pagination dots */}
+                      {renderPaginationDots()}
+                    </Animated.View>
+                  </PanGestureHandler>
+                  
+                  {/* Action buttons */}
+                  <View style={styles.actionButtonsContainer}>
+                    <TouchableOpacity style={styles.actionButton}>
+                      <View style={styles.iconContainer}>
+                        <Ionicons name="bookmark-outline" size={24} color="#FFFFFF" />
+                      </View>
+                      <Text style={styles.actionText}>Save</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.actionButton}>
+                      <View style={styles.iconContainer}>
+                        <Ionicons name="share-outline" size={24} color="#FFFFFF" />
+                      </View>
+                      <Text style={styles.actionText}>Share</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.actionButton}>
+                      <View style={styles.iconContainer}>
+                        <Ionicons name="happy-outline" size={24} color="#FFFFFF" />
+                      </View>
+                      <Text style={styles.actionText}>Helpful</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                
+                {/* This Week Milestones */}
+                <ThisWeekMilestones navigation={navigation} />
+                
+                {/* Upcoming check-ins reminder */}
+                <View style={styles.upcomingCheckInsCard}>
+                  <View style={styles.upcomingCheckInsHeader}>
+                    <Text style={styles.upcomingCheckInsTitle}>Upcoming Check-ins</Text>
+                    <TouchableOpacity>
+                      <Text style={styles.seeAllText}>See All</Text>
+                    </TouchableOpacity>
+                  </View>
+                  
+                  <View style={styles.checkInItem}>
+                    <View style={styles.checkInIconContainer}>
+                      <Ionicons name="calendar" size={24} color={theme.colors.primary.main} />
+                    </View>
+                    <View style={styles.checkInContent}>
+                      <Text style={styles.checkInTitle}>4-Month Wellness Check</Text>
+                      <Text style={styles.checkInDate}>May 30, 2025</Text>
+                    </View>
+                    <TouchableOpacity style={styles.checkInButton}>
+                      <Text style={styles.checkInButtonText}>Prepare</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </ScrollView>
+          </SafeAreaView>
+        </BackgroundContainer>
+      </GestureHandlerRootView>
+    </ScreenErrorWrapper>
   );
 }
 
@@ -182,6 +214,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 100, // Extra padding for bottom tab bar
   },
   appHeader: {
     alignItems: 'center',
@@ -237,7 +272,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     paddingHorizontal: 20,
-    paddingBottom: 20, // Reduced from 80 since we removed the custom nav bar
+    paddingBottom: 20,
     marginTop: 10,
     zIndex: 1,
   },
@@ -320,5 +355,74 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProText-Regular',
     fontSize: 16,
     color: '#FFFFFF',
+  },
+  upcomingCheckInsCard: {
+    backgroundColor: '#F8EFE0',
+    borderRadius: 20,
+    padding: 20,
+    marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  upcomingCheckInsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  upcomingCheckInsTitle: {
+    fontFamily: 'SFProDisplay-Bold',
+    fontSize: 22,
+    color: '#004D4D',
+  },
+  seeAllText: {
+    fontFamily: 'SFProText-Medium',
+    fontSize: 14,
+    color: theme.colors.primary.main,
+    textDecorationLine: 'underline',
+  },
+  checkInItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    borderRadius: 12,
+    padding: 12,
+  },
+  checkInIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(0, 77, 77, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  checkInContent: {
+    flex: 1,
+  },
+  checkInTitle: {
+    fontFamily: 'SFProText-Medium',
+    fontSize: 16,
+    color: '#004D4D',
+    marginBottom: 2,
+  },
+  checkInDate: {
+    fontFamily: 'SFProText-Regular',
+    fontSize: 14,
+    color: theme.colors.neutral.medium,
+  },
+  checkInButton: {
+    backgroundColor: theme.colors.primary.main,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+  },
+  checkInButtonText: {
+    fontFamily: 'SFProText-Medium',
+    fontSize: 14,
+    color: theme.colors.neutral.white,
   },
 });
