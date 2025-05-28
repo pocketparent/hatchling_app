@@ -6,7 +6,7 @@ import journeyMock from '../../data/journeyMock';
 import PhaseSelector from '../../components/journey/PhaseSelector';
 import DomainCard from '../../components/journey/DomainCard';
 import MilestoneActivityView from '../../components/journey/MilestoneActivityView';
-import BackgroundDecorations from '../../components/decorations/BackgroundDecorations';
+import BackgroundImage from '../../components/decorations/BackgroundImage';
 
 /**
  * Journey Screen
@@ -79,66 +79,64 @@ export default function JourneyScreen() {
   // If a domain is selected, show milestone and activity view
   if (selectedDomain) {
     return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar style="light" />
-        {/* Background decorations for milestone view */}
-        <BackgroundDecorations />
-        <MilestoneActivityView 
-          domain={selectedDomain}
-          onToggleMilestone={handleToggleMilestone}
-          onBack={handleBackToPhase}
-        />
-      </SafeAreaView>
+      <BackgroundImage>
+        <SafeAreaView style={styles.container}>
+          <StatusBar style="light" />
+          <MilestoneActivityView 
+            domain={selectedDomain}
+            onToggleMilestone={handleToggleMilestone}
+            onBack={handleBackToPhase}
+          />
+        </SafeAreaView>
+      </BackgroundImage>
     );
   }
   
   // Otherwise show the phase and domain selection view
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="light" />
-      
-      {/* Background decorative elements - using new SVG components */}
-      <BackgroundDecorations />
-      
-      {/* App header */}
-      <View style={styles.appHeader}>
-        <Text style={styles.appTitle}>Hatchling</Text>
-      </View>
-      
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Phase selector */}
-        <PhaseSelector 
-          phases={milestoneData.phases}
-          selectedPhaseId={selectedPhaseId}
-          onSelectPhase={handleSelectPhase}
-        />
+    <BackgroundImage>
+      <SafeAreaView style={styles.container}>
+        <StatusBar style="light" />
         
-        {/* Domain cards */}
-        <View style={styles.domainsContainer}>
-          {currentPhase.domains.map(domain => (
-            <DomainCard 
-              key={domain.id}
-              domain={domain}
-              onExplore={() => handleExploreDomain(domain.id)}
-            />
-          ))}
+        {/* App header */}
+        <View style={styles.appHeader}>
+          <Text style={styles.appTitle}>Hatchling</Text>
         </View>
         
-        {/* Phase description */}
-        <View style={styles.phaseDescriptionContainer}>
-          <Text style={styles.phaseDescription}>
-            {currentPhase.description}
-          </Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          {/* Phase selector */}
+          <PhaseSelector 
+            phases={milestoneData.phases}
+            selectedPhaseId={selectedPhaseId}
+            onSelectPhase={handleSelectPhase}
+          />
+          
+          {/* Domain cards */}
+          <View style={styles.domainsContainer}>
+            {currentPhase.domains.map(domain => (
+              <DomainCard 
+                key={domain.id}
+                domain={domain}
+                onExplore={() => handleExploreDomain(domain.id)}
+              />
+            ))}
+          </View>
+          
+          {/* Phase description */}
+          <View style={styles.phaseDescriptionContainer}>
+            <Text style={styles.phaseDescription}>
+              {currentPhase.description}
+            </Text>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </BackgroundImage>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#4A9B9B', // Teal background matching the Today screen
   },
   appHeader: {
     alignItems: 'center',

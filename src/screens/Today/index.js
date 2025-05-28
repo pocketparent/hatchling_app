@@ -11,7 +11,7 @@ import Animated, {
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../theme';
-import BackgroundDecorations from '../../components/decorations/BackgroundDecorations';
+import BackgroundImage from '../../components/decorations/BackgroundImage';
 
 /**
  * Today Screen
@@ -103,76 +103,75 @@ export default function TodayScreen() {
   
   return (
     <GestureHandlerRootView style={styles.gestureRoot}>
-      <SafeAreaView style={styles.container}>
-        {/* Background decorative elements - Using new SVG components */}
-        <BackgroundDecorations />
-        
-        {/* Hatchling header */}
-        <View style={styles.appHeader}>
-          <Text style={styles.appTitle}>Hatchling</Text>
-        </View>
-        
-        {/* Header with baby info */}
-        <View style={styles.header}>
-          <View style={styles.avatarContainer}>
-            <Image 
-              source={require('../../../assets/baby-avatar.png')} 
-              style={styles.avatar}
-              defaultSource={require('../../../assets/baby-avatar.png')}
-            />
+      <BackgroundImage>
+        <SafeAreaView style={styles.container}>
+          {/* Hatchling header */}
+          <View style={styles.appHeader}>
+            <Text style={styles.appTitle}>Hatchling</Text>
           </View>
-          <View style={styles.babyInfo}>
-            <Text style={styles.babyName}>Emma,</Text>
-            <Text style={styles.babyAge}>4 months</Text>
-          </View>
-        </View>
-        
-        {/* Main insight card */}
-        <View style={styles.cardContainer}>
-          <View style={styles.insightCard}>
-            <Text style={styles.insightLabel}>DAILY INSIGHT</Text>
-            
-            <PanGestureHandler onGestureEvent={gestureHandler}>
-              <Animated.View style={[styles.insightContent, animatedStyle]}>
-                <Text style={styles.insightTitle}>
-                  {currentPanel.title}
-                </Text>
-                
-                <Text style={styles.insightText}>
-                  {currentPanel.content}
-                </Text>
-                
-                {/* Pagination dots */}
-                {renderPaginationDots()}
-              </Animated.View>
-            </PanGestureHandler>
-            
-            {/* Action buttons */}
-            <View style={styles.actionButtonsContainer}>
-              <TouchableOpacity style={styles.actionButton}>
-                <View style={styles.iconContainer}>
-                  <Ionicons name="bookmark-outline" size={24} color="#FFFFFF" />
-                </View>
-                <Text style={styles.actionText}>Save</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity style={styles.actionButton}>
-                <View style={styles.iconContainer}>
-                  <Ionicons name="share-outline" size={24} color="#FFFFFF" />
-                </View>
-                <Text style={styles.actionText}>Share</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity style={styles.actionButton}>
-                <View style={styles.iconContainer}>
-                  <Ionicons name="happy-outline" size={24} color="#FFFFFF" />
-                </View>
-                <Text style={styles.actionText}>Helpful</Text>
-              </TouchableOpacity>
+          
+          {/* Header with baby info */}
+          <View style={styles.header}>
+            <View style={styles.avatarContainer}>
+              <Image 
+                source={require('../../../assets/baby-avatar.png')} 
+                style={styles.avatar}
+                defaultSource={require('../../../assets/baby-avatar.png')}
+              />
+            </View>
+            <View style={styles.babyInfo}>
+              <Text style={styles.babyName}>Emma,</Text>
+              <Text style={styles.babyAge}>4 months</Text>
             </View>
           </View>
-        </View>
-      </SafeAreaView>
+          
+          {/* Main insight card */}
+          <View style={styles.cardContainer}>
+            <View style={styles.insightCard}>
+              <Text style={styles.insightLabel}>DAILY INSIGHT</Text>
+              
+              <PanGestureHandler onGestureEvent={gestureHandler}>
+                <Animated.View style={[styles.insightContent, animatedStyle]}>
+                  <Text style={styles.insightTitle}>
+                    {currentPanel.title}
+                  </Text>
+                  
+                  <Text style={styles.insightText}>
+                    {currentPanel.content}
+                  </Text>
+                  
+                  {/* Pagination dots */}
+                  {renderPaginationDots()}
+                </Animated.View>
+              </PanGestureHandler>
+              
+              {/* Action buttons */}
+              <View style={styles.actionButtonsContainer}>
+                <TouchableOpacity style={styles.actionButton}>
+                  <View style={styles.iconContainer}>
+                    <Ionicons name="bookmark-outline" size={24} color="#FFFFFF" />
+                  </View>
+                  <Text style={styles.actionText}>Save</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.actionButton}>
+                  <View style={styles.iconContainer}>
+                    <Ionicons name="share-outline" size={24} color="#FFFFFF" />
+                  </View>
+                  <Text style={styles.actionText}>Share</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.actionButton}>
+                  <View style={styles.iconContainer}>
+                    <Ionicons name="happy-outline" size={24} color="#FFFFFF" />
+                  </View>
+                  <Text style={styles.actionText}>Helpful</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </SafeAreaView>
+      </BackgroundImage>
     </GestureHandlerRootView>
   );
 }
@@ -183,7 +182,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#4A9B9B', // Teal background matching the design
   },
   appHeader: {
     alignItems: 'center',
