@@ -5,7 +5,8 @@ import {
   TouchableOpacity, 
   KeyboardAvoidingView, 
   Platform, 
-  ScrollView
+  ScrollView,
+  Text
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ScreenErrorWrapper } from '../../components/error/ErrorComponents';
@@ -419,20 +420,10 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
                     {commonQuestions.map(item => renderQuestionItem(item))}
                   </Column>
                 </Section>
-                
-                <Section style={styles.askDirectlySection}>
-                  <H3 color="white" style={styles.askDirectlySectionTitle}>
-                    Don't see what you're looking for?
-                  </H3>
-                  <PrimaryButton 
-                    title="Ask a New Question"
-                    icon="chatbubble-ellipses-outline"
-                    onPress={() => setUserMessage("I have a question about...")}
-                    style={styles.askNewQuestionButton}
-                  />
-                </Section>
               </>
             )}
+            
+            <Spacer size="xl" />
           </ScrollContainer>
         </SafeContainer>
       </Container>
@@ -448,25 +439,25 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
 
 const styles = {
   searchBarContainer: {
-    marginTop: 16,
-    marginBottom: 16,
+    marginBottom: 24,
   },
   searchInput: {
     flex: 1,
+    height: 48,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 25,
+    borderRadius: 24,
     paddingHorizontal: 16,
-    paddingVertical: 10,
     color: '#FFFFFF',
-    marginRight: 8,
+    fontSize: 16,
   },
   searchButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: theme.colors.primary.main,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 8,
   },
   sectionTitle: {
     marginBottom: 16,
@@ -491,22 +482,24 @@ const styles = {
   },
   categoryName: {
     color: '#FFFFFF',
+    textAlign: 'center',
   },
   categoryNameActive: {
     color: theme.colors.primary.main,
+    textAlign: 'center',
   },
   questionsContainer: {
-    paddingBottom: 100, // Extra space for bottom tab bar
+    flex: 1,
   },
   questionsList: {
     gap: 12,
   },
   questionCard: {
-    marginBottom: 0,
+    padding: 16,
   },
   answerPreview: {
     marginTop: 8,
-    marginBottom: 8,
+    marginBottom: 12,
   },
   readMoreContainer: {
     marginTop: 8,
@@ -514,29 +507,18 @@ const styles = {
   readMoreButton: {
     paddingVertical: 0,
     paddingHorizontal: 0,
+    height: 'auto',
   },
   noResultsContainer: {
+    padding: 16,
     alignItems: 'center',
-    padding: 24,
   },
   noResultsText: {
-    marginBottom: 16,
     textAlign: 'center',
+    marginBottom: 16,
   },
   askDirectlyButton: {
     marginTop: 8,
-  },
-  askDirectlySection: {
-    alignItems: 'center',
-    marginTop: 24,
-    marginBottom: 40,
-  },
-  askDirectlySectionTitle: {
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  askNewQuestionButton: {
-    paddingHorizontal: 24,
   },
   backButtonRow: {
     marginBottom: 16,
@@ -544,11 +526,16 @@ const styles = {
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
   backButtonText: {
     marginLeft: 8,
   },
   detailCard: {
+    padding: 16,
     marginBottom: 16,
   },
   detailQuestion: {
@@ -560,39 +547,43 @@ const styles = {
   },
   feedbackContainer: {
     marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0, 0, 0, 0.1)',
   },
   feedbackButtons: {
     marginLeft: 16,
   },
   feedbackButton: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
     height: 36,
+    paddingVertical: 0,
   },
   messageInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 25,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 24,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    marginTop: 8,
+    marginBottom: 16,
   },
   messageInput: {
     flex: 1,
-    color: '#FFFFFF',
+    minHeight: 40,
     maxHeight: 100,
+    color: '#FFFFFF',
+    fontSize: 16,
   },
   sendButton: {
-    backgroundColor: theme.colors.primary.main,
     width: 36,
     height: 36,
     borderRadius: 18,
+    backgroundColor: theme.colors.primary.main,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,
   },
   sendButtonDisabled: {
-    backgroundColor: 'rgba(42, 157, 143, 0.5)',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
   },
 };
