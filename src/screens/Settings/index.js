@@ -69,7 +69,7 @@ export default function SettingsScreen({ navigation }) {
     );
   };
 
-  // Settings sections
+  // Settings sections - Simplified with Dieter Rams principles
   const settingsSections = [
     {
       id: '1',
@@ -106,12 +106,6 @@ export default function SettingsScreen({ navigation }) {
           title: 'Subscription', 
           icon: 'star',
           action: () => navigation.navigate('Subscription')
-        },
-        { 
-          id: '3-2', 
-          title: 'Privacy Settings', 
-          icon: 'lock-closed',
-          action: () => navigation.navigate('PrivacySettings')
         },
         { 
           id: '3-3', 
@@ -255,58 +249,61 @@ const styles = {
     paddingBottom: 100, // Extra padding for bottom tab bar
   },
   profileCard: {
-    marginBottom: 24,
+    marginBottom: 32,
+    padding: 20,
   },
   profileImagePlaceholder: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#4A9B9B',
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#2A9D8F', // Deeper teal for better contrast
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: 20,
   },
   profileInfo: {
     flex: 1,
     justifyContent: 'center',
   },
   editProfileButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#E0F2F1',
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(42, 157, 143, 0.1)', // Subtle background
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
   },
   settingsSection: {
-    marginBottom: 8,
+    marginBottom: 24,
     overflow: 'hidden',
+    borderRadius: 12,
   },
   sectionTitle: {
-    marginBottom: 8,
+    marginBottom: 12,
     marginLeft: 8,
+    color: '#FFFFFF',
   },
   settingsItem: {
     borderBottomWidth: 1,
-    borderBottomColor: '#F5F5F5',
+    borderBottomColor: 'rgba(255, 255, 255, 0.1)', // Subtle divider
   },
   settingsItemRow: {
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
+    padding: 18,
   },
   settingsItemIconContainer: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: 'rgba(74, 155, 155, 0.1)', // Light teal background
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(42, 157, 143, 0.15)', // Subtle teal background
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
   },
   settingsItemIconContainerDanger: {
-    backgroundColor: 'rgba(244, 67, 54, 0.1)', // Light red background
+    backgroundColor: 'rgba(244, 67, 54, 0.15)', // Subtle red background
   },
   settingsItemTitle: {
     flex: 1,
@@ -316,6 +313,8 @@ const styles = {
   },
   versionText: {
     textAlign: 'center',
-    marginTop: 32,
+    marginTop: 40,
+    marginBottom: 16,
+    color: 'rgba(255, 255, 255, 0.6)',
   },
 };

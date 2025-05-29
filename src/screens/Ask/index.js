@@ -56,7 +56,6 @@ export default function AskScreen({ navigation }) {
     { id: '2', name: 'Feeding', icon: '🍼' },
     { id: '3', name: 'Development', icon: '🧩' },
     { id: '4', name: 'Health', icon: '🩺' },
-    { id: '5', name: 'Behavior', icon: '🧸' },
   ];
 
   // Mock data for recent questions

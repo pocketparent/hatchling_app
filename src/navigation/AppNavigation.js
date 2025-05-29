@@ -40,6 +40,11 @@ import theme from '../theme';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// Import screens
+import SubscriptionScreen from '../screens/Settings/Subscription';
+import PrivacyPolicyScreen from '../screens/Settings/PrivacyPolicy';
+import TermsScreen from '../screens/Settings/Terms';
+
 // Settings stack navigator
 const SettingsStackNavigator = () => {
   return (
@@ -50,12 +55,9 @@ const SettingsStackNavigator = () => {
     >
       <Stack.Screen name="SettingsMain" component={SettingsScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-      <Stack.Screen name="Subscription" component={SettingsScreen} />
-      <Stack.Screen name="PrivacySettings" component={SettingsScreen} />
-      <Stack.Screen name="ContactUs" component={SettingsScreen} />
-      <Stack.Screen name="About" component={SettingsScreen} />
-      <Stack.Screen name="PrivacyPolicy" component={SettingsScreen} />
-      <Stack.Screen name="Terms" component={SettingsScreen} />
+      <Stack.Screen name="Subscription" component={SubscriptionScreen} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
+      <Stack.Screen name="Terms" component={TermsScreen} />
     </Stack.Navigator>
   );
 };

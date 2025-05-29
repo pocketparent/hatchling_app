@@ -134,8 +134,8 @@ const getColor = (colorName) => {
 const styles = StyleSheet.create({
   h1: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 28,
-    lineHeight: 34,
+    fontSize: 32,
+    lineHeight: 38,
     letterSpacing: 0.35,
   },
   h2: {
