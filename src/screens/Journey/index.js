@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -8,7 +8,8 @@ import {
   TouchableOpacity, 
   Dimensions,
   FlatList,
-  Animated
+  Animated,
+  PanResponder
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
@@ -32,14 +33,17 @@ export default function JourneyScreen({ navigation }) {
   const [journeyState, setJourneyState] = useState(journeyMilestoneData);
   const [selectedMilestoneId, setSelectedMilestoneId] = useState(null);
   
+  // State for domain card view mode (0: overview, 1: milestones, 2: activities)
+  const [domainCardViewMode, setDomainCardViewMode] = useState(0);
+  
   // Refs for scrolling
   const phaseScrollRef = useRef(null);
   
   // Get selected phase data
-  const selectedPhase = journeyState.phases.find(phase => phase.id === selectedPhaseId);
+  const selectedPhase = journeyState.phases.find(phase => phase.id === selectedPhaseId) || journeyState.phases[0];
   
   // Get selected domain data if any
-  const selectedDomain = selectedDomainId 
+  const selectedDomain = selectedDomainId && selectedPhase
     ? selectedPhase.domains.find(domain => domain.id === selectedDomainId)
     : null;
     
@@ -48,17 +52,59 @@ export default function JourneyScreen({ navigation }) {
     ? selectedDomain.milestones.find(milestone => milestone.id === selectedMilestoneId)
     : null;
   
+  // Effect to scroll to selected phase
+  useEffect(() => {
+    if (phaseScrollRef.current && selectedPhaseId) {
+      const phaseIndex = journeyState.phases.findIndex(phase => phase.id === selectedPhaseId);
+      if (phaseIndex !== -1) {
+        phaseScrollRef.current.scrollToIndex({ 
+          index: phaseIndex, 
+          animated: true,
+          viewPosition: 0.5 // Center the item
+        });
+      }
+    }
+  }, [selectedPhaseId]);
+  
   // Handle phase selection
   const handleSelectPhase = (phaseId) => {
-    setSelectedPhaseId(phaseId);
-    setSelectedDomainId(null); // Reset domain selection when phase changes
-    setSelectedMilestoneId(null); // Reset milestone selection
+    if (phaseId !== selectedPhaseId) {
+      setSelectedPhaseId(phaseId);
+      setSelectedDomainId(null); // Reset domain selection when phase changes
+      setSelectedMilestoneId(null); // Reset milestone selection
+      setDomainCardViewMode(0); // Reset to overview mode
+    }
   };
   
   // Handle domain selection
   const handleSelectDomain = (domainId) => {
-    setSelectedDomainId(domainId === selectedDomainId ? null : domainId);
-    setSelectedMilestoneId(null); // Reset milestone selection
+    if (domainId === selectedDomainId) {
+      // If already selected, cycle through view modes
+      setDomainCardViewMode((domainCardViewMode + 1) % 3);
+    } else {
+      // If new domain, select it and reset to overview
+      setSelectedDomainId(domainId);
+      setSelectedMilestoneId(null);
+      setDomainCardViewMode(0);
+    }
+  };
+  
+  // Handle swipe on domain card
+  const handleDomainCardSwipe = (direction, domainId) => {
+    // Select the domain if not already selected
+    if (domainId !== selectedDomainId) {
+      setSelectedDomainId(domainId);
+      setSelectedMilestoneId(null);
+    }
+    
+    // Update view mode based on swipe direction
+    if (direction === 'left') {
+      // Swipe left: move to next view (overview -> milestones -> activities -> overview)
+      setDomainCardViewMode((domainCardViewMode + 1) % 3);
+    } else if (direction === 'right') {
+      // Swipe right: move to previous view (overview <- milestones <- activities <- overview)
+      setDomainCardViewMode((domainCardViewMode + 2) % 3); // +2 instead of -1 to handle negative numbers
+    }
   };
   
   // Handle milestone selection
@@ -70,6 +116,7 @@ export default function JourneyScreen({ navigation }) {
   const handleBackToDomains = () => {
     setSelectedDomainId(null);
     setSelectedMilestoneId(null);
+    setDomainCardViewMode(0);
   };
   
   // Handle back button from milestone view
@@ -151,6 +198,26 @@ export default function JourneyScreen({ navigation }) {
     return Math.round((completedCount / milestone.suggestedActivities.length) * 100);
   };
   
+  // Get all activities for a domain
+  const getDomainActivities = (domain) => {
+    if (!domain || !domain.milestones) return [];
+    
+    const activities = [];
+    domain.milestones.forEach(milestone => {
+      if (milestone.suggestedActivities) {
+        milestone.suggestedActivities.forEach(activity => {
+          activities.push({
+            ...activity,
+            milestoneId: milestone.id,
+            milestoneTitle: milestone.title
+          });
+        });
+      }
+    });
+    
+    return activities;
+  };
+  
   // Render phase item for horizontal carousel
   const renderPhaseItem = ({ item }) => (
     <TouchableOpacity
@@ -171,47 +238,221 @@ export default function JourneyScreen({ navigation }) {
     </TouchableOpacity>
   );
   
-  // Render domain card
+  // Render domain card with swipe functionality
   const renderDomainCard = (domain) => {
     const progress = calculateDomainProgress(domain);
+    const activities = getDomainActivities(domain);
+    const activityCount = activities.length;
+    const completedActivities = activities.filter(activity => activity.completed).length;
+    const activityProgress = activityCount > 0 ? Math.round((completedActivities / activityCount) * 100) : 0;
     
+    // Determine if this domain is the selected one
+    const isSelected = domain.id === selectedDomainId;
+    
+    // Create pan responder for swipe
+    const panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (evt, gestureState) => {
+        // Detect horizontal swipe
+        if (Math.abs(gestureState.dx) > 50) {
+          if (gestureState.dx < 0) {
+            // Swipe left - move to next view
+            handleDomainCardSwipe('left', domain.id);
+          } else {
+            // Swipe right - move to previous view
+            handleDomainCardSwipe('right', domain.id);
+          }
+        }
+      },
+      onPanResponderRelease: () => {}
+    });
+    
+    // If this is the selected domain, show the appropriate view based on domainCardViewMode
+    if (isSelected) {
+      if (domainCardViewMode === 1) {
+        // Milestones view
+        return (
+          <View 
+            key={domain.id}
+            style={[styles.domainCardExpanded, { borderLeftColor: domain.color }]}
+            {...panResponder.panHandlers}
+          >
+            <View style={styles.domainCardHeader}>
+              <View style={[styles.domainIconContainer, { backgroundColor: domain.color }]}>
+                <Ionicons name={domain.icon} size={24} color="#FFFFFF" />
+              </View>
+              <View style={styles.domainTitleContainer}>
+                <Text style={styles.domainTitle}>{domain.name}</Text>
+                <Text style={styles.domainSubtitle}>Milestones</Text>
+              </View>
+            </View>
+            
+            <View style={styles.swipeIndicatorContainer}>
+              <View style={[styles.swipeIndicator, styles.swipeIndicatorInactive]} />
+              <View style={[styles.swipeIndicator, styles.swipeIndicatorActive]} />
+              <View style={[styles.swipeIndicator, styles.swipeIndicatorInactive]} />
+            </View>
+            
+            <ScrollView 
+              style={styles.milestonesContainer}
+              contentContainerStyle={styles.milestonesContent}
+              showsVerticalScrollIndicator={false}
+            >
+              {domain.milestones.map(milestone => (
+                <View key={milestone.id} style={styles.milestoneItem}>
+                  <View style={styles.milestoneContent}>
+                    <Text style={styles.milestoneTitle}>{milestone.title}</Text>
+                    <Text style={styles.milestoneDescription} numberOfLines={2}>
+                      {milestone.description}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={[
+                      styles.milestoneToggleButton,
+                      milestone.observed ? styles.milestoneToggleButtonObserved : styles.milestoneToggleButtonNotYet
+                    ]}
+                    onPress={() => handleToggleMilestone(milestone.id)}
+                  >
+                    <Text style={[
+                      styles.milestoneToggleButtonText,
+                      !milestone.observed && styles.milestoneToggleButtonTextNotYet
+                    ]}>
+                      {milestone.observed ? 'Observed' : 'Not Yet'}
+                    </Text>
+                    {milestone.observed && (
+                      <Ionicons name="checkmark-circle" size={16} color="#FFFFFF" style={styles.checkIcon} />
+                    )}
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </ScrollView>
+            
+            <View style={styles.swipeHintContainer}>
+              <Text style={styles.swipeHintText}>Swipe for activities</Text>
+              <Ionicons name="arrow-forward" size={16} color={domain.color} />
+            </View>
+          </View>
+        );
+      } else if (domainCardViewMode === 2) {
+        // Activities view
+        const activities = getDomainActivities(domain);
+        
+        return (
+          <View 
+            key={domain.id}
+            style={[styles.domainCardExpanded, { borderLeftColor: domain.color }]}
+            {...panResponder.panHandlers}
+          >
+            <View style={styles.domainCardHeader}>
+              <View style={[styles.domainIconContainer, { backgroundColor: domain.color }]}>
+                <Ionicons name={domain.icon} size={24} color="#FFFFFF" />
+              </View>
+              <View style={styles.domainTitleContainer}>
+                <Text style={styles.domainTitle}>{domain.name}</Text>
+                <Text style={styles.domainSubtitle}>Activities</Text>
+              </View>
+            </View>
+            
+            <View style={styles.swipeIndicatorContainer}>
+              <View style={[styles.swipeIndicator, styles.swipeIndicatorInactive]} />
+              <View style={[styles.swipeIndicator, styles.swipeIndicatorInactive]} />
+              <View style={[styles.swipeIndicator, styles.swipeIndicatorActive]} />
+            </View>
+            
+            <ScrollView 
+              style={styles.activitiesContainer}
+              contentContainerStyle={styles.activitiesContent}
+              showsVerticalScrollIndicator={false}
+            >
+              {activities.map(activity => (
+                <View key={activity.id} style={styles.activityItem}>
+                  <View style={styles.activityContent}>
+                    <Text style={styles.activityTitle}>{activity.title}</Text>
+                    {activity.milestoneTitle && (
+                      <Text style={styles.activityMilestone}>For: {activity.milestoneTitle}</Text>
+                    )}
+                    <Text style={styles.activityDescription} numberOfLines={2}>
+                      {activity.description}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.activityToggleButton}
+                    onPress={() => handleToggleActivity(activity.milestoneId, activity.id)}
+                  >
+                    {activity.completed ? (
+                      <Ionicons name="checkmark-circle" size={24} color="#2A9D8F" />
+                    ) : (
+                      <Ionicons name="ellipse-outline" size={24} color="#CCCCCC" />
+                    )}
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </ScrollView>
+            
+            <View style={styles.swipeHintContainer}>
+              <Text style={styles.swipeHintText}>Swipe for overview</Text>
+              <Ionicons name="arrow-forward" size={16} color={domain.color} />
+            </View>
+          </View>
+        );
+      }
+    }
+    
+    // Default: Overview view
     return (
-      <TouchableOpacity
+      <View
         key={domain.id}
         style={[
           styles.domainCard,
-          { borderColor: domain.color }
+          { borderLeftColor: domain.color },
+          isSelected && domainCardViewMode === 0 && styles.domainCardSelected
         ]}
-        onPress={() => handleSelectDomain(domain.id)}
+        {...panResponder.panHandlers}
       >
-        <View style={styles.domainCardHeader}>
-          <View style={[styles.domainIconContainer, { backgroundColor: domain.color }]}>
-            <Ionicons name={domain.icon} size={24} color="#FFFFFF" />
+        <TouchableOpacity
+          style={styles.domainCardTouchable}
+          onPress={() => handleSelectDomain(domain.id)}
+        >
+          <View style={styles.domainCardHeader}>
+            <View style={[styles.domainIconContainer, { backgroundColor: domain.color }]}>
+              <Ionicons name={domain.icon} size={24} color="#FFFFFF" />
+            </View>
+            <Text style={styles.domainTitle}>{domain.name}</Text>
           </View>
-          <Text style={styles.domainTitle}>{domain.name}</Text>
-        </View>
-        
-        <View style={styles.progressContainer}>
-          <View style={styles.progressBar}>
-            <View 
-              style={[
-                styles.progressFill,
-                { width: `${progress}%`, backgroundColor: domain.color }
-              ]} 
-            />
+          
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBar}>
+              <View 
+                style={[
+                  styles.progressFill,
+                  { width: `${progress}%`, backgroundColor: domain.color }
+                ]} 
+              />
+            </View>
+            <Text style={styles.progressText}>{progress}%</Text>
           </View>
-          <Text style={styles.progressText}>{progress}%</Text>
-        </View>
-        
-        <Text style={styles.domainDescription}>{domain.description}</Text>
-        
-        <View style={styles.domainCardFooter}>
-          <Text style={[styles.viewDetailsText, { color: domain.color }]}>
-            View Milestones
-          </Text>
-          <Ionicons name="chevron-forward" size={16} color={domain.color} />
-        </View>
-      </TouchableOpacity>
+          
+          <Text style={styles.domainDescription}>{domain.description}</Text>
+          
+          {isSelected && domainCardViewMode === 0 && (
+            <View style={styles.swipeIndicatorContainer}>
+              <View style={[styles.swipeIndicator, styles.swipeIndicatorActive]} />
+              <View style={[styles.swipeIndicator, styles.swipeIndicatorInactive]} />
+              <View style={[styles.swipeIndicator, styles.swipeIndicatorInactive]} />
+            </View>
+          )}
+          
+          <View style={styles.domainCardFooter}>
+            <Text style={[styles.viewDetailsText, { color: domain.color }]}>
+              View Details
+            </Text>
+            <View style={styles.swipeHintContainer}>
+              <Text style={styles.swipeHintText}>Swipe for milestones</Text>
+              <Ionicons name="arrow-forward" size={16} color={domain.color} />
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
     );
   };
   
@@ -275,12 +516,15 @@ export default function JourneyScreen({ navigation }) {
       <View key={activity.id} style={styles.activityCard}>
         <View style={styles.activityCardContent}>
           <Text style={styles.activityTitle}>{activity.title}</Text>
+          {activity.milestoneTitle && (
+            <Text style={styles.activityMilestone}>For: {activity.milestoneTitle}</Text>
+          )}
           <Text style={styles.activityDescription}>{activity.description}</Text>
         </View>
         
         <TouchableOpacity
           style={styles.activityToggleButton}
-          onPress={() => handleToggleActivity(milestoneId, activity.id)}
+          onPress={() => handleToggleActivity(milestoneId || activity.milestoneId, activity.id)}
         >
           {activity.completed ? (
             <Ionicons name="checkmark-circle" size={24} color="#2A9D8F" />
@@ -291,47 +535,6 @@ export default function JourneyScreen({ navigation }) {
       </View>
     );
   };
-  
-  // If a domain is selected, show milestones view
-  if (selectedDomain && !selectedMilestone) {
-    return (
-      <ScreenErrorWrapper screenName="Domain Milestones" navigation={navigation}>
-        <BackgroundContainer>
-          <SafeAreaView style={styles.container}>
-            <StatusBar style="light" />
-            
-            <View style={styles.domainDetailContainer}>
-              <TouchableOpacity 
-                style={styles.backButton}
-                onPress={handleBackToDomains}
-              >
-                <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-                <Text style={styles.backButtonText}>Back</Text>
-              </TouchableOpacity>
-              
-              <View style={[styles.domainHeaderCard, {borderLeftWidth: 4, borderLeftColor: selectedDomain.color}]}>
-                <View style={styles.domainCardHeader}>
-                  <View style={[styles.domainIconContainer, { backgroundColor: selectedDomain.color }]}>
-                    <Ionicons name={selectedDomain.icon} size={24} color="#FFFFFF" />
-                  </View>
-                  <View>
-                    <Text style={styles.domainTitle}>{selectedDomain.name}</Text>
-                    <Text style={styles.phaseSubtitle}>{selectedPhase.name}</Text>
-                  </View>
-                </View>
-              </View>
-              
-              <Text style={styles.milestonesTitle}>Milestones</Text>
-              
-              <ScrollView contentContainerStyle={styles.milestonesScrollContent}>
-                {selectedDomain.milestones.map(milestone => renderMilestoneCard(milestone))}
-              </ScrollView>
-            </View>
-          </SafeAreaView>
-        </BackgroundContainer>
-      </ScreenErrorWrapper>
-    );
-  }
   
   // If a milestone is selected, show milestone detail view
   if (selectedMilestone) {
@@ -438,6 +641,7 @@ export default function JourneyScreen({ navigation }) {
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.phaseList}
+              onScrollToIndexFailed={() => {}}
             />
           </View>
           
@@ -445,7 +649,7 @@ export default function JourneyScreen({ navigation }) {
           <ScrollView contentContainerStyle={styles.scrollContent}>
             {/* Phase header */}
             <View style={styles.phaseHeaderContainer}>
-              <Text style={styles.phaseHeaderTitle}>{selectedPhase.name}</Text>
+              <Text style={styles.phaseHeaderTitle}>{selectedPhase.description.split(' ')[0]}</Text>
               <Text style={styles.phaseHeaderDescription}>
                 {selectedPhase.description}
               </Text>
@@ -531,7 +735,6 @@ const styles = StyleSheet.create({
   domainCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    padding: 16,
     marginBottom: 16,
     borderLeftWidth: 4,
     shadowColor: '#000',
@@ -539,6 +742,26 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,
+  },
+  domainCardSelected: {
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  domainCardTouchable: {
+    padding: 16,
+  },
+  domainCardExpanded: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    marginBottom: 16,
+    borderLeftWidth: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+    padding: 16,
+    minHeight: 300,
   },
   domainCardHeader: {
     flexDirection: 'row',
@@ -553,12 +776,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
   },
+  domainTitleContainer: {
+    flex: 1,
+  },
   domainTitle: {
     fontFamily: 'SFProDisplay-Bold',
     fontSize: 18,
     color: '#004D4D', // Darker teal
   },
-  phaseSubtitle: {
+  domainSubtitle: {
     fontFamily: 'SFProText-Regular',
     fontSize: 14,
     color: '#555555',
@@ -593,14 +819,103 @@ const styles = StyleSheet.create({
     color: '#555555',
     marginBottom: 12,
   },
+  swipeIndicatorContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 12,
+  },
+  swipeIndicator: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
+  },
+  swipeIndicatorActive: {
+    backgroundColor: '#2A9D8F',
+  },
+  swipeIndicatorInactive: {
+    backgroundColor: '#E0E0E0',
+  },
   domainCardFooter: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   viewDetailsText: {
     fontSize: 14,
     fontFamily: 'SFProText-Medium',
     marginRight: 4,
+  },
+  swipeHintContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  swipeHintText: {
+    fontSize: 12,
+    fontFamily: 'SFProText-Regular',
+    color: '#777777',
+    marginRight: 4,
+  },
+  milestonesContainer: {
+    flex: 1,
+    marginVertical: 8,
+  },
+  milestonesContent: {
+    paddingBottom: 8,
+  },
+  activitiesContainer: {
+    flex: 1,
+    marginVertical: 8,
+  },
+  activitiesContent: {
+    paddingBottom: 8,
+  },
+  milestoneItem: {
+    backgroundColor: '#F8F8F8',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  milestoneContent: {
+    flex: 1,
+    marginRight: 8,
+  },
+  activityItem: {
+    backgroundColor: '#F8F8F8',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  activityContent: {
+    flex: 1,
+    marginRight: 8,
+  },
+  activityTitle: {
+    fontFamily: 'SFProDisplay-Bold',
+    fontSize: 16,
+    color: '#004D4D',
+    marginBottom: 4,
+  },
+  activityMilestone: {
+    fontFamily: 'SFProText-Regular',
+    fontSize: 12,
+    color: '#777777',
+    marginBottom: 4,
+    fontStyle: 'italic',
+  },
+  activityDescription: {
+    fontFamily: 'SFProText-Regular',
+    fontSize: 14,
+    color: '#555555',
+    lineHeight: 20,
+  },
+  activityToggleButton: {
+    padding: 4,
   },
   domainDetailContainer: {
     flex: 1,
@@ -627,6 +942,30 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,
+  },
+  viewModeToggle: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 20,
+    marginBottom: 16,
+    padding: 4,
+  },
+  viewModeButton: {
+    flex: 1,
+    paddingVertical: 8,
+    alignItems: 'center',
+    borderRadius: 16,
+  },
+  viewModeButtonActive: {
+    backgroundColor: '#FFFFFF',
+  },
+  viewModeButtonText: {
+    fontFamily: 'SFProText-Medium',
+    fontSize: 14,
+    color: '#FFFFFF',
+  },
+  viewModeButtonTextActive: {
+    color: '#004D4D',
   },
   milestonesTitle: {
     fontFamily: 'SFProDisplay-Bold',
@@ -818,19 +1157,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 12,
   },
-  activityTitle: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 16,
-    color: '#004D4D',
-    marginBottom: 8,
-  },
-  activityDescription: {
+  phaseSubtitle: {
     fontFamily: 'SFProText-Regular',
     fontSize: 14,
     color: '#555555',
-    lineHeight: 20,
-  },
-  activityToggleButton: {
-    padding: 4,
   },
 });

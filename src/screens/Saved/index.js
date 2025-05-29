@@ -5,6 +5,7 @@ import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler'
 import BackgroundContainer from '../../components/decorations/BackgroundContainer';
 import theme from '../../theme';
 import { ScreenErrorWrapper } from '../../components/error/ErrorComponents';
+import AppHeader from '../../components/common/AppHeader';
 
 /**
  * Saved Screen
@@ -17,6 +18,9 @@ export default function SavedScreen({ navigation }) {
   const [activeFilter, setActiveFilter] = useState('all');
   // State for selected insight (for detailed view)
   const [selectedInsight, setSelectedInsight] = useState(null);
+  
+  // Ref for swipeable rows
+  const swipeableRefs = useRef({});
   
   // Mock data for saved insights
   const savedInsights = [
@@ -279,19 +283,23 @@ If your baby dislikes tummy time, start with very short sessions and gradually b
 
   // Render a saved item (insight or activity) with swipe-to-delete
   const renderSavedItem = (item, type) => {
-    const row = useRef(null);
+    const itemKey = `${type}-${item.id}`;
     
     return (
       <Swipeable
-        ref={row}
-        key={item.id}
+        key={itemKey}
+        ref={ref => swipeableRefs.current[itemKey] = ref}
         renderRightActions={(progress, dragX) => 
           renderRightActions(progress, dragX, type, item.id)
         }
         rightThreshold={40}
         onSwipeableOpen={() => {
           // Optional: Auto-close after a delay
-          // setTimeout(() => row.current.close(), 3000);
+          // setTimeout(() => {
+          //   if (swipeableRefs.current[itemKey]) {
+          //     swipeableRefs.current[itemKey].close();
+          //   }
+          // }, 3000);
         }}
       >
         <TouchableOpacity 
@@ -370,7 +378,8 @@ If your baby dislikes tummy time, start with very short sessions and gradually b
     
     return (
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.headerTitle}>Saved</Text>
+        {/* App header with logo */}
+        <AppHeader />
         
         {/* Filter tabs */}
         <View style={styles.filterContainer}>
@@ -393,38 +402,32 @@ If your baby dislikes tummy time, start with very short sessions and gradually b
           ))}
         </View>
         
-        {/* Swipe tip */}
-        <View style={styles.organizationTip}>
-          <Ionicons name="information-circle-outline" size={20} color="#FFFFFF" />
-          <Text style={styles.organizationTipText}>
-            Swipe left on an item to delete it from your saved collection.
-          </Text>
-        </View>
+        {/* No items message */}
+        {noItemsToDisplay && (
+          <View style={styles.noItemsContainer}>
+            <Ionicons name="bookmark-outline" size={48} color="#FFFFFF" />
+            <Text style={styles.noItemsText}>
+              No saved {activeFilter !== 'all' ? activeFilter : 'items'} yet
+            </Text>
+            <Text style={styles.noItemsSubtext}>
+              Items you save will appear here for easy access
+            </Text>
+          </View>
+        )}
         
         {/* Insights section */}
         {insights.length > 0 && (
-          <>
+          <View style={styles.section}>
             <Text style={styles.sectionTitle}>Insights</Text>
-            {insights.map(insight => renderSavedItem(insight, 'insight'))}
-          </>
+            {insights.map(item => renderSavedItem(item, 'insight'))}
+          </View>
         )}
         
         {/* Activities section */}
         {activities.length > 0 && (
-          <>
+          <View style={styles.section}>
             <Text style={styles.sectionTitle}>Activities</Text>
-            {activities.map(activity => renderSavedItem(activity, 'activity'))}
-          </>
-        )}
-        
-        {/* Empty state */}
-        {noItemsToDisplay && (
-          <View style={styles.emptyStateContainer}>
-            <Ionicons name="bookmark-outline" size={60} color="#FFFFFF" />
-            <Text style={styles.emptyStateTitle}>No saved items</Text>
-            <Text style={styles.emptyStateText}>
-              Items you save from the Today and Journey screens will appear here.
-            </Text>
+            {activities.map(item => renderSavedItem(item, 'activity'))}
           </View>
         )}
       </ScrollView>
@@ -433,7 +436,7 @@ If your baby dislikes tummy time, start with very short sessions and gradually b
 
   return (
     <ScreenErrorWrapper screenName="Saved" navigation={navigation}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureHandlerRootView style={styles.gestureRoot}>
         <BackgroundContainer>
           <SafeAreaView style={styles.container}>
             {renderContent()}
@@ -445,32 +448,34 @@ If your baby dislikes tummy time, start with very short sessions and gradually b
 }
 
 const styles = StyleSheet.create({
+  gestureRoot: {
+    flex: 1,
+  },
   container: {
     flex: 1,
   },
   scrollContent: {
-    padding: 20,
     paddingBottom: 100, // Extra padding for bottom tab bar
   },
   headerTitle: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 28,
+    fontSize: 24,
     color: '#FFFFFF',
-    marginBottom: 20,
     textAlign: 'center',
+    marginVertical: 16,
   },
   filterContainer: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 20,
+    justifyContent: 'center',
+    paddingHorizontal: 16,
     marginBottom: 20,
-    padding: 4,
   },
   filterOption: {
-    flex: 1,
+    paddingHorizontal: 16,
     paddingVertical: 8,
-    alignItems: 'center',
-    borderRadius: 16,
+    marginHorizontal: 4,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
   filterOptionActive: {
     backgroundColor: '#FFFFFF',
@@ -483,37 +488,23 @@ const styles = StyleSheet.create({
   filterOptionTextActive: {
     color: theme.colors.primary.main,
   },
-  emptyStateContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 60,
-  },
-  emptyStateTitle: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
-    color: '#FFFFFF',
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  emptyStateText: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 16,
-    color: '#FFFFFF',
-    opacity: 0.8,
-    textAlign: 'center',
-    marginBottom: 32,
+  section: {
+    marginBottom: 24,
   },
   sectionTitle: {
     fontFamily: 'SFProDisplay-Bold',
     fontSize: 20,
     color: '#FFFFFF',
-    marginBottom: 16,
+    marginHorizontal: 16,
+    marginBottom: 12,
   },
   savedItemContainer: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    borderRadius: 16,
+    marginHorizontal: 16,
     marginBottom: 12,
+    padding: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -521,87 +512,91 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   iconContainer: {
-    width: 70,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    borderTopLeftRadius: 12,
-    borderBottomLeftRadius: 12,
+    marginRight: 12,
   },
   icon: {
-    fontSize: 28,
+    fontSize: 20,
   },
   savedItemContent: {
     flex: 1,
-    padding: 16,
-    justifyContent: 'center',
   },
   savedItemTitle: {
     fontFamily: 'SFProDisplay-Bold',
     fontSize: 16,
-    color: '#004D4D',
-    marginBottom: 2,
+    color: theme.colors.neutral.dark,
+    marginBottom: 4,
   },
   savedItemType: {
-    fontFamily: 'SFProText-Medium',
+    fontFamily: 'SFProText-Regular',
     fontSize: 12,
-    color: theme.colors.primary.main,
+    color: theme.colors.neutral.medium,
     marginBottom: 4,
   },
   savedItemDescription: {
     fontFamily: 'SFProText-Regular',
     fontSize: 14,
-    color: '#333333',
+    color: theme.colors.neutral.dark,
     marginBottom: 4,
   },
   savedItemDate: {
     fontFamily: 'SFProText-Regular',
     fontSize: 12,
-    color: '#666666',
+    color: theme.colors.neutral.medium,
   },
   savedItemActions: {
     justifyContent: 'center',
-    paddingRight: 16,
+    paddingLeft: 8,
   },
   rightAction: {
-    backgroundColor: theme.colors.feedback.error,
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'flex-end',
-    borderTopRightRadius: 12,
-    borderBottomRightRadius: 12,
+    marginRight: 16,
     marginBottom: 12,
   },
   actionButton: {
-    height: '100%',
+    flex: 1,
     justifyContent: 'center',
   },
   deleteButton: {
     backgroundColor: theme.colors.feedback.error,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 100,
+    width: 80,
     height: '100%',
+    borderRadius: 16,
   },
   deleteText: {
-    color: '#FFFFFF',
     fontFamily: 'SFProText-Medium',
-    fontSize: 14,
+    fontSize: 12,
+    color: '#FFFFFF',
     marginTop: 4,
   },
-  organizationTip: {
-    flexDirection: 'row',
+  noItemsContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 32,
+    paddingHorizontal: 32,
+    paddingVertical: 64,
   },
-  organizationTipText: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 14,
+  noItemsText: {
+    fontFamily: 'SFProDisplay-Bold',
+    fontSize: 20,
     color: '#FFFFFF',
-    marginLeft: 8,
+    marginTop: 16,
+    marginBottom: 8,
+    textAlign: 'center',
   },
-  // Detail view styles
+  noItemsSubtext: {
+    fontFamily: 'SFProText-Regular',
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 0.8)',
+    textAlign: 'center',
+  },
   detailContainer: {
     flex: 1,
     padding: 16,
@@ -619,59 +614,60 @@ const styles = StyleSheet.create({
   },
   detailCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
+    borderRadius: 16,
     padding: 20,
     flex: 1,
-    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   detailIconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
-    alignSelf: 'center',
   },
   detailIcon: {
-    fontSize: 30,
+    fontSize: 24,
   },
   detailTitle: {
     fontFamily: 'SFProDisplay-Bold',
     fontSize: 22,
-    color: '#004D4D',
+    color: theme.colors.neutral.dark,
     marginBottom: 8,
-    textAlign: 'center',
   },
   detailType: {
-    fontFamily: 'SFProText-Medium',
+    fontFamily: 'SFProText-Regular',
     fontSize: 14,
-    color: theme.colors.primary.main,
+    color: theme.colors.neutral.medium,
     marginBottom: 4,
-    textAlign: 'center',
   },
   detailDate: {
     fontFamily: 'SFProText-Regular',
     fontSize: 14,
-    color: '#666666',
-    marginBottom: 20,
-    textAlign: 'center',
+    color: theme.colors.neutral.medium,
+    marginBottom: 16,
   },
   detailContentScroll: {
     flex: 1,
+    marginBottom: 16,
   },
   detailContent: {
     fontFamily: 'SFProText-Regular',
     fontSize: 16,
-    color: '#333333',
+    color: theme.colors.neutral.dark,
     lineHeight: 24,
   },
   detailActions: {
     borderTopWidth: 1,
-    borderTopColor: 'rgba(0, 0, 0, 0.1)',
+    borderTopColor: '#EEEEEE',
     paddingTop: 16,
-    marginTop: 16,
-    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   detailActionButton: {
     flexDirection: 'row',
