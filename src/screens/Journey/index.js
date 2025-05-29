@@ -410,17 +410,17 @@ export default function JourneyScreen({ navigation }) {
             </BodySmall>
             
             <Row style={styles.domainStatsContainer}>
-              <Column style={styles.domainStat}>
-                <Caption color="medium">Milestones</Caption>
-                <Body>{domain.milestones.length}</Body>
-              </Column>
-              <Column style={styles.domainStat}>
+              <Column style={styles.progressBarContainer}>
                 <Caption color="medium">Progress</Caption>
-                <Body>{progress}%</Body>
-              </Column>
-              <Column style={styles.domainStat}>
-                <Caption color="medium">Activities</Caption>
-                <Body>{activityCount}</Body>
+                <View style={styles.progressBarBackground}>
+                  <View 
+                    style={[
+                      styles.progressBarFill, 
+                      { width: `${progress}%`, backgroundColor: domain.color }
+                    ]} 
+                  />
+                </View>
+                <Body style={styles.progressText}>{progress}%</Body>
               </Column>
             </Row>
           </Column>
@@ -504,7 +504,7 @@ const styles = {
   },
   domainsContainer: {
     paddingBottom: 100, // Extra padding for bottom tab bar
-    gap: 16,
+    gap: 8, // Reduced spacing between domain cards
   },
   domainIconContainer: {
     width: 50,
@@ -522,9 +522,25 @@ const styles = {
   },
   domainStatsContainer: {
     marginTop: 8,
+    width: '100%',
   },
-  domainStat: {
-    marginRight: 16,
+  progressBarContainer: {
+    width: '100%',
+  },
+  progressBarBackground: {
+    height: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    borderRadius: 4,
+    marginVertical: 4,
+    width: '100%',
+  },
+  progressBarFill: {
+    height: '100%',
+    borderRadius: 4,
+  },
+  progressText: {
+    textAlign: 'right',
+    fontSize: 12,
   },
   domainCardArrow: {
     justifyContent: 'center',

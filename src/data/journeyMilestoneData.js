@@ -6,6 +6,7 @@ const journeyMilestoneData = {
     {
       "id": "phase_0_2m",
       "name": "0-2 Months",
+      "phaseName": "Newborn Discovery",
       "description": "Newborn development focuses on basic reflexes and sensory awareness",
       "domains": [
         {
@@ -75,7 +76,7 @@ const journeyMilestoneData = {
         {
           "id": "cognitive_0_2m",
           "name": "Cognitive",
-          "icon": "brain-outline",
+          "icon": "bulb-outline",
           "color": "#F4A261", // Orange
           "description": "Learning, thinking, and problem-solving skills",
           "progress": 0,
@@ -235,6 +236,7 @@ const journeyMilestoneData = {
     {
       "id": "phase_2_4m",
       "name": "2-4 Months",
+      "phaseName": "Social Awakening",
       "description": "Baby becomes more alert, interactive, and begins to develop more control over their body",
       "domains": [
         {
@@ -298,7 +300,7 @@ const journeyMilestoneData = {
         {
           "id": "cognitive_2_4m",
           "name": "Cognitive",
-          "icon": "brain-outline",
+          "icon": "bulb-outline",
           "color": "#F4A261", // Orange
           "description": "Learning, thinking, and problem-solving skills",
           "progress": 0,
@@ -346,7 +348,7 @@ const journeyMilestoneData = {
                 {
                   "id": "activity_18",
                   "title": "Consistent Routines",
-                  "description": "Establish simple, predictable routines for daily activities like feeding, naps, and bedtime.",
+                  "description": "Establish simple, predictable routines for daily activities, using the same words or songs as cues.",
                   "completed": false
                 }
               ]
@@ -363,32 +365,32 @@ const journeyMilestoneData = {
           "milestones": [
             {
               "id": "language_milestone_3",
-              "title": "Coos and makes gurgling sounds",
-              "description": "Your baby is experimenting with making different sounds, including cooing and gurgling. These are early forms of vocal play that will eventually lead to babbling and speech.",
-              "ageRange": "2-4 months",
+              "title": "Babbles with different sounds",
+              "description": "Your baby is experimenting with a wider range of sounds, including consonants like 'b', 'p', and 'm'. This babbling is an important step toward speech development.",
+              "ageRange": "3-4 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
                   "id": "activity_19",
                   "title": "Sound Imitation",
-                  "description": "When your baby makes sounds, imitate them back and wait for a response to create a 'conversation'.",
+                  "description": "When baby makes sounds, imitate them back and wait for a response, creating a back-and-forth 'conversation'.",
                   "completed": false
                 }
               ]
             },
             {
               "id": "language_milestone_4",
-              "title": "Turns toward familiar sounds",
-              "description": "Your baby is developing the ability to recognize and locate familiar sounds, such as your voice or a favorite toy.",
-              "ageRange": "2-4 months",
+              "title": "Laughs out loud",
+              "description": "Your baby is developing the ability to laugh out loud in response to playful interactions. This is both a social and language milestone.",
+              "ageRange": "3-4 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
                   "id": "activity_20",
-                  "title": "Name Recognition",
-                  "description": "Use your baby's name frequently when talking to them to help them learn to recognize it.",
+                  "title": "Playful Interactions",
+                  "description": "Engage in gentle, playful activities like peek-a-boo or silly faces to encourage laughter.",
                   "completed": false
                 }
               ]
@@ -406,31 +408,47 @@ const journeyMilestoneData = {
             {
               "id": "social_milestone_4",
               "title": "Smiles spontaneously, especially at people",
-              "description": "Your baby is now smiling in response to your smiles and as a way to engage socially, not just as a reflex. This shows developing social awareness and enjoyment of interaction.",
+              "description": "Your baby now smiles readily and spontaneously, particularly at familiar faces. This shows developing social awareness and emotional expression.",
               "ageRange": "2-3 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
                   "id": "activity_21",
-                  "title": "Mirror Play",
-                  "description": "Hold baby in front of a mirror and point out their reflection, smiling and talking to encourage social interaction.",
+                  "title": "Social Smiling",
+                  "description": "Spend time face-to-face with your baby when they're in a good mood, smiling and talking to encourage social interaction.",
                   "completed": false
                 }
               ]
             },
             {
               "id": "social_milestone_5",
-              "title": "Enjoys playing with people",
-              "description": "Your baby is showing more interest in social play and interaction, responding with excitement to playful engagement.",
+              "title": "Enjoys social play",
+              "description": "Your baby is showing more interest in interactive play with caregivers, responding with excitement to games and social interactions.",
               "ageRange": "3-4 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
                   "id": "activity_22",
-                  "title": "Peek-a-Boo",
-                  "description": "Play simple games like peek-a-boo to encourage social interaction and teach cause-and-effect.",
+                  "title": "Interactive Games",
+                  "description": "Play simple games like peek-a-boo or 'This Little Piggy' with your baby, watching for their enjoyment and engagement.",
+                  "completed": false
+                }
+              ]
+            },
+            {
+              "id": "social_milestone_6",
+              "title": "May cry when play stops",
+              "description": "Your baby may become upset when enjoyable social interactions end, showing their growing preference for social engagement.",
+              "ageRange": "3-4 months",
+              "observed": false,
+              "dateObserved": null,
+              "suggestedActivities": [
+                {
+                  "id": "activity_23",
+                  "title": "Gentle Transitions",
+                  "description": "When ending playtime, gradually wind down the activity and provide verbal cues about what's coming next.",
                   "completed": false
                 }
               ]
@@ -442,7 +460,8 @@ const journeyMilestoneData = {
     {
       "id": "phase_4_6m",
       "name": "4-6 Months",
-      "description": "Baby develops greater control over their body and begins to interact more with their environment",
+      "phaseName": "Active Explorer",
+      "description": "Baby becomes more physically active and begins to interact with their environment in new ways",
       "domains": [
         {
           "id": "physical_4_6m",
@@ -455,15 +474,15 @@ const journeyMilestoneData = {
             {
               "id": "physical_milestone_7",
               "title": "Rolls over in both directions",
-              "description": "Your baby can now roll from their back to their tummy and from their tummy to their back. This shows developing core strength and coordination.",
+              "description": "Your baby can now roll from tummy to back and back to tummy, showing increased strength and coordination.",
               "ageRange": "4-6 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_23",
+                  "id": "activity_24",
                   "title": "Rolling Practice",
-                  "description": "Place toys slightly out of reach to encourage rolling. Always supervise and ensure the surface is safe.",
+                  "description": "Place toys slightly out of reach during floor play to encourage rolling and reaching.",
                   "completed": false
                 }
               ]
@@ -471,14 +490,14 @@ const journeyMilestoneData = {
             {
               "id": "physical_milestone_8",
               "title": "Begins to sit with support",
-              "description": "Your baby is developing the strength to sit upright when supported with pillows, cushions, or your hands.",
+              "description": "Your baby is developing the ability to sit upright when provided with support, showing increasing core strength.",
               "ageRange": "4-5 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_24",
-                  "title": "Supported Sitting Practice",
+                  "id": "activity_25",
+                  "title": "Supported Sitting",
                   "description": "Place baby in a seated position with pillows around for support, gradually reducing support as they gain strength.",
                   "completed": false
                 }
@@ -487,15 +506,15 @@ const journeyMilestoneData = {
             {
               "id": "physical_milestone_9",
               "title": "Reaches for and grasps objects",
-              "description": "Your baby is developing hand-eye coordination by reaching for objects and grasping them, often bringing them to their mouth for exploration.",
+              "description": "Your baby is developing hand-eye coordination by reaching for and grasping objects with increasing accuracy.",
               "ageRange": "4-6 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_25",
+                  "id": "activity_26",
                   "title": "Reaching Games",
-                  "description": "Hold toys at different positions within baby's reach to encourage reaching and grasping in various directions.",
+                  "description": "Offer toys of different textures and sizes within reach, encouraging baby to grasp and explore them.",
                   "completed": false
                 }
               ]
@@ -505,23 +524,23 @@ const journeyMilestoneData = {
         {
           "id": "cognitive_4_6m",
           "name": "Cognitive",
-          "icon": "brain-outline",
+          "icon": "bulb-outline",
           "color": "#F4A261", // Orange
           "description": "Learning, thinking, and problem-solving skills",
           "progress": 0,
           "milestones": [
             {
               "id": "cognitive_milestone_7",
-              "title": "Shows curiosity and tries to get objects out of reach",
-              "description": "Your baby is showing problem-solving skills by trying different ways to reach objects that are just beyond their grasp.",
+              "title": "Shows curiosity about objects",
+              "description": "Your baby examines objects closely, showing curiosity about how things work and what they can do with them.",
               "ageRange": "4-6 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_26",
-                  "title": "Problem-Solving Play",
-                  "description": "Place toys just slightly out of reach to encourage problem-solving and persistence.",
+                  "id": "activity_27",
+                  "title": "Object Exploration",
+                  "description": "Provide safe household objects of different textures, weights, and sounds for baby to explore.",
                   "completed": false
                 }
               ]
@@ -529,15 +548,31 @@ const journeyMilestoneData = {
             {
               "id": "cognitive_milestone_8",
               "title": "Begins to understand object permanence",
-              "description": "Your baby is starting to understand that objects continue to exist even when they can't be seen, a concept called object permanence.",
+              "description": "Your baby is beginning to understand that objects continue to exist even when they can't be seen, a concept called object permanence.",
               "ageRange": "5-6 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_27",
-                  "title": "Peek-a-Boo with Objects",
-                  "description": "Partially hide a toy under a blanket, encouraging baby to find it.",
+                  "id": "activity_28",
+                  "title": "Peek-a-Boo",
+                  "description": "Play peek-a-boo games, hiding your face behind your hands or a cloth and then reappearing.",
+                  "completed": false
+                }
+              ]
+            },
+            {
+              "id": "cognitive_milestone_9",
+              "title": "Recognizes familiar objects and people at a distance",
+              "description": "Your baby can now recognize familiar people and objects from across the room, showing improved visual processing and memory.",
+              "ageRange": "4-6 months",
+              "observed": false,
+              "dateObserved": null,
+              "suggestedActivities": [
+                {
+                  "id": "activity_29",
+                  "title": "Distance Recognition",
+                  "description": "When entering a room, pause at the doorway and see if baby recognizes you before approaching.",
                   "completed": false
                 }
               ]
@@ -554,32 +589,48 @@ const journeyMilestoneData = {
           "milestones": [
             {
               "id": "language_milestone_5",
-              "title": "Begins to babble with consonant sounds",
-              "description": "Your baby is starting to combine vowels with consonants in their vocalizations, such as 'ba', 'da', or 'ga'. This is an important step toward forming words.",
+              "title": "Responds to sounds by making sounds",
+              "description": "Your baby is engaging in vocal turn-taking by responding to your voice or other sounds with their own vocalizations.",
               "ageRange": "4-6 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_28",
-                  "title": "Babble Back",
-                  "description": "When your baby babbles, respond with similar sounds to encourage vocal play and turn-taking.",
+                  "id": "activity_30",
+                  "title": "Sound Conversations",
+                  "description": "Make a sound and then pause, giving baby time to respond with their own sound before you continue.",
                   "completed": false
                 }
               ]
             },
             {
               "id": "language_milestone_6",
-              "title": "Responds to their name",
-              "description": "Your baby is beginning to recognize and respond to their own name by looking or turning when called.",
+              "title": "Strings vowels together when babbling",
+              "description": "Your baby's babbling is becoming more complex, with strings of vowel sounds like 'ah-eh-oh'.",
               "ageRange": "5-6 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_29",
-                  "title": "Name Games",
-                  "description": "Call your baby's name in different tones and from different positions to help them recognize it.",
+                  "id": "activity_31",
+                  "title": "Vowel Play",
+                  "description": "Exaggerate vowel sounds during play and conversation, encouraging baby to imitate and experiment.",
+                  "completed": false
+                }
+              ]
+            },
+            {
+              "id": "language_milestone_7",
+              "title": "Responds to own name",
+              "description": "Your baby is beginning to recognize and respond to their own name by looking, smiling, or vocalizing when called.",
+              "ageRange": "5-6 months",
+              "observed": false,
+              "dateObserved": null,
+              "suggestedActivities": [
+                {
+                  "id": "activity_32",
+                  "title": "Name Recognition",
+                  "description": "Use baby's name frequently during the day, especially during positive interactions.",
                   "completed": false
                 }
               ]
@@ -595,33 +646,49 @@ const journeyMilestoneData = {
           "progress": 0,
           "milestones": [
             {
-              "id": "social_milestone_6",
-              "title": "Laughs out loud",
-              "description": "Your baby is expressing joy through laughter, especially during playful interactions. This shows developing emotional expression and social connection.",
-              "ageRange": "4-5 months",
+              "id": "social_milestone_7",
+              "title": "Knows familiar faces and begins to know if someone is a stranger",
+              "description": "Your baby is developing stranger awareness, showing preference for familiar people and possibly anxiety around strangers.",
+              "ageRange": "5-6 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_30",
-                  "title": "Silly Sounds",
-                  "description": "Make funny faces and silly sounds to encourage laughter and emotional expression.",
+                  "id": "activity_33",
+                  "title": "Gentle Introductions",
+                  "description": "Introduce new people gradually while holding baby, allowing them to observe from the safety of your arms.",
                   "completed": false
                 }
               ]
             },
             {
-              "id": "social_milestone_7",
-              "title": "Shows interest in mirror images",
-              "description": "Your baby is fascinated by their reflection in mirrors, though they don't yet understand it's them. This curiosity about faces supports social development.",
+              "id": "social_milestone_8",
+              "title": "Likes to play with others, especially parents",
+              "description": "Your baby shows increasing enjoyment of interactive play, particularly with parents and familiar caregivers.",
               "ageRange": "4-6 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_31",
-                  "title": "Mirror Exploration",
-                  "description": "Use an unbreakable mirror during play to let baby explore their reflection.",
+                  "id": "activity_34",
+                  "title": "Interactive Play",
+                  "description": "Engage in face-to-face games like peek-a-boo, pat-a-cake, or gentle tickling games.",
+                  "completed": false
+                }
+              ]
+            },
+            {
+              "id": "social_milestone_9",
+              "title": "Responds to others' emotions",
+              "description": "Your baby is beginning to notice and respond to others' emotional expressions, showing early empathy development.",
+              "ageRange": "5-6 months",
+              "observed": false,
+              "dateObserved": null,
+              "suggestedActivities": [
+                {
+                  "id": "activity_35",
+                  "title": "Emotion Mirroring",
+                  "description": "Use exaggerated facial expressions during play, naming the emotions as you show them.",
                   "completed": false
                 }
               ]
@@ -633,26 +700,27 @@ const journeyMilestoneData = {
     {
       "id": "phase_6_8m",
       "name": "6-8 Months",
-      "description": "Baby becomes more mobile and begins to understand cause and effect relationships",
+      "phaseName": "Curious Investigator",
+      "description": "Baby becomes increasingly mobile and curious about their surroundings",
       "domains": [
         {
           "id": "physical_6_8m",
           "name": "Physical",
           "icon": "body-outline",
-          "color": "#4A9B9B", // Teal
+          "color": "#4A9B9B",
           "description": "Motor skills and physical development",
           "progress": 0,
           "milestones": [
             {
               "id": "physical_milestone_10",
               "title": "Sits without support",
-              "description": "Your baby can now sit independently without needing pillows or your hands for support. This shows strong core muscles and balance.",
+              "description": "Your baby can now sit independently without needing props or support, freeing their hands for play.",
               "ageRange": "6-8 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_32",
+                  "id": "activity_36",
                   "title": "Sitting Play",
                   "description": "Place toys around baby while they're sitting to encourage reaching in different directions while maintaining balance.",
                   "completed": false
@@ -662,15 +730,15 @@ const journeyMilestoneData = {
             {
               "id": "physical_milestone_11",
               "title": "Begins to crawl or scoot",
-              "description": "Your baby is finding ways to move independently, whether by traditional crawling, army crawling, scooting, or rolling to get around.",
+              "description": "Your baby is finding ways to move independently, whether by traditional crawling, army crawling, or scooting on their bottom.",
               "ageRange": "6-8 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_33",
+                  "id": "activity_37",
                   "title": "Crawling Encouragement",
-                  "description": "Place favorite toys just out of reach during tummy time to encourage forward movement.",
+                  "description": "Place favorite toys just out of reach during floor time to encourage movement.",
                   "completed": false
                 }
               ]
@@ -678,15 +746,15 @@ const journeyMilestoneData = {
             {
               "id": "physical_milestone_12",
               "title": "Transfers objects between hands",
-              "description": "Your baby can now pass toys or objects from one hand to the other, showing improved hand coordination and bilateral skills.",
+              "description": "Your baby can now pass objects from one hand to the other, showing improved coordination and bilateral skills.",
               "ageRange": "6-7 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_34",
-                  "title": "Hand-to-Hand Play",
-                  "description": "Offer toys that require two hands or can be passed between hands, like soft blocks or rings.",
+                  "id": "activity_38",
+                  "title": "Hand-to-Hand Transfer",
+                  "description": "Offer toys that require two hands to manipulate, encouraging baby to transfer between hands.",
                   "completed": false
                 }
               ]
@@ -696,39 +764,55 @@ const journeyMilestoneData = {
         {
           "id": "cognitive_6_8m",
           "name": "Cognitive",
-          "icon": "brain-outline",
-          "color": "#F4A261", // Orange
+          "icon": "bulb-outline",
+          "color": "#F4A261",
           "description": "Learning, thinking, and problem-solving skills",
           "progress": 0,
           "milestones": [
             {
-              "id": "cognitive_milestone_9",
+              "id": "cognitive_milestone_10",
               "title": "Finds partially hidden objects",
-              "description": "Your baby can now find objects that are partially hidden, showing improved object permanence and memory skills.",
+              "description": "Your baby can now find objects that are partially hidden, showing developing object permanence and memory.",
               "ageRange": "6-8 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_35",
+                  "id": "activity_39",
                   "title": "Hide and Seek",
-                  "description": "Partially hide toys under blankets or behind cushions for baby to find.",
+                  "description": "Partially hide a toy under a blanket while baby watches, encouraging them to find it.",
                   "completed": false
                 }
               ]
             },
             {
-              "id": "cognitive_milestone_10",
+              "id": "cognitive_milestone_11",
               "title": "Explores objects in different ways",
-              "description": "Your baby investigates objects by shaking, banging, throwing, and mouthing them to learn about their properties.",
+              "description": "Your baby investigates objects by shaking, banging, throwing, and mouthing them, learning about their properties.",
               "ageRange": "6-8 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_36",
+                  "id": "activity_40",
                   "title": "Sensory Exploration",
-                  "description": "Provide toys with different textures, sounds, and functions for baby to explore.",
+                  "description": "Provide toys with different properties (soft, hard, noisy, textured) for baby to explore.",
+                  "completed": false
+                }
+              ]
+            },
+            {
+              "id": "cognitive_milestone_12",
+              "title": "Looks for things that fall out of sight",
+              "description": "Your baby will now look for objects that have completely disappeared from view, showing stronger object permanence.",
+              "ageRange": "7-8 months",
+              "observed": false,
+              "dateObserved": null,
+              "suggestedActivities": [
+                {
+                  "id": "activity_41",
+                  "title": "Drop Games",
+                  "description": "Play games where you drop a toy into a container and encourage baby to look for it.",
                   "completed": false
                 }
               ]
@@ -739,38 +823,54 @@ const journeyMilestoneData = {
           "id": "language_6_8m",
           "name": "Language",
           "icon": "chatbubble-outline",
-          "color": "#E76F51", // Coral
+          "color": "#E76F51",
           "description": "Communication and language development",
           "progress": 0,
           "milestones": [
             {
-              "id": "language_milestone_7",
+              "id": "language_milestone_8",
               "title": "Babbles chains of consonants",
-              "description": "Your baby is stringing together multiple consonant-vowel combinations like 'ba-ba-ba' or 'da-da-da', practicing the rhythm and sounds of speech.",
+              "description": "Your baby's babbling now includes consonant sounds in patterns like 'ba-ba-ba' or 'ma-ma-ma'.",
               "ageRange": "6-8 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_37",
-                  "title": "Babble Conversations",
-                  "description": "Have 'conversations' with your baby, taking turns making sounds and waiting for their response.",
+                  "id": "activity_42",
+                  "title": "Consonant Play",
+                  "description": "Repeat consonant-vowel combinations like 'ba-ba-ba' during play, encouraging baby to imitate.",
                   "completed": false
                 }
               ]
             },
             {
-              "id": "language_milestone_8",
+              "id": "language_milestone_9",
               "title": "Responds to simple verbal requests",
-              "description": "Your baby is beginning to understand simple instructions or questions, such as 'Where's the ball?' or 'Give me the toy.'",
+              "description": "Your baby is beginning to understand simple instructions like 'come here' or 'give me'.",
               "ageRange": "7-8 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_38",
+                  "id": "activity_43",
                   "title": "Simple Instructions",
-                  "description": "Give simple, one-step instructions during play, like 'Give me the block' or 'Touch the ball.'",
+                  "description": "Give baby simple, one-step instructions paired with gestures, praising attempts to respond.",
+                  "completed": false
+                }
+              ]
+            },
+            {
+              "id": "language_milestone_10",
+              "title": "Uses gestures like waving or reaching to communicate",
+              "description": "Your baby is using intentional gestures to communicate wants and needs, showing pre-verbal communication skills.",
+              "ageRange": "7-8 months",
+              "observed": false,
+              "dateObserved": null,
+              "suggestedActivities": [
+                {
+                  "id": "activity_44",
+                  "title": "Gesture Games",
+                  "description": "Wave 'hello' and 'goodbye' consistently, encouraging baby to imitate these gestures.",
                   "completed": false
                 }
               ]
@@ -781,38 +881,54 @@ const journeyMilestoneData = {
           "id": "social_6_8m",
           "name": "Social",
           "icon": "people-outline",
-          "color": "#2A9D8F", // Green
+          "color": "#2A9D8F",
           "description": "Social and emotional development",
           "progress": 0,
           "milestones": [
             {
-              "id": "social_milestone_8",
-              "title": "Shows stranger anxiety",
-              "description": "Your baby may become clingy or anxious around unfamiliar people, showing a healthy attachment to primary caregivers and awareness of strangers.",
+              "id": "social_milestone_10",
+              "title": "May show fear of strangers",
+              "description": "Your baby may show anxiety or distress around unfamiliar people, a normal developmental phase called stranger anxiety.",
               "ageRange": "6-8 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_39",
-                  "title": "Gentle Introductions",
-                  "description": "Introduce new people gradually while holding baby to provide security and comfort.",
+                  "id": "activity_45",
+                  "title": "Comfort and Reassurance",
+                  "description": "When introducing new people, hold baby close and allow them to warm up gradually at their own pace.",
                   "completed": false
                 }
               ]
             },
             {
-              "id": "social_milestone_9",
-              "title": "Plays interactive games like peek-a-boo",
-              "description": "Your baby enjoys social games and may even initiate them, showing understanding of turn-taking and social interaction.",
+              "id": "social_milestone_11",
+              "title": "Shows preference for certain people and toys",
+              "description": "Your baby is developing clear preferences for favorite people and toys, showing their developing sense of self.",
               "ageRange": "6-8 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_40",
-                  "title": "Interactive Games",
-                  "description": "Play games like peek-a-boo, pat-a-cake, and 'so big' to encourage social interaction and turn-taking.",
+                  "id": "activity_46",
+                  "title": "Preference Observation",
+                  "description": "Notice and respect baby's preferences while gently introducing new experiences.",
+                  "completed": false
+                }
+              ]
+            },
+            {
+              "id": "social_milestone_12",
+              "title": "Shows more emotion and may cling to familiar adults",
+              "description": "Your baby is expressing a wider range of emotions and may show separation anxiety when away from primary caregivers.",
+              "ageRange": "7-8 months",
+              "observed": false,
+              "dateObserved": null,
+              "suggestedActivities": [
+                {
+                  "id": "activity_47",
+                  "title": "Separation Practice",
+                  "description": "Practice brief separations with a consistent goodbye routine, returning promptly to build trust.",
                   "completed": false
                 }
               ]
@@ -824,60 +940,61 @@ const journeyMilestoneData = {
     {
       "id": "phase_8_10m",
       "name": "8-10 Months",
-      "description": "Baby becomes increasingly mobile and develops more intentional communication",
+      "phaseName": "Emerging Independence",
+      "description": "Baby becomes more mobile and begins to assert independence",
       "domains": [
         {
           "id": "physical_8_10m",
           "name": "Physical",
           "icon": "body-outline",
-          "color": "#4A9B9B", // Teal
+          "color": "#4A9B9B",
           "description": "Motor skills and physical development",
           "progress": 0,
           "milestones": [
             {
               "id": "physical_milestone_13",
               "title": "Pulls to stand",
-              "description": "Your baby can pull themselves up to a standing position using furniture for support, showing leg strength and coordination.",
+              "description": "Your baby can pull themselves up to a standing position using furniture or other support.",
               "ageRange": "8-10 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_41",
+                  "id": "activity_48",
                   "title": "Standing Practice",
-                  "description": "Place favorite toys on a low, stable surface to encourage pulling up to stand.",
+                  "description": "Place favorite toys on a low, stable surface to encourage pulling up to reach them.",
                   "completed": false
                 }
               ]
             },
             {
               "id": "physical_milestone_14",
-              "title": "Cruises while holding onto furniture",
-              "description": "Your baby can move sideways while holding onto furniture, taking early steps toward independent walking.",
-              "ageRange": "9-10 months",
+              "title": "Gets into sitting position independently",
+              "description": "Your baby can move from lying down to sitting up without help, showing increased core strength and coordination.",
+              "ageRange": "8-9 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_42",
-                  "title": "Cruising Circuit",
-                  "description": "Arrange furniture to create a 'cruising circuit' where baby can move from piece to piece safely.",
+                  "id": "activity_49",
+                  "title": "Position Changes",
+                  "description": "Encourage baby to practice moving between positions during floor play.",
                   "completed": false
                 }
               ]
             },
             {
               "id": "physical_milestone_15",
-              "title": "Uses pincer grasp",
-              "description": "Your baby can pick up small objects using their thumb and forefinger, showing refined fine motor control.",
+              "title": "Crawls or cruises efficiently",
+              "description": "Your baby moves with purpose, either crawling well or cruising along furniture to get to desired objects.",
               "ageRange": "8-10 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_43",
-                  "title": "Finger Food Practice",
-                  "description": "Offer safe finger foods like small pieces of soft fruit or cereal to practice pincer grasp (always supervise).",
+                  "id": "activity_50",
+                  "title": "Cruising Course",
+                  "description": "Arrange furniture to create a safe cruising path around the room.",
                   "completed": false
                 }
               ]
@@ -887,39 +1004,55 @@ const journeyMilestoneData = {
         {
           "id": "cognitive_8_10m",
           "name": "Cognitive",
-          "icon": "brain-outline",
-          "color": "#F4A261", // Orange
+          "icon": "bulb-outline",
+          "color": "#F4A261",
           "description": "Learning, thinking, and problem-solving skills",
           "progress": 0,
           "milestones": [
             {
-              "id": "cognitive_milestone_11",
-              "title": "Finds hidden objects easily",
-              "description": "Your baby can now find objects that are completely hidden, showing a solid understanding of object permanence.",
-              "ageRange": "8-10 months",
+              "id": "cognitive_milestone_13",
+              "title": "Watches the path of falling objects",
+              "description": "Your baby follows the trajectory of dropped objects with their eyes, showing understanding of object movement.",
+              "ageRange": "8-9 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_44",
-                  "title": "Hide and Seek Games",
-                  "description": "Hide toys completely under blankets or in containers and encourage baby to find them.",
+                  "id": "activity_51",
+                  "title": "Drop and Watch",
+                  "description": "Drop soft toys from different heights, encouraging baby to watch where they land.",
                   "completed": false
                 }
               ]
             },
             {
-              "id": "cognitive_milestone_12",
-              "title": "Understands cause and effect",
-              "description": "Your baby experiments with actions to see what happens, like dropping food from the high chair or pressing buttons to make sounds.",
+              "id": "cognitive_milestone_14",
+              "title": "Looks for hidden objects where they were last seen",
+              "description": "Your baby will search for hidden objects in the last place they saw them, showing developing memory and object permanence.",
               "ageRange": "8-10 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_45",
-                  "title": "Action-Reaction Toys",
-                  "description": "Provide toys that respond to baby's actions, like push buttons that make sounds or pop-up toys.",
+                  "id": "activity_52",
+                  "title": "Hide and Find",
+                  "description": "Hide a toy under a blanket while baby watches, then hide it in a different place to see if they look in the first location.",
+                  "completed": false
+                }
+              ]
+            },
+            {
+              "id": "cognitive_milestone_15",
+              "title": "Begins to use objects correctly",
+              "description": "Your baby starts to use objects for their intended purpose, like drinking from a cup or brushing with a hairbrush.",
+              "ageRange": "9-10 months",
+              "observed": false,
+              "dateObserved": null,
+              "suggestedActivities": [
+                {
+                  "id": "activity_53",
+                  "title": "Functional Play",
+                  "description": "Demonstrate how to use everyday objects correctly, then give baby a chance to imitate.",
                   "completed": false
                 }
               ]
@@ -930,38 +1063,54 @@ const journeyMilestoneData = {
           "id": "language_8_10m",
           "name": "Language",
           "icon": "chatbubble-outline",
-          "color": "#E76F51", // Coral
+          "color": "#E76F51",
           "description": "Communication and language development",
           "progress": 0,
           "milestones": [
             {
-              "id": "language_milestone_9",
+              "id": "language_milestone_11",
               "title": "Understands 'no'",
-              "description": "Your baby recognizes and often responds to the word 'no,' showing understanding of simple language and boundaries.",
+              "description": "Your baby recognizes and often responds to the word 'no', showing understanding of simple language.",
               "ageRange": "8-9 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_46",
-                  "title": "Positive Redirection",
-                  "description": "Use 'no' sparingly and follow with redirection to appropriate activities.",
+                  "id": "activity_54",
+                  "title": "Consistent Communication",
+                  "description": "Use 'no' consistently and sparingly for safety issues, pairing it with redirection to appropriate activities.",
                   "completed": false
                 }
               ]
             },
             {
-              "id": "language_milestone_10",
-              "title": "Makes specific sounds to get attention",
-              "description": "Your baby uses specific sounds, gestures, or proto-words consistently to communicate needs or get your attention.",
+              "id": "language_milestone_12",
+              "title": "Makes specific sounds to express meaning",
+              "description": "Your baby uses consistent sounds to communicate specific needs or interests, showing intentional pre-verbal communication.",
+              "ageRange": "8-10 months",
+              "observed": false,
+              "dateObserved": null,
+              "suggestedActivities": [
+                {
+                  "id": "activity_55",
+                  "title": "Sound Recognition",
+                  "description": "Notice and respond to baby's consistent sounds, treating them as meaningful communication.",
+                  "completed": false
+                }
+              ]
+            },
+            {
+              "id": "language_milestone_13",
+              "title": "Copies sounds and gestures of others",
+              "description": "Your baby imitates sounds, words, and gestures they observe, showing social learning and communication development.",
               "ageRange": "9-10 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_47",
-                  "title": "Responsive Communication",
-                  "description": "Respond promptly to baby's communication attempts to encourage continued development.",
+                  "id": "activity_56",
+                  "title": "Imitation Games",
+                  "description": "Make a sound or gesture and wait to see if baby imitates, then respond enthusiastically when they do.",
                   "completed": false
                 }
               ]
@@ -972,38 +1121,54 @@ const journeyMilestoneData = {
           "id": "social_8_10m",
           "name": "Social",
           "icon": "people-outline",
-          "color": "#2A9D8F", // Green
+          "color": "#2A9D8F",
           "description": "Social and emotional development",
           "progress": 0,
           "milestones": [
             {
-              "id": "social_milestone_10",
-              "title": "Shows separation anxiety",
-              "description": "Your baby may become upset when you leave, showing a strong attachment and understanding that you continue to exist when out of sight.",
+              "id": "social_milestone_13",
+              "title": "May be fearful in some situations",
+              "description": "Your baby may show fear in certain situations or around certain objects, showing developing awareness of potential dangers.",
               "ageRange": "8-10 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_48",
-                  "title": "Separation Practice",
-                  "description": "Practice brief separations with a consistent goodbye routine to build security.",
+                  "id": "activity_57",
+                  "title": "Gentle Exposure",
+                  "description": "Gradually and gently expose baby to feared situations while providing reassurance and support.",
                   "completed": false
                 }
               ]
             },
             {
-              "id": "social_milestone_11",
-              "title": "Imitates gestures and actions",
-              "description": "Your baby copies simple actions and gestures like clapping, waving, or shaking their head, showing social learning and imitation skills.",
+              "id": "social_milestone_14",
+              "title": "Shows separation anxiety",
+              "description": "Your baby becomes upset when primary caregivers leave, showing healthy attachment and emotional development.",
               "ageRange": "8-10 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_49",
-                  "title": "Gesture Games",
-                  "description": "Play games that involve gestures like waving, clapping, or blowing kisses for baby to imitate.",
+                  "id": "activity_58",
+                  "title": "Goodbye Routine",
+                  "description": "Create a consistent, brief goodbye routine that helps baby understand you will return.",
+                  "completed": false
+                }
+              ]
+            },
+            {
+              "id": "social_milestone_15",
+              "title": "Plays interactive games like peek-a-boo",
+              "description": "Your baby actively participates in social games like peek-a-boo, showing understanding of turn-taking and social rules.",
+              "ageRange": "8-10 months",
+              "observed": false,
+              "dateObserved": null,
+              "suggestedActivities": [
+                {
+                  "id": "activity_59",
+                  "title": "Interactive Games",
+                  "description": "Play turn-taking games like peek-a-boo, pat-a-cake, or roll-the-ball.",
                   "completed": false
                 }
               ]
@@ -1015,60 +1180,61 @@ const journeyMilestoneData = {
     {
       "id": "phase_10_12m",
       "name": "10-12 Months",
-      "description": "Baby prepares for first steps and first words as they approach their first birthday",
+      "phaseName": "Budding Communicator",
+      "description": "Baby develops more intentional communication and prepares for first steps",
       "domains": [
         {
           "id": "physical_10_12m",
           "name": "Physical",
           "icon": "body-outline",
-          "color": "#4A9B9B", // Teal
+          "color": "#4A9B9B",
           "description": "Motor skills and physical development",
           "progress": 0,
           "milestones": [
             {
               "id": "physical_milestone_16",
-              "title": "Stands alone briefly",
-              "description": "Your baby can stand without holding onto anything for a few moments, showing improved balance and leg strength.",
+              "title": "Stands alone momentarily",
+              "description": "Your baby can briefly stand without support, showing developing balance and leg strength.",
               "ageRange": "10-12 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_50",
+                  "id": "activity_60",
                   "title": "Independent Standing",
-                  "description": "Encourage brief moments of standing without support by holding toys at standing height.",
+                  "description": "Encourage brief moments of standing without support during play.",
                   "completed": false
                 }
               ]
             },
             {
               "id": "physical_milestone_17",
-              "title": "Takes first steps with support",
-              "description": "Your baby may take a few steps while holding your hands or pushing a stable toy, preparing for independent walking.",
-              "ageRange": "10-12 months",
+              "title": "May take first steps",
+              "description": "Your baby may begin taking their first independent steps, though walking typically develops between 9-15 months.",
+              "ageRange": "11-12 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_51",
-                  "title": "Supported Walking",
-                  "description": "Hold baby's hands while they practice taking steps, or provide a stable push toy.",
+                  "id": "activity_61",
+                  "title": "Walking Practice",
+                  "description": "Hold baby's hands while they practice walking, gradually reducing support as they gain confidence.",
                   "completed": false
                 }
               ]
             },
             {
               "id": "physical_milestone_18",
-              "title": "Drinks from a cup with help",
-              "description": "Your baby can drink from a sippy cup or open cup with your assistance, showing improved oral motor control.",
+              "title": "Uses pincer grasp",
+              "description": "Your baby can pick up small objects using their thumb and forefinger, showing developing fine motor control.",
               "ageRange": "10-12 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_52",
-                  "title": "Cup Practice",
-                  "description": "Offer small amounts of water in a sippy cup or open cup with your help during meals.",
+                  "id": "activity_62",
+                  "title": "Pincer Grasp Practice",
+                  "description": "Offer small, safe foods like cereal pieces or small toys that require pincer grasp to pick up.",
                   "completed": false
                 }
               ]
@@ -1078,39 +1244,55 @@ const journeyMilestoneData = {
         {
           "id": "cognitive_10_12m",
           "name": "Cognitive",
-          "icon": "brain-outline",
-          "color": "#F4A261", // Orange
+          "icon": "bulb-outline",
+          "color": "#F4A261",
           "description": "Learning, thinking, and problem-solving skills",
           "progress": 0,
           "milestones": [
             {
-              "id": "cognitive_milestone_13",
-              "title": "Puts objects in containers and takes them out",
-              "description": "Your baby enjoys filling and emptying containers, showing understanding of spatial relationships and object properties.",
+              "id": "cognitive_milestone_16",
+              "title": "Finds hidden objects easily",
+              "description": "Your baby can find objects hidden under multiple covers or in different locations, showing advanced object permanence.",
               "ageRange": "10-12 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_53",
-                  "title": "Fill and Dump",
-                  "description": "Provide containers and objects for baby to practice putting in and taking out.",
+                  "id": "activity_63",
+                  "title": "Advanced Hide and Seek",
+                  "description": "Hide toys under multiple layers or in new locations to challenge baby's searching skills.",
                   "completed": false
                 }
               ]
             },
             {
-              "id": "cognitive_milestone_14",
-              "title": "Follows simple directions with gestures",
-              "description": "Your baby can follow simple one-step directions, especially when accompanied by gestures, showing language comprehension.",
+              "id": "cognitive_milestone_17",
+              "title": "Explores objects in many ways",
+              "description": "Your baby investigates objects by shaking, banging, throwing, dropping, and examining them, showing curiosity and problem-solving.",
               "ageRange": "10-12 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_54",
-                  "title": "Simple Instructions",
-                  "description": "Give simple directions like 'Give me the ball' or 'Put the block in the box' during play.",
+                  "id": "activity_64",
+                  "title": "Exploration Basket",
+                  "description": "Create a basket of safe household objects with different properties for baby to explore.",
+                  "completed": false
+                }
+              ]
+            },
+            {
+              "id": "cognitive_milestone_18",
+              "title": "Begins to use objects correctly",
+              "description": "Your baby uses common objects for their intended purpose, like drinking from a cup, brushing hair, or talking on a toy phone.",
+              "ageRange": "10-12 months",
+              "observed": false,
+              "dateObserved": null,
+              "suggestedActivities": [
+                {
+                  "id": "activity_65",
+                  "title": "Functional Play",
+                  "description": "Provide toy versions of everyday objects and demonstrate their use, encouraging imitation.",
                   "completed": false
                 }
               ]
@@ -1121,38 +1303,54 @@ const journeyMilestoneData = {
           "id": "language_10_12m",
           "name": "Language",
           "icon": "chatbubble-outline",
-          "color": "#E76F51", // Coral
+          "color": "#E76F51",
           "description": "Communication and language development",
           "progress": 0,
           "milestones": [
             {
-              "id": "language_milestone_11",
-              "title": "Says first word",
-              "description": "Your baby may say their first recognizable word, often 'mama' or 'dada' used specifically for the right person.",
+              "id": "language_milestone_14",
+              "title": "Responds to simple verbal requests",
+              "description": "Your baby understands and responds to simple instructions like 'come here' or 'give me the toy'.",
               "ageRange": "10-12 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_55",
-                  "title": "Word Association",
-                  "description": "Clearly name familiar people and objects throughout the day to build vocabulary.",
+                  "id": "activity_66",
+                  "title": "Simple Commands",
+                  "description": "Give baby simple, one-step instructions throughout the day, praising their attempts to follow them.",
                   "completed": false
                 }
               ]
             },
             {
-              "id": "language_milestone_12",
-              "title": "Uses gestures like pointing or waving",
-              "description": "Your baby communicates intentionally through gestures like pointing to request things or waving to greet people.",
+              "id": "language_milestone_15",
+              "title": "Uses simple gestures like shaking head for 'no'",
+              "description": "Your baby uses meaningful gestures to communicate, showing intentional non-verbal communication.",
               "ageRange": "10-12 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_56",
+                  "id": "activity_67",
                   "title": "Gesture Games",
-                  "description": "Model and encourage gestures like waving, pointing, and nodding/shaking head.",
+                  "description": "Model and encourage simple gestures like nodding, shaking head, waving, or pointing.",
+                  "completed": false
+                }
+              ]
+            },
+            {
+              "id": "language_milestone_16",
+              "title": "Says 'mama' and 'dada' with meaning",
+              "description": "Your baby uses 'mama' and 'dada' to refer to specific parents, showing first true words.",
+              "ageRange": "10-12 months",
+              "observed": false,
+              "dateObserved": null,
+              "suggestedActivities": [
+                {
+                  "id": "activity_68",
+                  "title": "Name Association",
+                  "description": "Clearly label yourself and other family members by name during interactions.",
                   "completed": false
                 }
               ]
@@ -1163,38 +1361,54 @@ const journeyMilestoneData = {
           "id": "social_10_12m",
           "name": "Social",
           "icon": "people-outline",
-          "color": "#2A9D8F", // Green
+          "color": "#2A9D8F",
           "description": "Social and emotional development",
           "progress": 0,
           "milestones": [
             {
-              "id": "social_milestone_12",
-              "title": "Shows preferences for certain people and toys",
-              "description": "Your baby clearly shows preferences for favorite people, toys, and activities, demonstrating developing personality and opinions.",
+              "id": "social_milestone_16",
+              "title": "Is shy or anxious with strangers",
+              "description": "Your baby shows stranger anxiety, being cautious or upset around unfamiliar people.",
               "ageRange": "10-12 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_57",
-                  "title": "Choice Offering",
-                  "description": "Offer simple choices between two toys or foods to encourage expression of preferences.",
+                  "id": "activity_69",
+                  "title": "Gradual Introductions",
+                  "description": "Introduce new people slowly while holding baby, allowing them to warm up at their own pace.",
                   "completed": false
                 }
               ]
             },
             {
-              "id": "social_milestone_13",
-              "title": "Tests parental responses to behavior",
-              "description": "Your baby may test boundaries by doing things they've been told not to do while watching for your reaction.",
+              "id": "social_milestone_17",
+              "title": "Cries when parent leaves",
+              "description": "Your baby shows separation anxiety, becoming upset when primary caregivers leave.",
               "ageRange": "10-12 months",
               "observed": false,
               "dateObserved": null,
               "suggestedActivities": [
                 {
-                  "id": "activity_58",
-                  "title": "Consistent Boundaries",
-                  "description": "Respond consistently to boundary testing while offering appropriate alternatives.",
+                  "id": "activity_70",
+                  "title": "Separation Practice",
+                  "description": "Practice brief separations with a consistent goodbye routine, always returning as promised.",
+                  "completed": false
+                }
+              ]
+            },
+            {
+              "id": "social_milestone_18",
+              "title": "Shows specific preferences for people",
+              "description": "Your baby clearly shows preferences for certain familiar people, a sign of healthy attachment.",
+              "ageRange": "10-12 months",
+              "observed": false,
+              "dateObserved": null,
+              "suggestedActivities": [
+                {
+                  "id": "activity_71",
+                  "title": "Special Time",
+                  "description": "Ensure each caregiver has special one-on-one time with baby to build individual relationships.",
                   "completed": false
                 }
               ]
