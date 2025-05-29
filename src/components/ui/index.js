@@ -6,6 +6,8 @@ import Column from './layout/Column';
 import Spacer from './layout/Spacer';
 import Section from './layout/Section';
 import Container from './layout/Container';
+import SafeContainer from './layout/SafeContainer';
+import ScrollContainer from './layout/ScrollContainer';
 import Card from './cards/Card';
 import CardTitle from './cards/CardTitle';
 import Button from './buttons/Button';
@@ -35,6 +37,8 @@ export {
   Spacer,
   Section,
   Container,
+  SafeContainer,
+  ScrollContainer,
   
   // Cards
   Card,
