@@ -58,6 +58,11 @@ export const colors = {
     accent: '#F79770',  // Coral for accents
   },
   
+  // Accent colors
+  accent: {
+    copper: '#B05E35', // Copper/brown accent (same as secondary.dark)
+  },
+  
   // Transparency utilities
   alpha: {
     10: 'rgba(0,0,0,0.1)',
