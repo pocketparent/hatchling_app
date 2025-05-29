@@ -14,13 +14,13 @@ SplashScreen.preventAutoHideAsync();
 export default function useFontLoader() {
   const [fontsLoaded] = useFonts({
     // SF Pro Display family
-    'SFProDisplay-Regular': require('../../assets/fonts/SF-Pro-Display-Regular.otf'),
+    'SFProDisplay-Regular': require('../../assets/fonts/SFProDisplay-Regular.otf'),
     'SFProDisplay-Medium': require('../../assets/fonts/SF-Pro-Display-Medium.otf'),
     'SFProDisplay-Semibold': require('../../assets/fonts/SF-Pro-Display-Semibold.otf'),
-    'SFProDisplay-Bold': require('../../assets/fonts/SF-Pro-Display-Bold.otf'),
+    'SFProDisplay-Bold': require('../../assets/fonts/SFProDisplay-Bold.otf'),
     
     // SF Pro Text family
-    'SFProText-Regular': require('../../assets/fonts/SF-Pro-Text-Regular.otf'),
+    'SFProText-Regular': require('../../assets/fonts/SFProText-Regular.otf'),
     'SFProText-Medium': require('../../assets/fonts/SF-Pro-Text-Medium.otf'),
     'SFProText-Semibold': require('../../assets/fonts/SF-Pro-Text-Semibold.otf'),
     'SFProText-Bold': require('../../assets/fonts/SF-Pro-Text-Bold.otf'),
