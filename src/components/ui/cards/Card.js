@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import theme from '../../../theme';
-import { Row, Column, Body, BodySmall, Caption } from '../index';
+import Row from '../layout/Row';
+import Column from '../layout/Column';
+import { Body, BodySmall, Caption } from '../Typography';
 
 /**
  * Card Component
@@ -16,28 +18,27 @@ const Card = ({
   style 
 }) => {
   // Get card styling based on variant
-  const getCardStyles = () => {
+  const  getCardStyles = () => {
     switch (variant) {
       case 'outlined':
         return {
           backgroundColor: 'transparent',
           borderWidth: 1,
           borderColor: theme.colors.neutral.light,
-          ...theme.shadows.none,
+          ...theme.spacing.shadows.none,
         };
       case 'elevated':
         return {
           backgroundColor: theme.colors.neutral.white,
-          ...theme.shadows.medium,
+          ...theme.spacing.shadows.medium,
         };
       case 'default':
       default:
         return {
           backgroundColor: theme.colors.neutral.white,
-          ...theme.shadows.small,
+          ...theme.spacing.shadows.small,
         };
-    }
-  };
+    }  };
 
   const cardStyles = getCardStyles();
   
