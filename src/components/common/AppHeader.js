@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import theme from '../../theme';
 
 /**
@@ -10,11 +10,7 @@ import theme from '../../theme';
 const AppHeader = () => {
   return (
     <View style={styles.headerContainer}>
-      <Image 
-        source={require('../../assets/logo.png')} 
-        style={styles.logo}
-        resizeMode="contain"
-      />
+      <Text style={styles.logoText}>Hatchling</Text>
     </View>
   );
 };
@@ -25,10 +21,11 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 12,
   },
-  logo: {
-    width: 80, // Small logo as requested
-    height: 30,
-  },
+  logoText: {
+    fontFamily: 'SFProDisplay-Bold',
+    fontSize: 18,
+    color: '#FFFFFF',
+  }
 });
 
 export default AppHeader;
