@@ -14,6 +14,8 @@ import Button from './buttons/Button';
 import BackButton from './buttons/BackButton';
 import OptionButton from './buttons/OptionButton';
 import IconButton from './buttons/IconButton';
+import SecondaryButton from './buttons/SecondaryButton';
+import PrimaryButton from './buttons/Button'; // Alias Button as PrimaryButton
 import TextInput from './inputs/TextInput';
 import ProgressBar from './progress/ProgressBar';
 import ProgressIndicator from './progress/ProgressIndicator';
@@ -47,6 +49,8 @@ export {
   
   // Buttons
   Button,
+  PrimaryButton,
+  SecondaryButton,
   BackButton,
   OptionButton,
   IconButton,
