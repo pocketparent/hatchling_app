@@ -127,6 +127,12 @@ export default function SettingsScreen({ navigation }) {
           action: () => navigation.navigate('Terms')
         },
         { 
+          id: '7-4', 
+          title: 'Typography Test', 
+          icon: 'text',
+          action: () => navigation.navigate('TypographyTest')
+        },
+        { 
           id: '7-3', 
           title: 'Data Deletion', 
           icon: 'trash',

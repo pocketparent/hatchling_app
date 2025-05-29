@@ -3,9 +3,10 @@
  * 
  * Updated App.js with all providers and data integration
  * Includes ThemeProvider, AuthProvider, OnboardingProvider, and DataProvider
+ * Implements proper font loading with expo-font
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
@@ -16,9 +17,13 @@ import { DataProvider } from './src/context/DataContext';
 import AppNavigation from './src/navigation/AppNavigation';
 import theme from './src/theme';
 import { validateAll } from './src/utils/ExpoValidator';
+import useFontLoader from './src/hooks/useFontLoader';
 
 // Main app component
 export default function App() {
+  // Load fonts using the custom hook
+  const { fontsLoaded, onLayoutRootView } = useFontLoader();
+  
   // State for Expo compatibility validation
   const [validationResults, setValidationResults] = useState(null);
   const [validationComplete, setValidationComplete] = useState(false);
@@ -40,12 +45,14 @@ export default function App() {
     validateExpoCompatibility();
   }, []);
 
-  // Show validation screen if validation is not complete
-  if (!validationComplete) {
+  // Show loading screen if fonts are not loaded or validation is not complete
+  if (!fontsLoaded || !validationComplete) {
     return (
       <View style={styles.validationContainer}>
         <ActivityIndicator size="large" color={theme.colors.primary.main} />
-        <Text style={styles.validationText}>Validating app compatibility...</Text>
+        <Text style={[styles.validationText, { fontFamily: 'System' }]}>
+          {!fontsLoaded ? 'Loading fonts...' : 'Validating app compatibility...'}
+        </Text>
       </View>
     );
   }
@@ -73,7 +80,9 @@ export default function App() {
         <AuthProvider>
           <OnboardingProvider>
             <DataProvider>
-              <AppNavigation />
+              <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+                <AppNavigation />
+              </View>
             </DataProvider>
           </OnboardingProvider>
         </AuthProvider>

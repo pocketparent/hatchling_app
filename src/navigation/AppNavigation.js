@@ -45,6 +45,9 @@ import SubscriptionScreen from '../screens/Settings/Subscription';
 import PrivacyPolicyScreen from '../screens/Settings/PrivacyPolicy';
 import TermsScreen from '../screens/Settings/Terms';
 
+// Import typography test screen
+import TypographyTestScreen from '../screens/TypographyTest';
+
 // Settings stack navigator
 const SettingsStackNavigator = () => {
   return (
@@ -58,6 +61,7 @@ const SettingsStackNavigator = () => {
       <Stack.Screen name="Subscription" component={SubscriptionScreen} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
       <Stack.Screen name="Terms" component={TermsScreen} />
+      <Stack.Screen name="TypographyTest" component={TypographyTestScreen} />
     </Stack.Navigator>
   );
 };
