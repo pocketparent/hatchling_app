@@ -20,7 +20,7 @@ const CardTitle = ({
   return (
     <View style={[styles.container, style]}>
       <View style={styles.titleContainer}>
-        <Body weight="bold" style={styles.title}>
+        <Body weight="bold" style={[styles.title, subtitle ? { marginBottom: theme.spacing.spacing.xs } : {}]}>
           {title}
         </Body>
         
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    marginBottom: subtitle ? theme.spacing.spacing.xs : 0,
+    // Margin will be set dynamically in the component
   }
 });
 
