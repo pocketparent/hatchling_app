@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import theme from '../../../theme';
-import { Row, Column, Body, BodySmall, Caption } from '../index';
+import Row from '../layout/Row';
+import Column from '../layout/Column';
+import { Body, BodySmall, Caption } from '../Typography';
 
 /**
  * CategoryPill Component

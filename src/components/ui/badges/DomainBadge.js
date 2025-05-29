@@ -2,7 +2,8 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../../theme';
-import { Row, Body } from '../index';
+import Row from '../layout/Row';
+import { Body } from '../Typography';
 
 /**
  * DomainBadge Component

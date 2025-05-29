@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import theme from '../../../theme';
-import { Row, Column, Body, BodySmall, Caption } from '../index';
+import Row from '../layout/Row';
+import Column from '../layout/Column';
+import { Body, BodySmall, Caption } from '../Typography';
 import ProgressBar from '../progress/ProgressBar';
 import DomainBadge from '../badges/DomainBadge';
 
@@ -67,7 +69,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.neutral.white,
     borderRadius: theme.spacing.borderRadius.md,
     padding: theme.spacing.spacing.md,
-    ...theme.shadows.small,
+    ...theme.spacing.shadows.small,
   },
   header: {
     marginBottom: theme.spacing.spacing.md,
