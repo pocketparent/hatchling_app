@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   FlatList,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
@@ -424,7 +425,7 @@ export default function JourneyScreen({ navigation }) {
             </Row>
           </Column>
           <View style={styles.domainCardArrow}>
-            <Ionicons name="chevron-forward" size={20} color={theme.colors.neutral.medium} />
+            <Ionicons name="chevron-forward" size={20} color="#CCCCCC" />
           </View>
         </Row>
       </InteractiveAccentCard>
@@ -435,13 +436,11 @@ export default function JourneyScreen({ navigation }) {
     <ScreenErrorWrapper screenName="Journey" navigation={navigation}>
       <Container>
         <SafeContainer>
-          <StatusBar style="light" />
-          
           {/* App header with logo */}
           <AppHeader title={selectedPhase.name} />
           
           {/* Phase selector */}
-          <Section style={styles.phaseSelectorContainer}>
+          <Section style={styles.phaseSelector}>
             <FlatList
               ref={phaseScrollRef}
               data={journeyState.phases}
@@ -449,24 +448,23 @@ export default function JourneyScreen({ navigation }) {
               keyExtractor={item => item.id}
               horizontal
               showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.phaseList}
+              contentContainerStyle={styles.phaseSelectorContent}
               initialScrollIndex={0}
               onScrollToIndexFailed={() => {}}
             />
           </Section>
           
           {/* Phase description */}
-          <Section style={styles.phaseDescriptionContainer}>
-            <H2 color="white">{selectedPhase.name}</H2>
-            <Body color="white" style={styles.phaseDescription}>{selectedPhase.description}</Body>
+          <Section style={styles.phaseDescription}>
+            <Body color="white" style={styles.phaseDescriptionText}>
+              {selectedPhase.description}
+            </Body>
           </Section>
           
           {/* Domain cards */}
-          <ScrollContainer 
-            contentContainerStyle={styles.domainsContent}
-            showsVerticalScrollIndicator={false}
-          >
+          <ScrollContainer contentContainerStyle={styles.domainsContainer}>
             {selectedPhase.domains.map(domain => renderDomainCard(domain))}
+            <Spacer size="xl" />
           </ScrollContainer>
         </SafeContainer>
       </Container>
@@ -475,17 +473,16 @@ export default function JourneyScreen({ navigation }) {
 }
 
 const styles = {
-  phaseSelectorContainer: {
-    marginTop: 8,
+  phaseSelector: {
     marginBottom: 16,
   },
-  phaseList: {
-    paddingHorizontal: 16,
+  phaseSelectorContent: {
+    paddingHorizontal: 8,
   },
   phaseItem: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    marginRight: 8,
+    marginHorizontal: 4,
     borderRadius: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
@@ -496,39 +493,28 @@ const styles = {
     color: '#FFFFFF',
   },
   phaseItemTextSelected: {
-    color: theme.colors.primary.main,
-  },
-  phaseDescriptionContainer: {
-    paddingHorizontal: 16,
-    marginBottom: 16,
+    color: '#2A9D8F',
   },
   phaseDescription: {
-    marginTop: 8,
-    opacity: 0.8,
+    marginBottom: 24,
   },
-  domainsContent: {
+  phaseDescriptionText: {
+    textAlign: 'center',
     paddingHorizontal: 16,
-    paddingBottom: 100, // Extra space for bottom tab bar
   },
-  domainCardExpanded: {
-    marginBottom: 16,
-    paddingBottom: 16,
-  },
-  backButton: {
-    marginRight: 12,
+  domainsContainer: {
+    paddingBottom: 100, // Extra padding for bottom tab bar
+    gap: 16,
   },
   domainIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: 16,
   },
   domainInfoContainer: {
-    flex: 1,
-  },
-  domainTitleContainer: {
     flex: 1,
   },
   domainDescription: {
@@ -544,30 +530,45 @@ const styles = {
     justifyContent: 'center',
     paddingLeft: 8,
   },
+  domainCardExpanded: {
+    padding: 16,
+  },
+  backButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  domainTitleContainer: {
+    flex: 1,
+  },
   viewToggleContainer: {
-    marginTop: 16,
-    marginBottom: 16,
-    paddingHorizontal: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    borderRadius: 20,
+    padding: 4,
+    marginVertical: 16,
   },
   viewToggleButton: {
+    flex: 1,
     paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    marginRight: 8,
-    backgroundColor: 'rgba(42, 157, 143, 0.1)',
+    alignItems: 'center',
+    borderRadius: 16,
   },
   viewToggleButtonActive: {
-    backgroundColor: theme.colors.primary.main,
+    backgroundColor: '#2A9D8F',
   },
   milestonesContainer: {
     maxHeight: 400,
   },
   milestonesContent: {
-    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   milestoneItem: {
-    backgroundColor: 'rgba(42, 157, 143, 0.05)',
-    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    borderRadius: 8,
     padding: 12,
     marginBottom: 8,
   },
@@ -579,17 +580,17 @@ const styles = {
   },
   milestoneCheckbox: {
     justifyContent: 'center',
-    paddingLeft: 12,
+    paddingLeft: 8,
   },
   activitiesContainer: {
     maxHeight: 400,
   },
   activitiesContent: {
-    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   activityItem: {
-    backgroundColor: 'rgba(42, 157, 143, 0.05)',
-    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    borderRadius: 8,
     padding: 12,
     marginBottom: 8,
   },
@@ -597,10 +598,10 @@ const styles = {
     flex: 1,
   },
   activityTitle: {
-    marginBottom: 2,
+    marginBottom: 4,
   },
   activityCheckbox: {
     justifyContent: 'center',
-    paddingLeft: 12,
-  }
+    paddingLeft: 8,
+  },
 };
