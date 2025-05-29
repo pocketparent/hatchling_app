@@ -1,11 +1,39 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Alert, Animated } from 'react-native';
+import { 
+  View, 
+  TouchableOpacity, 
+  ScrollView, 
+  Alert, 
+  Animated 
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
-import BackgroundContainer from '../../components/decorations/BackgroundContainer';
-import theme from '../../theme';
 import { ScreenErrorWrapper } from '../../components/error/ErrorComponents';
-import AppHeader from '../../components/common/AppHeader';
+import theme from '../../theme';
+
+// Import UI components
+import {
+  Container,
+  SafeContainer,
+  ScrollContainer,
+  Section,
+  Row,
+  Column,
+  Spacer,
+  Card,
+  H1,
+  H2,
+  H3,
+  Body,
+  BodySmall,
+  Caption,
+  Label,
+  AppHeader,
+  PrimaryButton,
+  SecondaryButton,
+  TextButton,
+  IconButton
+} from '../../components/ui';
 
 /**
  * Saved Screen
@@ -270,11 +298,11 @@ If your baby dislikes tummy time, start with very short sessions and gradually b
           transform: [{ translateX: trans }],
         }]}>
           <TouchableOpacity 
-            style={[styles.deleteButton]}
+            style={styles.deleteButton}
             onPress={() => handleDeleteItem(type, id)}
           >
             <Ionicons name="trash-outline" size={24} color="#FFFFFF" />
-            <Text style={styles.deleteText}>Delete</Text>
+            <BodySmall color="white">Delete</BodySmall>
           </TouchableOpacity>
         </Animated.View>
       </View>
@@ -293,32 +321,27 @@ If your baby dislikes tummy time, start with very short sessions and gradually b
           renderRightActions(progress, dragX, type, item.id)
         }
         rightThreshold={40}
-        onSwipeableOpen={() => {
-          // Optional: Auto-close after a delay
-          // setTimeout(() => {
-          //   if (swipeableRefs.current[itemKey]) {
-          //     swipeableRefs.current[itemKey].close();
-          //   }
-          // }, 3000);
-        }}
       >
-        <TouchableOpacity 
-          style={styles.savedItemContainer}
-          onPress={() => handleInsightSelect(item)}
-        >
-          <View style={[styles.iconContainer, { backgroundColor: item.color }]}>
-            <Text style={styles.icon}>{item.icon}</Text>
-          </View>
-          <View style={styles.savedItemContent}>
-            <Text style={styles.savedItemTitle}>{item.title}</Text>
-            <Text style={styles.savedItemType}>{item.type}</Text>
-            <Text style={styles.savedItemDescription} numberOfLines={2}>{item.description}</Text>
-            <Text style={styles.savedItemDate}>{item.date}</Text>
-          </View>
-          <View style={styles.savedItemActions}>
-            <Ionicons name="chevron-forward" size={20} color={theme.colors.neutral.medium} />
-          </View>
-        </TouchableOpacity>
+        <Card style={styles.savedItemContainer}>
+          <TouchableOpacity onPress={() => handleInsightSelect(item)}>
+            <Row>
+              <View style={[styles.iconContainer, { backgroundColor: item.color }]}>
+                <Body style={styles.icon}>{item.icon}</Body>
+              </View>
+              <Column style={styles.savedItemContent}>
+                <H3>{item.title}</H3>
+                <Caption color="medium">{item.type}</Caption>
+                <BodySmall color="medium" numberOfLines={2} style={styles.savedItemDescription}>
+                  {item.description}
+                </BodySmall>
+                <Caption color="medium">{item.date}</Caption>
+              </Column>
+              <View style={styles.savedItemActions}>
+                <Ionicons name="chevron-forward" size={20} color={theme.colors.neutral.medium} />
+              </View>
+            </Row>
+          </TouchableOpacity>
+        </Card>
       </Swipeable>
     );
   };
@@ -326,41 +349,43 @@ If your baby dislikes tummy time, start with very short sessions and gradually b
   // Render insight detail view
   const renderInsightDetail = () => {
     return (
-      <View style={styles.detailContainer}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={handleBackFromDetail}
-        >
-          <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-          <Text style={styles.backButtonText}>Back to Saved</Text>
-        </TouchableOpacity>
-        
-        <View style={styles.detailCard}>
-          <View style={[styles.detailIconContainer, { backgroundColor: selectedInsight.color }]}>
-            <Text style={styles.detailIcon}>{selectedInsight.icon}</Text>
-          </View>
-          
-          <Text style={styles.detailTitle}>{selectedInsight.title}</Text>
-          <Text style={styles.detailType}>{selectedInsight.type}</Text>
-          <Text style={styles.detailDate}>{selectedInsight.date}</Text>
-          
-          <ScrollView style={styles.detailContentScroll}>
-            <Text style={styles.detailContent}>{selectedInsight.fullContent}</Text>
-          </ScrollView>
-          
-          <View style={styles.detailActions}>
+      <Container>
+        <SafeContainer>
+          <Row style={styles.backButtonRow}>
             <TouchableOpacity 
-              style={styles.detailActionButton}
-              onPress={() => handleDeleteItem('insight', selectedInsight.id)}
+              style={styles.backButton} 
+              onPress={handleBackFromDetail}
             >
-              <Ionicons name="trash-outline" size={20} color={theme.colors.feedback.error} />
-              <Text style={[styles.detailActionText, { color: theme.colors.feedback.error }]}>
-                Remove from Saved
-              </Text>
+              <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+              <BodySmall color="white" style={styles.backButtonText}>Back to Saved</BodySmall>
             </TouchableOpacity>
-          </View>
-        </View>
-      </View>
+          </Row>
+          
+          <Card style={styles.detailCard}>
+            <View style={[styles.detailIconContainer, { backgroundColor: selectedInsight.color }]}>
+              <Body style={styles.detailIcon}>{selectedInsight.icon}</Body>
+            </View>
+            
+            <H2 style={styles.detailTitle}>{selectedInsight.title}</H2>
+            <Caption color="medium" style={styles.detailType}>{selectedInsight.type}</Caption>
+            <Caption color="medium" style={styles.detailDate}>{selectedInsight.date}</Caption>
+            
+            <ScrollContainer style={styles.detailContentScroll}>
+              <Body>{selectedInsight.fullContent}</Body>
+            </ScrollContainer>
+            
+            <Row style={styles.detailActions} justify="center">
+              <SecondaryButton
+                title="Remove from Saved"
+                icon="trash-outline"
+                onPress={() => handleDeleteItem('insight', selectedInsight.id)}
+                style={styles.detailActionButton}
+                textColor={theme.colors.feedback.error}
+              />
+            </Row>
+          </Card>
+        </SafeContainer>
+      </Container>
     );
   };
 
@@ -377,176 +402,137 @@ If your baby dislikes tummy time, start with very short sessions and gradually b
     }
     
     return (
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* App header with logo */}
-        <AppHeader />
-        
-        {/* Filter tabs */}
-        <View style={styles.filterContainer}>
-          {filterOptions.map(option => (
-            <TouchableOpacity
-              key={option.id}
-              style={[
-                styles.filterOption,
-                activeFilter === option.id && styles.filterOptionActive
-              ]}
-              onPress={() => setActiveFilter(option.id)}
-            >
-              <Text style={[
-                styles.filterOptionText,
-                activeFilter === option.id && styles.filterOptionTextActive
-              ]}>
-                {option.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        
-        {/* No items message */}
-        {noItemsToDisplay && (
-          <View style={styles.noItemsContainer}>
-            <Ionicons name="bookmark-outline" size={48} color="#FFFFFF" />
-            <Text style={styles.noItemsText}>
-              No saved {activeFilter !== 'all' ? activeFilter : 'items'} yet
-            </Text>
-            <Text style={styles.noItemsSubtext}>
-              Items you save will appear here for easy access
-            </Text>
-          </View>
-        )}
-        
-        {/* Insights section */}
-        {insights.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Insights</Text>
-            {insights.map(item => renderSavedItem(item, 'insight'))}
-          </View>
-        )}
-        
-        {/* Activities section */}
-        {activities.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Activities</Text>
-            {activities.map(item => renderSavedItem(item, 'activity'))}
-          </View>
-        )}
-      </ScrollView>
+      <Container>
+        <SafeContainer>
+          {/* App header with logo */}
+          <AppHeader title="Saved" />
+          
+          {/* Filter tabs */}
+          <Section>
+            <Row style={styles.filterContainer}>
+              {filterOptions.map(option => (
+                <TouchableOpacity
+                  key={option.id}
+                  style={[
+                    styles.filterOption,
+                    activeFilter === option.id && styles.filterOptionActive
+                  ]}
+                  onPress={() => setActiveFilter(option.id)}
+                >
+                  <BodySmall 
+                    color={activeFilter === option.id ? "primary" : "white"}
+                    style={styles.filterText}
+                  >
+                    {option.label}
+                  </BodySmall>
+                </TouchableOpacity>
+              ))}
+            </Row>
+          </Section>
+          
+          {/* Saved items */}
+          <ScrollContainer contentContainerStyle={styles.scrollContent}>
+            {/* No items message */}
+            {noItemsToDisplay && (
+              <Card style={styles.noItemsContainer}>
+                <H3 style={styles.noItemsTitle}>No saved items</H3>
+                <Body style={styles.noItemsText}>
+                  Items you save will appear here for easy access.
+                </Body>
+                <PrimaryButton
+                  title="Explore Content"
+                  onPress={() => navigation.navigate('Today')}
+                  style={styles.exploreButton}
+                />
+              </Card>
+            )}
+            
+            {/* Insights section */}
+            {insights.length > 0 && (
+              <Section>
+                <H2 color="white" style={styles.sectionTitle}>Insights</H2>
+                <Column style={styles.savedItemsList}>
+                  {insights.map(item => renderSavedItem(item, 'insight'))}
+                </Column>
+              </Section>
+            )}
+            
+            {/* Activities section */}
+            {activities.length > 0 && (
+              <Section>
+                <H2 color="white" style={styles.sectionTitle}>Activities</H2>
+                <Column style={styles.savedItemsList}>
+                  {activities.map(item => renderSavedItem(item, 'activity'))}
+                </Column>
+              </Section>
+            )}
+          </ScrollContainer>
+        </SafeContainer>
+      </Container>
     );
   };
 
   return (
     <ScreenErrorWrapper screenName="Saved" navigation={navigation}>
       <GestureHandlerRootView style={styles.gestureRoot}>
-        <BackgroundContainer>
-          <SafeAreaView style={styles.container}>
-            {renderContent()}
-          </SafeAreaView>
-        </BackgroundContainer>
+        {renderContent()}
       </GestureHandlerRootView>
     </ScreenErrorWrapper>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   gestureRoot: {
     flex: 1,
   },
-  container: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingBottom: 100, // Extra padding for bottom tab bar
-  },
-  headerTitle: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 24,
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginVertical: 16,
-  },
   filterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingHorizontal: 16,
-    marginBottom: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 25,
+    padding: 4,
+    marginBottom: 16,
   },
   filterOption: {
-    paddingHorizontal: 16,
+    flex: 1,
     paddingVertical: 8,
-    marginHorizontal: 4,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    alignItems: 'center',
+    borderRadius: 25,
   },
   filterOptionActive: {
     backgroundColor: '#FFFFFF',
   },
-  filterOptionText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 14,
-    color: '#FFFFFF',
+  filterText: {
+    textAlign: 'center',
   },
-  filterOptionTextActive: {
-    color: theme.colors.primary.main,
-  },
-  section: {
-    marginBottom: 24,
+  scrollContent: {
+    paddingBottom: 100, // Extra padding for bottom tab bar
   },
   sectionTitle: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
-    color: '#FFFFFF',
-    marginHorizontal: 16,
-    marginBottom: 12,
+    marginBottom: 16,
+  },
+  savedItemsList: {
+    gap: 12,
   },
   savedItemContainer: {
-    flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    marginHorizontal: 16,
-    marginBottom: 12,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    marginBottom: 0,
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: 16,
   },
   icon: {
-    fontSize: 20,
+    fontSize: 24,
   },
   savedItemContent: {
     flex: 1,
-  },
-  savedItemTitle: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 16,
-    color: theme.colors.neutral.dark,
-    marginBottom: 4,
-  },
-  savedItemType: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 12,
-    color: theme.colors.neutral.medium,
-    marginBottom: 4,
+    justifyContent: 'center',
   },
   savedItemDescription: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 14,
-    color: theme.colors.neutral.dark,
+    marginTop: 4,
     marginBottom: 4,
-  },
-  savedItemDate: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 12,
-    color: theme.colors.neutral.medium,
   },
   savedItemActions: {
     justifyContent: 'center',
@@ -555,8 +541,8 @@ const styles = StyleSheet.create({
   rightAction: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 16,
-    marginBottom: 12,
+    width: 100,
+    height: '100%',
   },
   actionButton: {
     flex: 1,
@@ -568,116 +554,68 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 80,
     height: '100%',
-    borderRadius: 16,
-  },
-  deleteText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 12,
-    color: '#FFFFFF',
-    marginTop: 4,
+    borderRadius: 12,
   },
   noItemsContainer: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 32,
-    paddingVertical: 64,
-  },
-  noItemsText: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
-    color: '#FFFFFF',
+    padding: 24,
     marginTop: 16,
+  },
+  noItemsTitle: {
     marginBottom: 8,
     textAlign: 'center',
   },
-  noItemsSubtext: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)',
+  noItemsText: {
     textAlign: 'center',
+    marginBottom: 24,
   },
-  detailContainer: {
-    flex: 1,
-    padding: 16,
+  exploreButton: {
+    paddingHorizontal: 24,
+  },
+  backButtonRow: {
+    marginBottom: 16,
   },
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
   },
   backButtonText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 16,
-    color: '#FFFFFF',
     marginLeft: 8,
   },
   detailCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 20,
-    flex: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    alignItems: 'center',
+    padding: 24,
   },
   detailIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
   },
   detailIcon: {
-    fontSize: 24,
+    fontSize: 30,
   },
   detailTitle: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 22,
-    color: theme.colors.neutral.dark,
     marginBottom: 8,
+    textAlign: 'center',
   },
   detailType: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 14,
-    color: theme.colors.neutral.medium,
     marginBottom: 4,
   },
   detailDate: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 14,
-    color: theme.colors.neutral.medium,
     marginBottom: 16,
   },
   detailContentScroll: {
-    flex: 1,
-    marginBottom: 16,
-  },
-  detailContent: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 16,
-    color: theme.colors.neutral.dark,
-    lineHeight: 24,
+    maxHeight: 400,
+    width: '100%',
+    marginBottom: 24,
   },
   detailActions: {
-    borderTopWidth: 1,
-    borderTopColor: '#EEEEEE',
-    paddingTop: 16,
-    flexDirection: 'row',
-    justifyContent: 'center',
+    marginTop: 8,
   },
   detailActionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
     paddingHorizontal: 16,
   },
-  detailActionText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 16,
-    marginLeft: 8,
-  },
-});
+};

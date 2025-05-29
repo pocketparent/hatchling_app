@@ -1,10 +1,3 @@
-/**
- * Hatchling App Navigation Structure
- * 
- * Defines the navigation hierarchy for the entire application
- * Includes authentication, onboarding, and main app flows
- */
-
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -57,11 +50,8 @@ const SettingsStackNavigator = () => {
     >
       <Stack.Screen name="SettingsMain" component={SettingsScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-      <Stack.Screen name="AddChild" component={EditProfileScreen} />
-      <Stack.Screen name="ContentPreferences" component={SettingsScreen} />
       <Stack.Screen name="Subscription" component={SettingsScreen} />
       <Stack.Screen name="PrivacySettings" component={SettingsScreen} />
-      <Stack.Screen name="HelpCenter" component={SettingsScreen} />
       <Stack.Screen name="ContactUs" component={SettingsScreen} />
       <Stack.Screen name="About" component={SettingsScreen} />
       <Stack.Screen name="PrivacyPolicy" component={SettingsScreen} />
@@ -85,8 +75,6 @@ const MainTabNavigator = () => {
             iconName = focused ? 'pulse' : 'pulse-outline';
           } else if (route.name === 'Chat') {
             iconName = focused ? 'chatbubble' : 'chatbubble-outline';
-          } else if (route.name === 'Saved') {
-            iconName = focused ? 'bookmark' : 'bookmark-outline';
           } else if (route.name === 'Settings') {
             iconName = focused ? 'settings' : 'settings-outline';
           }
@@ -119,13 +107,6 @@ const MainTabNavigator = () => {
         component={AskScreen}
         options={{
           tabBarLabel: 'Chat'
-        }}
-      />
-      <Tab.Screen 
-        name="Saved" 
-        component={SavedScreen}
-        options={{
-          tabBarLabel: 'Saved'
         }}
       />
       <Tab.Screen 

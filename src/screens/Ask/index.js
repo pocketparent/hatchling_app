@@ -1,9 +1,40 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { 
+  View, 
+  TextInput, 
+  TouchableOpacity, 
+  KeyboardAvoidingView, 
+  Platform, 
+  ScrollView
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import BackgroundContainer from '../../components/decorations/BackgroundContainer';
-import theme from '../../theme';
 import { ScreenErrorWrapper } from '../../components/error/ErrorComponents';
+import theme from '../../theme';
+
+// Import UI components
+import {
+  Container,
+  SafeContainer,
+  ScrollContainer,
+  Section,
+  Row,
+  Column,
+  Spacer,
+  Card,
+  H1,
+  H2,
+  H3,
+  Body,
+  BodySmall,
+  Caption,
+  Label,
+  AppHeader,
+  PrimaryButton,
+  SecondaryButton,
+  TextButton,
+  IconButton,
+  Input
+} from '../../components/ui';
 
 /**
  * Ask Screen
@@ -189,503 +220,368 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
   // Render question detail view
   const renderQuestionDetail = () => {
     return (
-      <View style={styles.detailContainer}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={handleBackFromDetail}
-        >
-          <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-          <Text style={styles.backButtonText}>Back to Questions</Text>
-        </TouchableOpacity>
-        
-        <View style={styles.detailCard}>
-          <Text style={styles.detailQuestion}>{selectedQuestion.question}</Text>
+      <Container>
+        <SafeContainer>
+          <Row style={styles.backButtonRow}>
+            <TouchableOpacity 
+              style={styles.backButton} 
+              onPress={handleBackFromDetail}
+            >
+              <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+              <BodySmall color="white" style={styles.backButtonText}>Back to Questions</BodySmall>
+            </TouchableOpacity>
+          </Row>
           
-          <ScrollView style={styles.answerScrollView}>
-            <Text style={styles.detailAnswer}>{selectedQuestion.fullAnswer}</Text>
-          </ScrollView>
+          <Card style={styles.detailCard}>
+            <H2 style={styles.detailQuestion}>{selectedQuestion.question}</H2>
+            
+            <ScrollContainer style={styles.answerScrollView}>
+              <Body>{selectedQuestion.fullAnswer}</Body>
+            </ScrollContainer>
+            
+            <Row style={styles.feedbackContainer} justify="space-between" align="center">
+              <BodySmall>Was this helpful?</BodySmall>
+              <Row style={styles.feedbackButtons}>
+                <SecondaryButton 
+                  title="Yes" 
+                  icon="thumbs-up-outline"
+                  onPress={() => console.log('Feedback: Yes')}
+                  style={styles.feedbackButton}
+                />
+                <Spacer size={8} horizontal />
+                <SecondaryButton 
+                  title="No" 
+                  icon="thumbs-down-outline"
+                  onPress={() => console.log('Feedback: No')}
+                  style={styles.feedbackButton}
+                />
+              </Row>
+            </Row>
+          </Card>
           
-          <View style={styles.feedbackContainer}>
-            <Text style={styles.feedbackQuestion}>Was this helpful?</Text>
-            <View style={styles.feedbackButtons}>
-              <TouchableOpacity style={styles.feedbackButton}>
-                <Ionicons name="thumbs-up-outline" size={20} color={theme.colors.primary.main} />
-                <Text style={styles.feedbackButtonText}>Yes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.feedbackButton}>
-                <Ionicons name="thumbs-down-outline" size={20} color={theme.colors.primary.main} />
-                <Text style={styles.feedbackButtonText}>No</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-        
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={100}
-          style={styles.messageInputContainer}
-        >
-          <TextInput
-            style={styles.messageInput}
-            value={userMessage}
-            onChangeText={setUserMessage}
-            placeholder="Ask a follow-up question..."
-            multiline
-          />
-          <TouchableOpacity 
-            style={[styles.sendButton, !userMessage.trim() && styles.sendButtonDisabled]} 
-            onPress={handleSendMessage}
-            disabled={!userMessage.trim()}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={100}
+            style={styles.messageInputContainer}
           >
-            <Ionicons name="send" size={20} color={theme.colors.neutral.white} />
-          </TouchableOpacity>
-        </KeyboardAvoidingView>
-      </View>
+            <TextInput
+              style={styles.messageInput}
+              value={userMessage}
+              onChangeText={setUserMessage}
+              placeholder="Ask a follow-up question..."
+              multiline
+            />
+            <TouchableOpacity 
+              style={[
+                styles.sendButton, 
+                !userMessage.trim() && styles.sendButtonDisabled
+              ]} 
+              onPress={handleSendMessage}
+              disabled={!userMessage.trim()}
+            >
+              <Ionicons name="send" size={20} color={theme.colors.neutral.white} />
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+        </SafeContainer>
+      </Container>
     );
   };
 
   // Render question item
   const renderQuestionItem = (item) => (
-    <TouchableOpacity 
+    <Card 
       key={item.id}
       style={styles.questionCard}
-      onPress={() => handleQuestionSelect(item)}
     >
-      <Text style={styles.questionText}>{item.question}</Text>
-      <Text style={styles.answerPreview}>{item.preview}</Text>
-      <View style={styles.readMoreContainer}>
-        <Text style={styles.readMoreText}>Read more</Text>
-        <Ionicons name="chevron-forward" size={16} color={theme.colors.primary.main} />
-      </View>
-    </TouchableOpacity>
+      <TouchableOpacity onPress={() => handleQuestionSelect(item)}>
+        <H3>{item.question}</H3>
+        <BodySmall color="medium" style={styles.answerPreview}>{item.preview}</BodySmall>
+        <Row style={styles.readMoreContainer} align="center">
+          <TextButton 
+            title="Read more" 
+            onPress={() => handleQuestionSelect(item)}
+            style={styles.readMoreButton}
+          />
+          <Ionicons name="chevron-forward" size={16} color={theme.colors.primary.main} />
+        </Row>
+      </TouchableOpacity>
+    </Card>
   );
 
   // Render main content
   const renderMainContent = () => {
     return (
-      <View style={styles.mainContentContainer}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerTitle}>Ask Hatchling</Text>
-        </View>
-        
-        {/* Search bar */}
-        <View style={styles.searchBarContainer}>
-          <TextInput
-            style={styles.searchInput}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholder="Search questions..."
-            returnKeyType="search"
-            onSubmitEditing={handleSearch}
-          />
-          <TouchableOpacity 
-            style={styles.searchButton} 
-            onPress={handleSearch}
-          >
-            <Ionicons name="search" size={20} color={theme.colors.neutral.white} />
-          </TouchableOpacity>
-        </View>
-        
-        {/* Categories */}
-        <Text style={styles.sectionTitle}>Browse by Topic</Text>
-        <ScrollView 
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.categoriesContainer}
-        >
-          {categories.map(item => (
-            <TouchableOpacity 
-              key={item.id}
-              style={[
-                styles.categoryButton,
-                activeCategory === item.id && styles.categoryButtonActive
-              ]}
-              onPress={() => handleCategorySelect(item.id)}
+      <Container>
+        <SafeContainer>
+          {/* App header with logo */}
+          <AppHeader title="Ask" />
+          
+          {/* Search bar */}
+          <Section style={styles.searchBarContainer}>
+            <Row>
+              <TextInput
+                style={styles.searchInput}
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                placeholder="Search questions..."
+                returnKeyType="search"
+                onSubmitEditing={handleSearch}
+              />
+              <TouchableOpacity 
+                style={styles.searchButton} 
+                onPress={handleSearch}
+              >
+                <Ionicons name="search" size={20} color={theme.colors.neutral.white} />
+              </TouchableOpacity>
+            </Row>
+          </Section>
+          
+          {/* Categories */}
+          <Section>
+            <H2 color="white" style={styles.sectionTitle}>Browse by Topic</H2>
+            <ScrollView 
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.categoriesContainer}
             >
-              <Text style={styles.categoryIcon}>{item.icon}</Text>
-              <Text style={[
-                styles.categoryName,
-                activeCategory === item.id && styles.categoryNameActive
-              ]}>
-                {item.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-        
-        {/* Content based on selection */}
-        <ScrollView style={styles.questionsContainer} showsVerticalScrollIndicator={false}>
-          {/* Search Results */}
-          {showSearchResults && (
-            <>
-              <Text style={styles.sectionTitle}>
-                Search Results for "{searchQuery}"
-              </Text>
-              {getFilteredQuestions().length > 0 ? (
-                <View style={styles.questionsList}>
-                  {getFilteredQuestions().map(item => renderQuestionItem(item))}
-                </View>
-              ) : (
-                <View style={styles.noResultsContainer}>
-                  <Text style={styles.noResultsText}>
-                    No results found for "{searchQuery}"
-                  </Text>
-                  <TouchableOpacity 
-                    style={styles.askDirectlyButton}
-                    onPress={() => setUserMessage(searchQuery)}
-                  >
-                    <Text style={styles.askDirectlyButtonText}>
-                      Ask this question directly
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            </>
-          )}
-          
-          {/* Category Questions */}
-          {activeCategory && (
-            <>
-              <Text style={styles.sectionTitle}>
-                {categories.find(c => c.id === activeCategory)?.name} Questions
-              </Text>
-              <View style={styles.questionsList}>
-                {getQuestionsByCategory(activeCategory).map(item => renderQuestionItem(item))}
-              </View>
-            </>
-          )}
-          
-          {/* Recent and Common questions - show only if not searching or filtering by category */}
-          {!showSearchResults && !activeCategory && (
-            <>
-              <Text style={styles.sectionTitle}>Recent Questions</Text>
-              <View style={styles.questionsList}>
-                {recentQuestions.map(item => renderQuestionItem(item))}
-              </View>
-              
-              <Text style={styles.sectionTitle}>Common Questions</Text>
-              <View style={styles.questionsList}>
-                {commonQuestions.map(item => renderQuestionItem(item))}
-              </View>
-              
-              <View style={styles.askDirectlySection}>
-                <Text style={styles.askDirectlySectionTitle}>
-                  Don't see what you're looking for?
-                </Text>
+              {categories.map(item => (
                 <TouchableOpacity 
-                  style={styles.askNewQuestionButton}
-                  onPress={() => setUserMessage("I have a question about...")}
+                  key={item.id}
+                  style={[
+                    styles.categoryButton,
+                    activeCategory === item.id && styles.categoryButtonActive
+                  ]}
+                  onPress={() => handleCategorySelect(item.id)}
                 >
-                  <Ionicons 
-                    name="chatbubble-ellipses-outline" 
-                    size={20} 
-                    color="#FFFFFF" 
-                    style={styles.askNewQuestionIcon} 
-                  />
-                  <Text style={styles.askNewQuestionText}>
-                    Ask a New Question
-                  </Text>
+                  <Text style={styles.categoryIcon}>{item.icon}</Text>
+                  <BodySmall 
+                    style={activeCategory === item.id ? styles.categoryNameActive : styles.categoryName}
+                  >
+                    {item.name}
+                  </BodySmall>
                 </TouchableOpacity>
-              </View>
-            </>
-          )}
-        </ScrollView>
-      </View>
+              ))}
+            </ScrollView>
+          </Section>
+          
+          {/* Content based on selection */}
+          <ScrollContainer style={styles.questionsContainer} showsVerticalScrollIndicator={false}>
+            {/* Search Results */}
+            {showSearchResults && (
+              <Section>
+                <H2 color="white" style={styles.sectionTitle}>
+                  Search Results for "{searchQuery}"
+                </H2>
+                {getFilteredQuestions().length > 0 ? (
+                  <Column style={styles.questionsList}>
+                    {getFilteredQuestions().map(item => renderQuestionItem(item))}
+                  </Column>
+                ) : (
+                  <Card style={styles.noResultsContainer}>
+                    <Body style={styles.noResultsText}>
+                      No results found for "{searchQuery}"
+                    </Body>
+                    <PrimaryButton 
+                      title="Ask this question directly"
+                      onPress={() => setUserMessage(searchQuery)}
+                      style={styles.askDirectlyButton}
+                    />
+                  </Card>
+                )}
+              </Section>
+            )}
+            
+            {/* Category Questions */}
+            {activeCategory && (
+              <Section>
+                <H2 color="white" style={styles.sectionTitle}>
+                  {categories.find(c => c.id === activeCategory)?.name} Questions
+                </H2>
+                <Column style={styles.questionsList}>
+                  {getQuestionsByCategory(activeCategory).map(item => renderQuestionItem(item))}
+                </Column>
+              </Section>
+            )}
+            
+            {/* Recent and Common questions - show only if not searching or filtering by category */}
+            {!showSearchResults && !activeCategory && (
+              <>
+                <Section>
+                  <H2 color="white" style={styles.sectionTitle}>Recent Questions</H2>
+                  <Column style={styles.questionsList}>
+                    {recentQuestions.map(item => renderQuestionItem(item))}
+                  </Column>
+                </Section>
+                
+                <Section>
+                  <H2 color="white" style={styles.sectionTitle}>Common Questions</H2>
+                  <Column style={styles.questionsList}>
+                    {commonQuestions.map(item => renderQuestionItem(item))}
+                  </Column>
+                </Section>
+                
+                <Section style={styles.askDirectlySection}>
+                  <H3 color="white" style={styles.askDirectlySectionTitle}>
+                    Don't see what you're looking for?
+                  </H3>
+                  <PrimaryButton 
+                    title="Ask a New Question"
+                    icon="chatbubble-ellipses-outline"
+                    onPress={() => setUserMessage("I have a question about...")}
+                    style={styles.askNewQuestionButton}
+                  />
+                </Section>
+              </>
+            )}
+          </ScrollContainer>
+        </SafeContainer>
+      </Container>
     );
   };
 
   return (
     <ScreenErrorWrapper screenName="Ask" navigation={navigation}>
-      <BackgroundContainer>
-        <SafeAreaView style={styles.container}>
-          {selectedQuestion ? renderQuestionDetail() : renderMainContent()}
-        </SafeAreaView>
-      </BackgroundContainer>
+      {selectedQuestion ? renderQuestionDetail() : renderMainContent()}
     </ScreenErrorWrapper>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  mainContentContainer: {
-    flex: 1,
-  },
-  headerContainer: {
-    alignItems: 'center',
-    paddingTop: 20,
-    paddingBottom: 16,
-  },
-  headerTitle: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 24,
-    color: '#FFFFFF',
-  },
+const styles = {
   searchBarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 20,
+    marginTop: 16,
+    marginBottom: 16,
   },
   searchInput: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    paddingVertical: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 25,
     paddingHorizontal: 16,
-    fontSize: 16,
-    fontFamily: 'SFProText-Regular',
-    marginRight: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    paddingVertical: 10,
+    color: '#FFFFFF',
+    marginRight: 8,
   },
   searchButton: {
     backgroundColor: theme.colors.primary.main,
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   sectionTitle: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
-    color: '#FFFFFF',
-    marginHorizontal: 20,
-    marginBottom: 12,
-    marginTop: 8,
+    marginBottom: 16,
   },
   categoriesContainer: {
-    paddingHorizontal: 16,
     paddingBottom: 16,
   },
   categoryButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    marginHorizontal: 4,
-    flexDirection: 'row',
+    borderRadius: 12,
+    padding: 12,
+    marginRight: 12,
     alignItems: 'center',
+    minWidth: 80,
   },
   categoryButtonActive: {
     backgroundColor: '#FFFFFF',
   },
   categoryIcon: {
-    fontSize: 18,
-    marginRight: 6,
+    fontSize: 24,
+    marginBottom: 8,
   },
   categoryName: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 16,
     color: '#FFFFFF',
   },
   categoryNameActive: {
     color: theme.colors.primary.main,
   },
   questionsContainer: {
-    flex: 1,
-    paddingBottom: 20,
+    paddingBottom: 100, // Extra space for bottom tab bar
   },
   questionsList: {
-    paddingHorizontal: 20,
-    paddingBottom: 16,
+    gap: 12,
   },
   questionCard: {
-    backgroundColor: '#F8EFE0',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  questionText: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
-    color: '#004D4D',
-    marginBottom: 8,
+    marginBottom: 0,
   },
   answerPreview: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 14,
-    color: '#004D4D',
-    opacity: 0.8,
-    marginBottom: 12,
-    lineHeight: 20,
+    marginTop: 8,
+    marginBottom: 8,
   },
   readMoreContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    marginTop: 8,
   },
-  readMoreText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 14,
-    color: theme.colors.primary.main,
-    marginRight: 4,
+  readMoreButton: {
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
   noResultsContainer: {
-    backgroundColor: '#F8EFE0',
-    borderRadius: 16,
-    padding: 20,
-    marginHorizontal: 20,
     alignItems: 'center',
+    padding: 24,
   },
   noResultsText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 16,
-    color: '#004D4D',
-    textAlign: 'center',
     marginBottom: 16,
+    textAlign: 'center',
   },
   askDirectlyButton: {
-    backgroundColor: theme.colors.primary.main,
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  askDirectlyButtonText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 14,
-    color: '#FFFFFF',
+    marginTop: 8,
   },
   askDirectlySection: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 16,
-    padding: 20,
-    marginHorizontal: 20,
-    marginTop: 16,
-    marginBottom: 24,
     alignItems: 'center',
+    marginTop: 24,
+    marginBottom: 40,
   },
   askDirectlySectionTitle: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 16,
-    color: '#FFFFFF',
-    textAlign: 'center',
     marginBottom: 16,
+    textAlign: 'center',
   },
   askNewQuestionButton: {
-    backgroundColor: theme.colors.primary.main,
-    borderRadius: 20,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
+    paddingHorizontal: 24,
   },
-  askNewQuestionIcon: {
-    marginRight: 8,
-  },
-  askNewQuestionText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 16,
-    color: '#FFFFFF',
-  },
-  detailContainer: {
-    flex: 1,
-    padding: 16,
+  backButtonRow: {
+    marginBottom: 16,
   },
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
   },
   backButtonText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 16,
-    color: '#FFFFFF',
     marginLeft: 8,
   },
   detailCard: {
-    backgroundColor: '#F8EFE0',
-    borderRadius: 20,
-    padding: 20,
-    flex: 1,
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
   },
   detailQuestion: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 22,
-    color: '#004D4D',
     marginBottom: 16,
-    lineHeight: 28,
   },
   answerScrollView: {
-    flex: 1,
-  },
-  detailAnswer: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 16,
-    color: '#004D4D',
-    lineHeight: 24,
+    maxHeight: 400,
+    marginBottom: 16,
   },
   feedbackContainer: {
-    marginTop: 20,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0, 77, 77, 0.1)',
-    paddingTop: 16,
-  },
-  feedbackQuestion: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 16,
-    color: '#004D4D',
-    marginBottom: 12,
-    textAlign: 'center',
+    marginTop: 16,
   },
   feedbackButtons: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    marginLeft: 16,
   },
   feedbackButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(74, 155, 155, 0.1)',
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    marginHorizontal: 8,
-  },
-  feedbackButtonText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 14,
-    color: theme.colors.primary.main,
-    marginLeft: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    height: 36,
   },
   messageInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 25,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    marginTop: 8,
   },
   messageInput: {
     flex: 1,
-    fontSize: 16,
-    fontFamily: 'SFProText-Regular',
+    color: '#FFFFFF',
     maxHeight: 100,
-    paddingVertical: 8,
   },
   sendButton: {
     backgroundColor: theme.colors.primary.main,
@@ -697,6 +593,6 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   sendButtonDisabled: {
-    backgroundColor: 'rgba(74, 155, 155, 0.5)',
+    backgroundColor: 'rgba(42, 157, 143, 0.5)',
   },
-});
+};

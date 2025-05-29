@@ -1,5 +1,11 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Dimensions, ScrollView, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { 
+  Image, 
+  TouchableOpacity, 
+  Dimensions, 
+  Alert,
+  View
+} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -10,9 +16,32 @@ import Animated, {
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
-import theme from '../../theme';
-import BackgroundContainer from '../../components/decorations/BackgroundContainer';
 import { ScreenErrorWrapper } from '../../components/error/ErrorComponents';
+import theme from '../../theme';
+
+// Import UI components
+import {
+  Container,
+  SafeContainer,
+  ScrollContainer,
+  Section,
+  Row,
+  Column,
+  Spacer,
+  Card,
+  H1,
+  H2,
+  H3,
+  Body,
+  BodySmall,
+  Caption,
+  Label,
+  AppHeader,
+  PrimaryButton,
+  SecondaryButton,
+  TextButton,
+  IconButton
+} from '../../components/ui';
 
 /**
  * Today Screen
@@ -88,7 +117,7 @@ export default function TodayScreen({ navigation }) {
   // Render pagination dots
   const renderPaginationDots = () => {
     return (
-      <View style={styles.paginationDotsContainer}>
+      <Row style={styles.paginationDotsContainer}>
         {insightPanels.map((_, index) => (
           <View
             key={index}
@@ -98,7 +127,7 @@ export default function TodayScreen({ navigation }) {
             ]}
           />
         ))}
-      </View>
+      </Row>
     );
   };
   
@@ -124,43 +153,43 @@ export default function TodayScreen({ navigation }) {
   return (
     <ScreenErrorWrapper screenName="Today" navigation={navigation}>
       <GestureHandlerRootView style={styles.gestureRoot}>
-        <BackgroundContainer>
-          <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollContent}>
-              {/* Hatchling header */}
-              <View style={styles.appHeader}>
-                <Text style={styles.appTitle}>Hatchling</Text>
-              </View>
+        <Container>
+          <SafeContainer>
+            <ScrollContainer contentContainerStyle={styles.scrollContent}>
+              {/* App header with logo */}
+              <AppHeader title="Today" />
               
               {/* Header with baby info */}
-              <View style={styles.header}>
-                <View style={styles.avatarContainer}>
-                  <Image 
-                    source={require('../../../assets/baby-avatar.png')} 
-                    style={styles.avatar}
-                    defaultSource={require('../../../assets/baby-avatar.png')}
-                  />
-                </View>
-                <View style={styles.babyInfo}>
-                  <Text style={styles.babyName}>Emma,</Text>
-                  <Text style={styles.babyAge}>4 months</Text>
-                </View>
-              </View>
+              <Section>
+                <Row style={styles.header}>
+                  <View style={styles.avatarContainer}>
+                    <Image 
+                      source={require('../../../assets/baby-avatar.png')} 
+                      style={styles.avatar}
+                      defaultSource={require('../../../assets/baby-avatar.png')}
+                    />
+                  </View>
+                  <Column style={styles.babyInfo}>
+                    <H1 color="white">Emma,</H1>
+                    <H2 color="white">4 months</H2>
+                  </Column>
+                </Row>
+              </Section>
               
               {/* Main insight card */}
-              <View style={styles.cardContainer}>
-                <View style={styles.insightCard}>
-                  <Text style={styles.insightLabel}>DAILY INSIGHT</Text>
+              <Section>
+                <Card style={styles.insightCard}>
+                  <Label style={styles.insightLabel}>DAILY INSIGHT</Label>
                   
                   <PanGestureHandler onGestureEvent={gestureHandler}>
                     <Animated.View style={[styles.insightContent, animatedStyle]}>
-                      <Text style={styles.insightTitle}>
+                      <H2 style={styles.insightTitle}>
                         {currentPanel.title}
-                      </Text>
+                      </H2>
                       
-                      <Text style={styles.insightText}>
+                      <Body style={styles.insightText}>
                         {currentPanel.content}
-                      </Text>
+                      </Body>
                       
                       {/* Pagination dots */}
                       {renderPaginationDots()}
@@ -168,109 +197,99 @@ export default function TodayScreen({ navigation }) {
                   </PanGestureHandler>
                   
                   {/* Action buttons */}
-                  <View style={styles.actionButtonsContainer}>
+                  <Row style={styles.actionButtonsContainer}>
                     <TouchableOpacity style={styles.actionButton}>
                       <View style={styles.iconContainer}>
                         <Ionicons name="bookmark-outline" size={24} color="#FFFFFF" />
                       </View>
-                      <Text style={styles.actionText}>Save</Text>
+                      <BodySmall color="white">Save</BodySmall>
                     </TouchableOpacity>
                     
                     <TouchableOpacity style={styles.actionButton}>
                       <View style={styles.iconContainer}>
                         <Ionicons name="share-outline" size={24} color="#FFFFFF" />
                       </View>
-                      <Text style={styles.actionText}>Share</Text>
+                      <BodySmall color="white">Share</BodySmall>
                     </TouchableOpacity>
                     
                     <TouchableOpacity style={styles.actionButton}>
                       <View style={styles.iconContainer}>
                         <Ionicons name="happy-outline" size={24} color="#FFFFFF" />
                       </View>
-                      <Text style={styles.actionText}>Helpful</Text>
+                      <BodySmall color="white">Helpful</BodySmall>
                     </TouchableOpacity>
-                  </View>
-                </View>
+                  </Row>
+                </Card>
                 
                 {/* Weekly Check-in Card */}
-                <TouchableOpacity 
-                  style={styles.weeklyCheckInCard}
-                  onPress={handleWeeklyCheckIn}
-                >
-                  <View style={styles.weeklyCheckInContent}>
-                    <View style={styles.weeklyCheckInIconContainer}>
-                      <Ionicons name="clipboard-outline" size={24} color="#FFFFFF" />
-                    </View>
-                    <View style={styles.weeklyCheckInTextContainer}>
-                      <Text style={styles.weeklyCheckInTitle}>Weekly Check-in</Text>
-                      <Text style={styles.weeklyCheckInDescription}>
-                        Tell us how Emma is doing this week
-                      </Text>
-                    </View>
-                  </View>
-                  <Ionicons name="chevron-forward" size={24} color="#FFFFFF" />
-                </TouchableOpacity>
+                <Card style={styles.weeklyCheckInCard}>
+                  <TouchableOpacity 
+                    style={styles.weeklyCheckInContent}
+                    onPress={handleWeeklyCheckIn}
+                  >
+                    <Row align="center" justify="space-between">
+                      <Row align="center">
+                        <View style={styles.weeklyCheckInIconContainer}>
+                          <Ionicons name="clipboard-outline" size={24} color="#FFFFFF" />
+                        </View>
+                        <Column style={styles.weeklyCheckInTextContainer}>
+                          <H3 color="white">Weekly Check-in</H3>
+                          <BodySmall color="white">
+                            Tell us how Emma is doing this week
+                          </BodySmall>
+                        </Column>
+                      </Row>
+                      <Ionicons name="chevron-forward" size={24} color="#FFFFFF" />
+                    </Row>
+                  </TouchableOpacity>
+                </Card>
                 
                 {/* Upcoming check-ins reminder */}
-                <View style={styles.upcomingCheckInsCard}>
-                  <View style={styles.upcomingCheckInsHeader}>
-                    <Text style={styles.upcomingCheckInsTitle}>Upcoming Check-ins</Text>
-                    <TouchableOpacity>
-                      <Text style={styles.seeAllText}>See All</Text>
-                    </TouchableOpacity>
-                  </View>
+                <Card style={styles.upcomingCheckInsCard}>
+                  <Row style={styles.upcomingCheckInsHeader} justify="space-between" align="center">
+                    <H3 color="dark">Upcoming Check-ins</H3>
+                    <TextButton 
+                      title="See All" 
+                      onPress={() => console.log('See all check-ins')}
+                    />
+                  </Row>
                   
-                  <View style={styles.checkInItem}>
-                    <View style={styles.checkInIconContainer}>
-                      <Ionicons name="calendar" size={24} color={theme.colors.primary.main} />
-                    </View>
-                    <View style={styles.checkInContent}>
-                      <Text style={styles.checkInTitle}>4-Month Wellness Check</Text>
-                      <Text style={styles.checkInDate}>May 30, 2025</Text>
-                    </View>
-                    <TouchableOpacity style={styles.checkInButton}>
-                      <Text style={styles.checkInButtonText}>Prepare</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </ScrollView>
-          </SafeAreaView>
-        </BackgroundContainer>
+                  <Card style={styles.checkInItem}>
+                    <Row align="center">
+                      <View style={styles.checkInIconContainer}>
+                        <Ionicons name="calendar" size={24} color={theme.colors.primary.main} />
+                      </View>
+                      <Column style={styles.checkInContent}>
+                        <Body>4-Month Wellness Check</Body>
+                        <Caption color="medium">May 30, 2025</Caption>
+                      </Column>
+                      <PrimaryButton 
+                        title="Prepare" 
+                        onPress={() => console.log('Prepare for check-in')}
+                        style={styles.checkInButton}
+                      />
+                    </Row>
+                  </Card>
+                </Card>
+              </Section>
+            </ScrollContainer>
+          </SafeContainer>
+        </Container>
       </GestureHandlerRootView>
     </ScreenErrorWrapper>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   gestureRoot: {
-    flex: 1,
-  },
-  container: {
     flex: 1,
   },
   scrollContent: {
     paddingBottom: 100, // Extra padding for bottom tab bar
   },
-  appHeader: {
-    alignItems: 'center',
-    paddingTop: 20,
-    marginBottom: 5,
-    zIndex: 1,
-  },
-  appTitle: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
     paddingTop: 5,
     paddingBottom: 10,
-    zIndex: 1,
   },
   avatarContainer: {
     width: 70,
@@ -282,6 +301,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 2,
     borderColor: '#FFFFFF',
+    marginRight: 15,
   },
   avatar: {
     width: 65,
@@ -289,41 +309,15 @@ const styles = StyleSheet.create({
     borderRadius: 32.5,
   },
   babyInfo: {
-    marginLeft: 15,
-  },
-  babyName: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 32,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  babyAge: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 22,
-    color: '#FFFFFF',
-  },
-  cardContainer: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    marginTop: 10,
-    zIndex: 1,
+    justifyContent: 'center',
   },
   insightCard: {
     backgroundColor: '#F8EFE0', // Cream/beige background matching the design
-    borderRadius: 20,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    marginBottom: 20,
   },
   insightLabel: {
-    fontFamily: 'SFProText-Medium',
     fontSize: 16,
-    fontWeight: '500',
     color: '#B05E35', // Copper/brown color matching the design
     textAlign: 'center',
     marginTop: 24,
@@ -337,25 +331,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   insightTitle: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 32,
-    fontWeight: '700',
     color: '#004D4D', // Dark teal matching the design
     textAlign: 'center',
     marginBottom: 24,
-    lineHeight: 38,
   },
   insightText: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 18,
     color: '#004D4D', // Dark teal matching the design
     textAlign: 'center',
     paddingHorizontal: 20,
-    lineHeight: 24,
     marginBottom: 24,
   },
   paginationDotsContainer: {
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
@@ -374,7 +360,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   actionButtonsContainer: {
-    flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: '#F79770', // Coral/orange matching the design
     paddingVertical: 16,
@@ -385,28 +370,14 @@ const styles = StyleSheet.create({
   iconContainer: {
     marginBottom: 4,
   },
-  actionText: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 16,
-    color: '#FFFFFF',
-  },
   weeklyCheckInCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     backgroundColor: '#2E7D7D', // Darker teal for contrast
-    borderRadius: 20,
-    padding: 16,
-    marginTop: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    marginBottom: 20,
+    padding: 0,
+    overflow: 'hidden',
   },
   weeklyCheckInContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    padding: 16,
   },
   weeklyCheckInIconContainer: {
     width: 40,
@@ -420,50 +391,15 @@ const styles = StyleSheet.create({
   weeklyCheckInTextContainer: {
     flex: 1,
   },
-  weeklyCheckInTitle: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
-    color: '#FFFFFF',
-    marginBottom: 4,
-  },
-  weeklyCheckInDescription: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.9)',
-  },
   upcomingCheckInsCard: {
     backgroundColor: '#F8EFE0',
-    borderRadius: 20,
-    padding: 20,
-    marginTop: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    marginBottom: 20,
   },
   upcomingCheckInsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     marginBottom: 16,
   },
-  upcomingCheckInsTitle: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 22,
-    color: '#004D4D',
-  },
-  seeAllText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 14,
-    color: theme.colors.primary.main,
-    textDecorationLine: 'underline',
-  },
   checkInItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    borderRadius: 12,
     padding: 12,
   },
   checkInIconContainer: {
@@ -478,26 +414,10 @@ const styles = StyleSheet.create({
   checkInContent: {
     flex: 1,
   },
-  checkInTitle: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 16,
-    color: '#004D4D',
-    marginBottom: 2,
-  },
-  checkInDate: {
-    fontFamily: 'SFProText-Regular',
-    fontSize: 14,
-    color: theme.colors.neutral.medium,
-  },
   checkInButton: {
-    backgroundColor: theme.colors.primary.main,
-    paddingVertical: 6,
+    height: 32,
+    paddingVertical: 0,
     paddingHorizontal: 12,
-    borderRadius: 16,
+    justifyContent: 'center',
   },
-  checkInButtonText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 14,
-    color: theme.colors.neutral.white,
-  },
-});
+};
