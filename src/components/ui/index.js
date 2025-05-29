@@ -11,6 +11,7 @@ import CardTitle from './cards/CardTitle';
 import Button from './buttons/Button';
 import BackButton from './buttons/BackButton';
 import OptionButton from './buttons/OptionButton';
+import IconButton from './buttons/IconButton';
 import TextInput from './inputs/TextInput';
 import ProgressBar from './progress/ProgressBar';
 import ProgressIndicator from './progress/ProgressIndicator';
@@ -44,6 +45,7 @@ export {
   Button,
   BackButton,
   OptionButton,
+  IconButton,
   
   // Inputs
   TextInput,
