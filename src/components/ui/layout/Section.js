@@ -5,15 +5,22 @@ import theme from '../../../theme';
 /**
  * Section Component
  * 
- * A reusable section component for grouping related content
- * Used across the app for content organization
- * 
- * @param {React.ReactNode} children - Child components to render inside the section
- * @param {Object} style - Additional style overrides for the container
+ * A reusable layout component for content sections
+ * Used throughout the app for consistent layout
  */
-const Section = ({ children, style }) => {
+const Section = ({ 
+  children, 
+  padding = true,
+  style 
+}) => {
   return (
-    <View style={[styles.container, style]}>
+    <View 
+      style={[
+        styles.container, 
+        padding && styles.padding,
+        style
+      ]}
+    >
       {children}
     </View>
   );
@@ -21,8 +28,12 @@ const Section = ({ children, style }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: theme.spacing.spacing.lg,
+    width: '100%',
   },
+  padding: {
+    paddingHorizontal: theme.spacing.spacing.screenPadding,
+    paddingVertical: theme.spacing.spacing.md,
+  }
 });
 
 export default Section;

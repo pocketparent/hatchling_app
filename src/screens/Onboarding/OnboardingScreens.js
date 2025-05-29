@@ -1,31 +1,24 @@
-/**
- * Hatchling App Onboarding Screens
- * 
- * Implements simplified onboarding flow screens
- * Includes Baby Info, Feeding Method, Sleep Arrangement, Experience Level, and Top Concern screens
- */
-
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import { useOnboarding } from '../../context/OnboardingContext';
 import theme from '../../theme';
 
-// Onboarding Progress Indicator
-const ProgressIndicator = ({ currentStep, totalSteps }) => {
-  return (
-    <View style={styles.progressContainer}>
-      {Array.from({ length: totalSteps }).map((_, index) => (
-        <View 
-          key={index} 
-          style={[
-            styles.progressDot, 
-            index < currentStep ? styles.progressDotActive : {}
-          ]} 
-        />
-      ))}
-    </View>
-  );
-};
+// Import UI components
+import {
+  Container,
+  Row,
+  Column,
+  Spacer,
+  H2,
+  Body,
+  BodySmall,
+  Caption,
+  Button,
+  TextInput,
+  BackButton,
+  ProgressIndicator,
+  OptionButton
+} from '../../components/ui';
 
 // Baby Information Screen
 export const BabyInfoScreen = ({ navigation }) => {
@@ -42,41 +35,43 @@ export const BabyInfoScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <ProgressIndicator currentStep={1} totalSteps={5} />
+        <ProgressIndicator 
+          currentStep={1} 
+          totalSteps={5} 
+          style={styles.progressIndicator}
+        />
         
-        <Text style={styles.screenTitle}>Tell us about your baby</Text>
+        <H2 style={styles.screenTitle}>Tell us about your baby</H2>
         
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Baby's Name</Text>
+        <Column style={styles.inputContainer}>
+          <BodySmall color="white" style={styles.inputLabel}>Baby's Name</BodySmall>
           <TextInput
-            style={styles.input}
             value={name}
             onChangeText={setName}
             placeholder="Enter baby's name"
           />
-        </View>
+        </Column>
         
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Birth Date / Due Date</Text>
+        <Column style={styles.inputContainer}>
+          <BodySmall color="white" style={styles.inputLabel}>Birth Date / Due Date</BodySmall>
           <TextInput
-            style={styles.input}
             value={birthDate}
             onChangeText={setBirthDate}
             placeholder="MM/DD/YYYY"
           />
-        </View>
+        </Column>
         
         <View style={styles.photoUploadPlaceholder}>
-          <Text style={styles.photoUploadText}>Add Baby Photo (Optional)</Text>
+          <Body color="white" style={styles.photoUploadText}>Add Baby Photo (Optional)</Body>
         </View>
         
-        <TouchableOpacity 
-          style={[styles.button, styles.primaryButton, !name && styles.disabledButton]} 
+        <Button 
+          label="Continue"
+          variant="primary"
           onPress={handleContinue}
           disabled={!name}
-        >
-          <Text style={styles.buttonText}>Continue</Text>
-        </TouchableOpacity>
+          style={styles.button}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -103,49 +98,42 @@ export const FeedingMethodScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <TouchableOpacity 
-          style={styles.backButton} 
+        <BackButton 
           onPress={() => {
             prevStep();
             navigation.goBack();
           }}
-        >
-          <Text style={styles.backButtonText}>← Back</Text>
-        </TouchableOpacity>
+          color="white"
+          style={styles.backButton}
+        />
         
-        <ProgressIndicator currentStep={2} totalSteps={5} />
+        <ProgressIndicator 
+          currentStep={2} 
+          totalSteps={5} 
+          style={styles.progressIndicator}
+        />
         
-        <Text style={styles.screenTitle}>How are you feeding your baby?</Text>
+        <H2 style={styles.screenTitle}>How are you feeding your baby?</H2>
         
-        <View style={styles.optionsContainer}>
+        <Column style={styles.optionsContainer}>
           {feedingOptions.map(option => (
-            <TouchableOpacity
+            <OptionButton
               key={option.id}
-              style={[
-                styles.optionButton,
-                feedingMethod === option.id && styles.optionButtonSelected
-              ]}
+              label={option.label}
+              isSelected={feedingMethod === option.id}
               onPress={() => setFeedingMethod(option.id)}
-            >
-              <Text 
-                style={[
-                  styles.optionButtonText,
-                  feedingMethod === option.id && styles.optionButtonTextSelected
-                ]}
-              >
-                {option.label}
-              </Text>
-            </TouchableOpacity>
+              style={styles.optionButton}
+            />
           ))}
-        </View>
+        </Column>
         
-        <TouchableOpacity 
-          style={[styles.button, styles.primaryButton, !feedingMethod && styles.disabledButton]} 
+        <Button 
+          label="Continue"
+          variant="primary"
           onPress={handleContinue}
           disabled={!feedingMethod}
-        >
-          <Text style={styles.buttonText}>Continue</Text>
-        </TouchableOpacity>
+          style={styles.button}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -172,49 +160,42 @@ export const SleepArrangementScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <TouchableOpacity 
-          style={styles.backButton} 
+        <BackButton 
           onPress={() => {
             prevStep();
             navigation.goBack();
           }}
-        >
-          <Text style={styles.backButtonText}>← Back</Text>
-        </TouchableOpacity>
+          color="white"
+          style={styles.backButton}
+        />
         
-        <ProgressIndicator currentStep={3} totalSteps={5} />
+        <ProgressIndicator 
+          currentStep={3} 
+          totalSteps={5} 
+          style={styles.progressIndicator}
+        />
         
-        <Text style={styles.screenTitle}>Where does your baby sleep?</Text>
+        <H2 style={styles.screenTitle}>Where does your baby sleep?</H2>
         
-        <View style={styles.optionsContainer}>
+        <Column style={styles.optionsContainer}>
           {sleepOptions.map(option => (
-            <TouchableOpacity
+            <OptionButton
               key={option.id}
-              style={[
-                styles.optionButton,
-                sleepArrangement === option.id && styles.optionButtonSelected
-              ]}
+              label={option.label}
+              isSelected={sleepArrangement === option.id}
               onPress={() => setSleepArrangement(option.id)}
-            >
-              <Text 
-                style={[
-                  styles.optionButtonText,
-                  sleepArrangement === option.id && styles.optionButtonTextSelected
-                ]}
-              >
-                {option.label}
-              </Text>
-            </TouchableOpacity>
+              style={styles.optionButton}
+            />
           ))}
-        </View>
+        </Column>
         
-        <TouchableOpacity 
-          style={[styles.button, styles.primaryButton, !sleepArrangement && styles.disabledButton]} 
+        <Button 
+          label="Continue"
+          variant="primary"
           onPress={handleContinue}
           disabled={!sleepArrangement}
-        >
-          <Text style={styles.buttonText}>Continue</Text>
-        </TouchableOpacity>
+          style={styles.button}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -239,49 +220,42 @@ export const ExperienceLevelScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <TouchableOpacity 
-          style={styles.backButton} 
+        <BackButton 
           onPress={() => {
             prevStep();
             navigation.goBack();
           }}
-        >
-          <Text style={styles.backButtonText}>← Back</Text>
-        </TouchableOpacity>
+          color="white"
+          style={styles.backButton}
+        />
         
-        <ProgressIndicator currentStep={4} totalSteps={5} />
+        <ProgressIndicator 
+          currentStep={4} 
+          totalSteps={5} 
+          style={styles.progressIndicator}
+        />
         
-        <Text style={styles.screenTitle}>What's your parenting experience?</Text>
+        <H2 style={styles.screenTitle}>What's your parenting experience?</H2>
         
-        <View style={styles.optionsContainer}>
+        <Column style={styles.optionsContainer}>
           {experienceOptions.map(option => (
-            <TouchableOpacity
+            <OptionButton
               key={option.id}
-              style={[
-                styles.optionButton,
-                experienceLevel === option.id && styles.optionButtonSelected
-              ]}
+              label={option.label}
+              isSelected={experienceLevel === option.id}
               onPress={() => setExperienceLevel(option.id)}
-            >
-              <Text 
-                style={[
-                  styles.optionButtonText,
-                  experienceLevel === option.id && styles.optionButtonTextSelected
-                ]}
-              >
-                {option.label}
-              </Text>
-            </TouchableOpacity>
+              style={styles.optionButton}
+            />
           ))}
-        </View>
+        </Column>
         
-        <TouchableOpacity 
-          style={[styles.button, styles.primaryButton, !experienceLevel && styles.disabledButton]} 
+        <Button 
+          label="Continue"
+          variant="primary"
           onPress={handleContinue}
           disabled={!experienceLevel}
-        >
-          <Text style={styles.buttonText}>Continue</Text>
-        </TouchableOpacity>
+          style={styles.button}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -310,49 +284,42 @@ export const TopConcernScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <TouchableOpacity 
-          style={styles.backButton} 
+        <BackButton 
           onPress={() => {
             prevStep();
             navigation.goBack();
           }}
-        >
-          <Text style={styles.backButtonText}>← Back</Text>
-        </TouchableOpacity>
+          color="white"
+          style={styles.backButton}
+        />
         
-        <ProgressIndicator currentStep={5} totalSteps={5} />
+        <ProgressIndicator 
+          currentStep={5} 
+          totalSteps={5} 
+          style={styles.progressIndicator}
+        />
         
-        <Text style={styles.screenTitle}>What's your top concern right now?</Text>
+        <H2 style={styles.screenTitle}>What's your top concern right now?</H2>
         
-        <View style={styles.optionsContainer}>
+        <Column style={styles.optionsContainer}>
           {concernOptions.map(option => (
-            <TouchableOpacity
+            <OptionButton
               key={option.id}
-              style={[
-                styles.optionButton,
-                topConcern === option.id && styles.optionButtonSelected
-              ]}
+              label={option.label}
+              isSelected={topConcern === option.id}
               onPress={() => setTopConcern(option.id)}
-            >
-              <Text 
-                style={[
-                  styles.optionButtonText,
-                  topConcern === option.id && styles.optionButtonTextSelected
-                ]}
-              >
-                {option.label}
-              </Text>
-            </TouchableOpacity>
+              style={styles.optionButton}
+            />
           ))}
-        </View>
+        </Column>
         
-        <TouchableOpacity 
-          style={[styles.button, styles.primaryButton, !topConcern && styles.disabledButton]} 
+        <Button 
+          label="Continue"
+          variant="primary"
           onPress={handleContinue}
           disabled={!topConcern}
-        >
-          <Text style={styles.buttonText}>Continue</Text>
-        </TouchableOpacity>
+          style={styles.button}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -360,7 +327,7 @@ export const TopConcernScreen = ({ navigation }) => {
 
 // Personalization Screen
 export const PersonalizationScreen = ({ navigation }) => {
-  React.useEffect(() => {
+  useEffect(() => {
     // Auto-navigate to main app after delay
     const timer = setTimeout(() => {
       navigation.reset({
@@ -374,45 +341,31 @@ export const PersonalizationScreen = ({ navigation }) => {
   
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.screenTitle}>Creating your personalized Hatchling experience...</Text>
+      <Container style={styles.content}>
+        <H2 style={styles.screenTitle}>Creating your personalized Hatchling experience...</H2>
         
         <View style={styles.loadingAnimation}>
-          <Text style={styles.loadingText}>🐣</Text>
+          <Body style={styles.loadingText}>🐣</Body>
         </View>
-      </View>
+      </Container>
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
     backgroundColor: theme.colors.background.primary,
   },
   content: {
     flex: 1,
-    padding: theme.spacing.spacing.screenPadding,
+    padding: theme.spacing.spacing.lg,
     justifyContent: 'center',
   },
-  progressContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+  progressIndicator: {
     marginBottom: theme.spacing.spacing.xl,
   },
-  progressDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    marginHorizontal: 4,
-  },
-  progressDotActive: {
-    backgroundColor: theme.colors.neutral.white,
-  },
   screenTitle: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 28,
     color: theme.colors.neutral.white,
     marginBottom: theme.spacing.spacing.xl,
     textAlign: 'center',
@@ -421,48 +374,21 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.spacing.lg,
   },
   inputLabel: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 14,
-    color: theme.colors.neutral.white,
-    marginBottom: 8,
-  },
-  input: {
-    backgroundColor: theme.colors.neutral.white,
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontFamily: 'SFProText-Regular',
-    fontSize: 16,
+    marginBottom: theme.spacing.spacing.xs,
   },
   photoUploadPlaceholder: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 12,
+    borderRadius: theme.spacing.borderRadius.md,
     height: 120,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: theme.spacing.spacing.xl,
   },
   photoUploadText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 16,
-    color: theme.colors.neutral.white,
+    textAlign: 'center',
   },
   button: {
-    borderRadius: 12,
-    paddingVertical: 16,
-    marginBottom: 12,
-    alignItems: 'center',
-  },
-  primaryButton: {
-    backgroundColor: theme.colors.neutral.white,
-  },
-  buttonText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 16,
-    color: theme.colors.primary.main,
-  },
-  disabledButton: {
-    opacity: 0.7,
+    marginBottom: theme.spacing.spacing.sm,
   },
   backButton: {
     position: 'absolute',
@@ -470,32 +396,12 @@ const styles = StyleSheet.create({
     left: 20,
     zIndex: 10,
   },
-  backButtonText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 16,
-    color: theme.colors.neutral.white,
-  },
   optionsContainer: {
     marginBottom: theme.spacing.spacing.xl,
+    gap: theme.spacing.spacing.sm,
   },
   optionButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    marginBottom: 12,
-  },
-  optionButtonSelected: {
-    backgroundColor: theme.colors.neutral.white,
-  },
-  optionButtonText: {
-    fontFamily: 'SFProText-Medium',
-    fontSize: 16,
-    color: theme.colors.neutral.white,
-    textAlign: 'center',
-  },
-  optionButtonTextSelected: {
-    color: theme.colors.primary.main,
+    width: '100%',
   },
   loadingAnimation: {
     alignItems: 'center',
@@ -505,7 +411,7 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: 72,
   },
-});
+};
 
 export default {
   BabyInfoScreen,

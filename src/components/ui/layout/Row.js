@@ -5,15 +5,28 @@ import theme from '../../../theme';
 /**
  * Row Component
  * 
- * A reusable row component for horizontal layouts
- * Used across the app for content organization
- * 
- * @param {React.ReactNode} children - Child components to render inside the row
- * @param {Object} style - Additional style overrides for the container
+ * A reusable layout component for horizontal arrangement
+ * Used throughout the app for consistent layout
  */
-const Row = ({ children, style }) => {
+const Row = ({ 
+  children, 
+  align = 'center', 
+  justify = 'flex-start',
+  wrap = false,
+  style 
+}) => {
   return (
-    <View style={[styles.container, style]}>
+    <View 
+      style={[
+        styles.container, 
+        { 
+          alignItems: align,
+          justifyContent: justify,
+          flexWrap: wrap ? 'wrap' : 'nowrap'
+        },
+        style
+      ]}
+    >
       {children}
     </View>
   );
@@ -22,8 +35,7 @@ const Row = ({ children, style }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
-  },
+  }
 });
 
 export default Row;

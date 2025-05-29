@@ -1,69 +1,60 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import theme from '../../../theme';
+import { Row, Column, Body, BodySmall, Caption } from '../index';
 
 /**
  * CategoryPill Component
  * 
- * A reusable component for displaying selectable category pills/filters
- * Used in Ask screen and other places where category filtering is needed
- * 
- * @param {string} label - The category label to display
- * @param {boolean} isActive - Whether the category is currently selected
- * @param {Function} onPress - Function to call when the pill is pressed
- * @param {Object} style - Additional style overrides for the container
+ * A reusable pill component for category/topic selection
+ * Used in Ask screen for topic filtering and other areas
  */
 const CategoryPill = ({ 
   label,
-  isActive,
+  isSelected = false,
   onPress,
   style
 }) => {
   return (
-    <TouchableOpacity
-      onPress={onPress}
+    <TouchableOpacity 
       style={[
-        styles.container,
-        isActive ? styles.containerActive : styles.containerInactive,
+        styles.container, 
+        isSelected && styles.containerSelected,
         style
-      ]}
+      ]} 
+      onPress={onPress}
+      activeOpacity={0.7}
     >
-      <Text 
+      <BodySmall 
         style={[
           styles.label,
-          isActive ? styles.labelActive : styles.labelInactive
+          isSelected && styles.labelSelected
         ]}
       >
         {label}
-      </Text>
+      </BodySmall>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: theme.spacing.spacing.xs,
     paddingHorizontal: theme.spacing.spacing.md,
-    borderRadius: 20,
+    paddingVertical: theme.spacing.spacing.sm,
+    borderRadius: theme.spacing.borderRadius.pill,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     marginRight: theme.spacing.spacing.sm,
-    marginBottom: theme.spacing.spacing.xs,
+    marginBottom: theme.spacing.spacing.sm,
   },
-  containerActive: {
+  containerSelected: {
     backgroundColor: theme.colors.neutral.white,
   },
-  containerInactive: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-  },
   label: {
-    fontSize: theme.typography.sizes.bodySmall,
-    fontFamily: theme.typography.fonts.medium,
-  },
-  labelActive: {
-    color: theme.colors.primary.main,
-  },
-  labelInactive: {
     color: theme.colors.neutral.white,
   },
+  labelSelected: {
+    color: theme.colors.primary.main,
+  }
 });
 
 export default CategoryPill;

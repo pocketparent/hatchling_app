@@ -5,19 +5,45 @@ import theme from '../../../theme';
 /**
  * Spacer Component
  * 
- * A reusable spacer component for adding consistent spacing
- * Used across the app for layout management
- * 
- * @param {string} size - Size of the spacer: 'xs', 'sm', 'md', 'lg', 'xl'
- * @param {boolean} horizontal - Whether the spacer is horizontal (default is vertical)
+ * A reusable layout component for adding consistent spacing
+ * Used throughout the app for consistent layout
  */
-const Spacer = ({ size = 'md', horizontal = false }) => {
-  const spacerStyle = {
-    width: horizontal ? theme.spacing.spacing[size] : undefined,
-    height: !horizontal ? theme.spacing.spacing[size] : undefined,
+const Spacer = ({ 
+  size = 'md',
+  horizontal = false,
+  style 
+}) => {
+  // Get spacing value based on size
+  const getSpacingValue = () => {
+    switch (size) {
+      case 'xs':
+        return theme.spacing.spacing.xs;
+      case 'sm':
+        return theme.spacing.spacing.sm;
+      case 'lg':
+        return theme.spacing.spacing.lg;
+      case 'xl':
+        return theme.spacing.spacing.xl;
+      case 'xxl':
+        return theme.spacing.spacing.xxl;
+      case 'md':
+      default:
+        return theme.spacing.spacing.md;
+    }
   };
+
+  const spacingValue = getSpacingValue();
   
-  return <View style={spacerStyle} />;
+  return (
+    <View 
+      style={[
+        horizontal 
+          ? { width: spacingValue, height: '100%' }
+          : { height: spacingValue, width: '100%' },
+        style
+      ]}
+    />
+  );
 };
 
 export default Spacer;

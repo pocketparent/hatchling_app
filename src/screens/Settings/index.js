@@ -1,32 +1,26 @@
 import React, { useState } from 'react';
-import { View, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
+import { View, TouchableOpacity, Switch, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
 import { useOnboarding } from '../../context/OnboardingContext';
 import { useTheme } from '../../theme/ThemeProvider';
 import { ScreenErrorWrapper } from '../../components/error/ErrorComponents';
+import theme from '../../theme';
 
 // Import UI components
 import {
   Container,
-  SafeContainer,
-  ScrollContainer,
-  Section,
   Row,
   Column,
   Spacer,
   Card,
-  H1,
   H2,
   H3,
   Body,
   BodySmall,
   Caption,
-  Label,
-  AppHeader,
-  PrimaryButton,
-  SecondaryButton,
-  TextButton,
+  Button,
+  Section,
   IconButton
 } from '../../components/ui';
 
@@ -160,161 +154,157 @@ export default function SettingsScreen({ navigation }) {
   return (
     <ScreenErrorWrapper screenName="Settings" navigation={navigation}>
       <Container>
-        <SafeContainer>
-          <AppHeader title="Settings" />
+        <View style={styles.contentContainer}>
+          {/* Baby profile summary */}
+          <Card style={styles.profileCard}>
+            <Row>
+              <View style={styles.profileImagePlaceholder}>
+                <Ionicons name="person" size={30} color={theme.colors.neutral.white} />
+              </View>
+              <Column style={styles.profileInfo}>
+                <H2>{babyProfile.name}</H2>
+                <BodySmall>{babyProfile.age}</BodySmall>
+                <Caption>Born: {babyProfile.birthDate}</Caption>
+              </Column>
+              <IconButton 
+                icon="pencil"
+                size="medium"
+                variant="secondary"
+                color={theme.colors.primary.main}
+                style={styles.editProfileButton}
+                onPress={() => navigation.navigate('EditProfile')}
+              />
+            </Row>
+          </Card>
           
-          <ScrollContainer contentContainerStyle={styles.scrollContent}>
-            {/* Baby profile summary */}
-            <Card style={styles.profileCard}>
-              <Row>
-                <View style={styles.profileImagePlaceholder}>
-                  <Ionicons name="person" size={30} color="white" />
-                </View>
-                <Column style={styles.profileInfo}>
-                  <H2>{babyProfile.name}</H2>
-                  <BodySmall>{babyProfile.age}</BodySmall>
-                  <Caption>Born: {babyProfile.birthDate}</Caption>
-                </Column>
-                <TouchableOpacity 
-                  style={styles.editProfileButton}
-                  onPress={() => navigation.navigate('EditProfile')}
-                >
-                  <Ionicons name="pencil" size={20} color="#4A9B9B" />
-                </TouchableOpacity>
-              </Row>
-            </Card>
-            
-            {/* Settings sections */}
-            {settingsSections.map(section => (
-              <Section key={section.id}>
-                <H3 style={styles.sectionTitle}>{section.title}</H3>
-                
-                <Card style={styles.settingsSection}>
-                  {section.items.map(item => (
-                    <TouchableOpacity 
-                      key={item.id} 
-                      style={styles.settingsItem}
-                      onPress={item.action}
-                      disabled={item.toggle}
-                    >
-                      <Row style={styles.settingsItemRow}>
-                        <View style={[
-                          styles.settingsItemIconContainer,
-                          item.danger && styles.settingsItemIconContainerDanger
-                        ]}>
-                          <Ionicons 
-                            name={item.icon} 
-                            size={20} 
-                            color={item.danger ? "#F44336" : "#4A9B9B"} 
-                          />
-                        </View>
-                        <Body 
-                          style={[
-                            styles.settingsItemTitle,
-                            item.danger && styles.settingsItemTitleDanger
-                          ]}
-                        >
-                          {item.title}
-                        </Body>
-                        
-                        {item.toggle ? (
-                          <Switch
-                            value={item.value}
-                            onValueChange={item.onToggle}
-                            trackColor={{ false: '#767577', true: '#4A9B9B' }}
-                            thumbColor={item.value ? '#E0F2F1' : '#f4f3f4'}
-                          />
-                        ) : (
-                          <Ionicons name="chevron-forward" size={20} color="#757575" />
-                        )}
-                      </Row>
-                    </TouchableOpacity>
-                  ))}
-                </Card>
-              </Section>
-            ))}
-            
-            {/* Version info */}
-            <Caption style={styles.versionText}>Hatchling v1.0.0</Caption>
-            <Spacer size="xl" />
-          </ScrollContainer>
-        </SafeContainer>
+          {/* Settings sections */}
+          {settingsSections.map(section => (
+            <Section key={section.id}>
+              <H3 style={styles.sectionTitle}>{section.title}</H3>
+              
+              <Card style={styles.settingsSection}>
+                {section.items.map(item => (
+                  <TouchableOpacity 
+                    key={item.id} 
+                    style={styles.settingsItem}
+                    onPress={item.action}
+                    disabled={item.toggle}
+                  >
+                    <Row style={styles.settingsItemRow}>
+                      <View style={[
+                        styles.settingsItemIconContainer,
+                        item.danger && styles.settingsItemIconContainerDanger
+                      ]}>
+                        <Ionicons 
+                          name={item.icon} 
+                          size={20} 
+                          color={item.danger ? theme.colors.feedback.error : theme.colors.primary.main} 
+                        />
+                      </View>
+                      <Body 
+                        style={[
+                          styles.settingsItemTitle,
+                          item.danger && styles.settingsItemTitleDanger
+                        ]}
+                      >
+                        {item.title}
+                      </Body>
+                      
+                      {item.toggle ? (
+                        <Switch
+                          value={item.value}
+                          onValueChange={item.onToggle}
+                          trackColor={{ false: theme.colors.neutral.medium, true: theme.colors.primary.main }}
+                          thumbColor={item.value ? theme.colors.primary.lightest : theme.colors.neutral.lightest}
+                        />
+                      ) : (
+                        <Ionicons name="chevron-forward" size={20} color={theme.colors.neutral.medium} />
+                      )}
+                    </Row>
+                  </TouchableOpacity>
+                ))}
+              </Card>
+            </Section>
+          ))}
+          
+          {/* Version info */}
+          <Caption style={styles.versionText}>Hatchling v1.0.0</Caption>
+          <Spacer size="xl" />
+        </View>
       </Container>
     </ScreenErrorWrapper>
   );
 }
 
 const styles = {
-  scrollContent: {
+  contentContainer: {
+    flex: 1,
+    paddingHorizontal: theme.spacing.spacing.md,
     paddingBottom: 100, // Extra padding for bottom tab bar
   },
   profileCard: {
-    marginBottom: 32,
-    padding: 20,
+    marginBottom: theme.spacing.spacing.xl,
+    padding: theme.spacing.spacing.md,
   },
   profileImagePlaceholder: {
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: '#2A9D8F', // Deeper teal for better contrast
+    backgroundColor: theme.colors.primary.main,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 20,
+    marginRight: theme.spacing.spacing.md,
   },
   profileInfo: {
     flex: 1,
     justifyContent: 'center',
   },
   editProfileButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(42, 157, 143, 0.1)', // Subtle background
-    justifyContent: 'center',
-    alignItems: 'center',
     alignSelf: 'center',
+    backgroundColor: `${theme.colors.primary.main}15`, // 15% opacity
   },
   settingsSection: {
-    marginBottom: 24,
+    marginBottom: theme.spacing.spacing.lg,
     overflow: 'hidden',
-    borderRadius: 12,
+    borderRadius: theme.spacing.borderRadius.md,
+    padding: 0,
   },
   sectionTitle: {
-    marginBottom: 12,
-    marginLeft: 8,
-    color: '#FFFFFF',
+    marginBottom: theme.spacing.spacing.md,
+    marginLeft: theme.spacing.spacing.sm,
+    color: theme.colors.neutral.white,
   },
   settingsItem: {
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.1)', // Subtle divider
+    borderBottomColor: theme.colors.neutral.lightest + '20', // 20% opacity
   },
   settingsItemRow: {
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 18,
+    padding: theme.spacing.spacing.md,
   },
   settingsItemIconContainer: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(42, 157, 143, 0.15)', // Subtle teal background
+    backgroundColor: `${theme.colors.primary.main}15`, // 15% opacity
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: theme.spacing.spacing.md,
   },
   settingsItemIconContainerDanger: {
-    backgroundColor: 'rgba(244, 67, 54, 0.15)', // Subtle red background
+    backgroundColor: `${theme.colors.feedback.error}15`, // 15% opacity
   },
   settingsItemTitle: {
     flex: 1,
   },
   settingsItemTitleDanger: {
-    color: '#F44336',
+    color: theme.colors.feedback.error,
   },
   versionText: {
     textAlign: 'center',
-    marginTop: 40,
-    marginBottom: 16,
-    color: 'rgba(255, 255, 255, 0.6)',
+    marginTop: theme.spacing.spacing.xl,
+    marginBottom: theme.spacing.spacing.md,
+    color: theme.colors.neutral.white + '99', // 60% opacity
   },
 };

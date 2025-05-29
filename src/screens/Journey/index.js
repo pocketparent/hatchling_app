@@ -14,23 +14,18 @@ import theme from '../../theme';
 // Import UI components
 import {
   Container,
-  SafeContainer,
-  ScrollContainer,
-  Section,
   Row,
   Column,
   Spacer,
   Card,
-  AccentCard,
-  InteractiveAccentCard,
-  H1,
-  H2,
-  H3,
+  Section,
   Body,
   BodySmall,
   Caption,
-  Label,
-  AppHeader
+  H3,
+  BackButton,
+  DomainBadge,
+  ProgressBar
 } from '../../components/ui';
 
 const { width } = Dimensions.get('window');
@@ -189,7 +184,7 @@ export default function JourneyScreen({ navigation }) {
     if (!domain.milestones || domain.milestones.length === 0) return 0;
     
     const observedCount = domain.milestones.filter(milestone => milestone.observed).length;
-    return Math.round((observedCount / domain.milestones.length) * 100);
+    return observedCount / domain.milestones.length;
   };
   
   // Calculate activity completion for a milestone
@@ -197,7 +192,7 @@ export default function JourneyScreen({ navigation }) {
     if (!milestone.suggestedActivities || milestone.suggestedActivities.length === 0) return 0;
     
     const completedCount = milestone.suggestedActivities.filter(activity => activity.completed).length;
-    return Math.round((completedCount / milestone.suggestedActivities.length) * 100);
+    return completedCount / milestone.suggestedActivities.length;
   };
   
   // Get all activities for a domain
@@ -243,7 +238,7 @@ export default function JourneyScreen({ navigation }) {
     const activities = getDomainActivities(domain);
     const activityCount = activities.length;
     const completedActivities = activities.filter(activity => activity.completed).length;
-    const activityProgress = activityCount > 0 ? Math.round((completedActivities / activityCount) * 100) : 0;
+    const activityProgress = activityCount > 0 ? completedActivities / activityCount : 0;
     
     // Determine if this domain is the selected one
     const isSelected = domain.id === selectedDomainId;
@@ -253,21 +248,16 @@ export default function JourneyScreen({ navigation }) {
       if (domainCardViewMode === 1) {
         // Milestones view
         return (
-          <AccentCard 
+          <Card 
             key={domain.id}
-            accentColor={domain.color}
             style={styles.domainCardExpanded}
           >
             <Row align="center">
-              <TouchableOpacity 
-                style={styles.backButton}
+              <BackButton 
                 onPress={handleBackToDomains}
-              >
-                <Ionicons name="arrow-back" size={20} color="#FFFFFF" />
-              </TouchableOpacity>
-              <View style={[styles.domainIconContainer, { backgroundColor: domain.color }]}>
-                <Ionicons name={domain.icon} size={24} color="#FFFFFF" />
-              </View>
+                color="primary"
+              />
+              <DomainBadge domain={domain} size="medium" />
               <Column style={styles.domainTitleContainer}>
                 <H3>{domain.name}</H3>
                 <BodySmall color="medium">Milestones</BodySmall>
@@ -289,11 +279,7 @@ export default function JourneyScreen({ navigation }) {
               </TouchableOpacity>
             </Row>
             
-            <ScrollContainer 
-              style={styles.milestonesContainer}
-              contentContainerStyle={styles.milestonesContent}
-              showsVerticalScrollIndicator={false}
-            >
+            <View style={styles.milestonesContainer}>
               {domain.milestones.map(milestone => (
                 <Row key={milestone.id} style={styles.milestoneItem}>
                   <Column style={styles.milestoneContent}>
@@ -307,36 +293,31 @@ export default function JourneyScreen({ navigation }) {
                     onPress={() => handleToggleMilestone(milestone.id)}
                   >
                     {milestone.observed ? (
-                      <Ionicons name="checkmark-circle" size={24} color="#2A9D8F" />
+                      <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary.main} />
                     ) : (
-                      <Ionicons name="ellipse-outline" size={24} color="#CCCCCC" />
+                      <Ionicons name="ellipse-outline" size={24} color={theme.colors.neutral.light} />
                     )}
                   </TouchableOpacity>
                 </Row>
               ))}
-            </ScrollContainer>
-          </AccentCard>
+            </View>
+          </Card>
         );
       } else if (domainCardViewMode === 2) {
         // Activities view
         const activities = getDomainActivities(domain);
         
         return (
-          <AccentCard 
+          <Card 
             key={domain.id}
-            accentColor={domain.color}
             style={styles.domainCardExpanded}
           >
             <Row align="center">
-              <TouchableOpacity 
-                style={styles.backButton}
+              <BackButton 
                 onPress={handleBackToDomains}
-              >
-                <Ionicons name="arrow-back" size={20} color="#FFFFFF" />
-              </TouchableOpacity>
-              <View style={[styles.domainIconContainer, { backgroundColor: domain.color }]}>
-                <Ionicons name={domain.icon} size={24} color="#FFFFFF" />
-              </View>
+                color="primary"
+              />
+              <DomainBadge domain={domain} size="medium" />
               <Column style={styles.domainTitleContainer}>
                 <H3>{domain.name}</H3>
                 <BodySmall color="medium">Activities</BodySmall>
@@ -358,11 +339,7 @@ export default function JourneyScreen({ navigation }) {
               </TouchableOpacity>
             </Row>
             
-            <ScrollContainer 
-              style={styles.activitiesContainer}
-              contentContainerStyle={styles.activitiesContent}
-              showsVerticalScrollIndicator={false}
-            >
+            <View style={styles.activitiesContainer}>
               {activities.map(activity => (
                 <Row key={activity.id} style={styles.activityItem}>
                   <Column style={styles.activityContent}>
@@ -379,30 +356,28 @@ export default function JourneyScreen({ navigation }) {
                     onPress={() => handleToggleActivity(activity.milestoneId, activity.id)}
                   >
                     {activity.completed ? (
-                      <Ionicons name="checkmark-circle" size={24} color="#2A9D8F" />
+                      <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary.main} />
                     ) : (
-                      <Ionicons name="ellipse-outline" size={24} color="#CCCCCC" />
+                      <Ionicons name="ellipse-outline" size={24} color={theme.colors.neutral.light} />
                     )}
                   </TouchableOpacity>
                 </Row>
               ))}
-            </ScrollContainer>
-          </AccentCard>
+            </View>
+          </Card>
         );
       }
     }
     
     // Default: Overview view
     return (
-      <InteractiveAccentCard
+      <Card
         key={domain.id}
-        accentColor={domain.color}
+        style={styles.domainCard}
         onPress={() => handleSelectDomain(domain.id)}
       >
         <Row>
-          <View style={[styles.domainIconContainer, { backgroundColor: domain.color }]}>
-            <Ionicons name={domain.icon} size={24} color="#FFFFFF" />
-          </View>
+          <DomainBadge domain={domain} size="medium" />
           <Column style={styles.domainInfoContainer}>
             <H3>{domain.name}</H3>
             <BodySmall color="medium" numberOfLines={2} style={styles.domainDescription}>
@@ -411,62 +386,74 @@ export default function JourneyScreen({ navigation }) {
             
             <Row style={styles.domainStatsContainer}>
               <Column style={styles.progressBarContainer}>
-                <Caption color="medium">Progress</Caption>
-                <View style={styles.progressBarBackground}>
-                  <View 
-                    style={[
-                      styles.progressBarFill, 
-                      { width: `${progress}%`, backgroundColor: domain.color }
-                    ]} 
-                  />
-                </View>
-                <Body style={styles.progressText}>{progress}%</Body>
+                <ProgressBar 
+                  progress={progress} 
+                  color={getDomainColor(domain)}
+                  height={8}
+                  style={styles.progressBar}
+                />
+                <Body style={styles.progressText}>{Math.round(progress * 100)}%</Body>
               </Column>
             </Row>
           </Column>
           <View style={styles.domainCardArrow}>
-            <Ionicons name="chevron-forward" size={20} color="#CCCCCC" />
+            <Ionicons name="chevron-forward" size={20} color={theme.colors.neutral.light} />
           </View>
         </Row>
-      </InteractiveAccentCard>
+      </Card>
     );
+  };
+  
+  // Get domain color based on domain type
+  const getDomainColor = (domain) => {
+    switch (domain.type) {
+      case 'physical':
+        return theme.colors.domains.physical;
+      case 'cognitive':
+        return theme.colors.domains.cognitive;
+      case 'social':
+        return theme.colors.domains.social;
+      case 'emotional':
+        return theme.colors.domains.emotional;
+      case 'language':
+        return theme.colors.domains.language;
+      default:
+        return theme.colors.primary.main;
+    }
   };
   
   return (
     <ScreenErrorWrapper screenName="Journey" navigation={navigation}>
       <Container>
-        <SafeContainer>
-          {/* App header with logo */}
-          <AppHeader title={selectedPhase.name} />
-          
-          {/* Phase selector */}
-          <Section style={styles.phaseSelector}>
-            <FlatList
-              ref={phaseScrollRef}
-              data={journeyState.phases}
-              renderItem={renderPhaseItem}
-              keyExtractor={item => item.id}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.phaseSelectorContent}
-              initialScrollIndex={0}
-              onScrollToIndexFailed={() => {}}
-            />
-          </Section>
-          
-          {/* Phase description */}
-          <Section style={styles.phaseDescription}>
-            <Body color="white" style={styles.phaseDescriptionText}>
-              {selectedPhase.description}
-            </Body>
-          </Section>
-          
-          {/* Domain cards */}
-          <ScrollContainer contentContainerStyle={styles.domainsContainer}>
-            {selectedPhase.domains.map(domain => renderDomainCard(domain))}
-            <Spacer size="xl" />
-          </ScrollContainer>
-        </SafeContainer>
+        <StatusBar style="light" />
+        
+        {/* Phase selector */}
+        <Section style={styles.phaseSelector}>
+          <FlatList
+            ref={phaseScrollRef}
+            data={journeyState.phases}
+            renderItem={renderPhaseItem}
+            keyExtractor={item => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.phaseSelectorContent}
+            initialScrollIndex={0}
+            onScrollToIndexFailed={() => {}}
+          />
+        </Section>
+        
+        {/* Phase description */}
+        <Section style={styles.phaseDescription}>
+          <Body color="white" style={styles.phaseDescriptionText}>
+            {selectedPhase.description}
+          </Body>
+        </Section>
+        
+        {/* Domain cards */}
+        <View style={styles.domainsContainer}>
+          {selectedPhase.domains.map(domain => renderDomainCard(domain))}
+          <Spacer size="xl" />
+        </View>
       </Container>
     </ScreenErrorWrapper>
   );
@@ -474,69 +461,58 @@ export default function JourneyScreen({ navigation }) {
 
 const styles = {
   phaseSelector: {
-    marginBottom: 16,
+    marginBottom: theme.spacing.spacing.md,
   },
   phaseSelectorContent: {
-    paddingHorizontal: 8,
+    paddingHorizontal: theme.spacing.spacing.sm,
   },
   phaseItem: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    marginHorizontal: 4,
-    borderRadius: 20,
+    paddingHorizontal: theme.spacing.spacing.md,
+    paddingVertical: theme.spacing.spacing.sm,
+    marginHorizontal: theme.spacing.spacing.xs,
+    borderRadius: theme.spacing.borderRadius.pill,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
   phaseItemSelected: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: theme.colors.neutral.white,
   },
   phaseItemText: {
-    color: '#FFFFFF',
+    color: theme.colors.neutral.white,
   },
   phaseItemTextSelected: {
-    color: '#2A9D8F',
+    color: theme.colors.primary.main,
   },
   phaseDescription: {
-    marginBottom: 24,
+    marginBottom: theme.spacing.spacing.lg,
   },
   phaseDescriptionText: {
     textAlign: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: theme.spacing.spacing.md,
   },
   domainsContainer: {
     paddingBottom: 100, // Extra padding for bottom tab bar
     gap: 8, // Reduced spacing between domain cards
+    paddingHorizontal: theme.spacing.spacing.md,
   },
-  domainIconContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
+  domainCard: {
+    marginBottom: theme.spacing.spacing.sm,
   },
   domainInfoContainer: {
     flex: 1,
+    marginLeft: theme.spacing.spacing.md,
   },
   domainDescription: {
-    marginVertical: 8,
+    marginVertical: theme.spacing.spacing.sm,
   },
   domainStatsContainer: {
-    marginTop: 8,
+    marginTop: theme.spacing.spacing.sm,
     width: '100%',
   },
   progressBarContainer: {
     width: '100%',
   },
-  progressBarBackground: {
-    height: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    borderRadius: 4,
-    marginVertical: 4,
-    width: '100%',
-  },
-  progressBarFill: {
-    height: '100%',
-    borderRadius: 4,
+  progressBar: {
+    marginVertical: theme.spacing.spacing.xs,
   },
   progressText: {
     textAlign: 'right',
@@ -544,80 +520,66 @@ const styles = {
   },
   domainCardArrow: {
     justifyContent: 'center',
-    paddingLeft: 8,
+    paddingLeft: theme.spacing.spacing.sm,
   },
   domainCardExpanded: {
-    padding: 16,
-  },
-  backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
+    padding: theme.spacing.spacing.md,
   },
   domainTitleContainer: {
     flex: 1,
+    marginLeft: theme.spacing.spacing.md,
   },
   viewToggleContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    borderRadius: 20,
-    padding: 4,
-    marginVertical: 16,
+    borderRadius: theme.spacing.borderRadius.pill,
+    padding: theme.spacing.spacing.xs,
+    marginVertical: theme.spacing.spacing.md,
   },
   viewToggleButton: {
     flex: 1,
-    paddingVertical: 8,
+    paddingVertical: theme.spacing.spacing.sm,
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: theme.spacing.borderRadius.pill,
   },
   viewToggleButtonActive: {
-    backgroundColor: '#2A9D8F',
+    backgroundColor: theme.colors.primary.main,
   },
   milestonesContainer: {
     maxHeight: 400,
   },
-  milestonesContent: {
-    paddingBottom: 16,
-  },
   milestoneItem: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 8,
+    borderRadius: theme.spacing.borderRadius.sm,
+    padding: theme.spacing.spacing.md,
+    marginBottom: theme.spacing.spacing.sm,
   },
   milestoneContent: {
     flex: 1,
   },
   milestoneTitle: {
-    marginBottom: 4,
+    marginBottom: theme.spacing.spacing.xs,
   },
   milestoneCheckbox: {
     justifyContent: 'center',
-    paddingLeft: 8,
+    paddingLeft: theme.spacing.spacing.sm,
   },
   activitiesContainer: {
     maxHeight: 400,
   },
-  activitiesContent: {
-    paddingBottom: 16,
-  },
   activityItem: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 8,
+    borderRadius: theme.spacing.borderRadius.sm,
+    padding: theme.spacing.spacing.md,
+    marginBottom: theme.spacing.spacing.sm,
   },
   activityContent: {
     flex: 1,
   },
   activityTitle: {
-    marginBottom: 4,
+    marginBottom: theme.spacing.spacing.xs,
   },
   activityCheckbox: {
     justifyContent: 'center',
-    paddingLeft: 8,
+    paddingLeft: theme.spacing.spacing.sm,
   },
 };

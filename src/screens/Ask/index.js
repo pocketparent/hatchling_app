@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
   View, 
-  TextInput, 
   TouchableOpacity, 
   KeyboardAvoidingView, 
   Platform, 
@@ -15,26 +14,20 @@ import theme from '../../theme';
 // Import UI components
 import {
   Container,
-  SafeContainer,
-  ScrollContainer,
-  Section,
   Row,
   Column,
   Spacer,
   Card,
-  H1,
   H2,
   H3,
   Body,
   BodySmall,
   Caption,
-  Label,
-  AppHeader,
-  PrimaryButton,
-  SecondaryButton,
-  TextButton,
-  IconButton,
-  Input
+  Button,
+  TextInput,
+  Section,
+  BackButton,
+  CategoryPill
 } from '../../components/ui';
 
 /**
@@ -221,68 +214,65 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
   const renderQuestionDetail = () => {
     return (
       <Container>
-        <SafeContainer>
-          <Row style={styles.backButtonRow}>
-            <TouchableOpacity 
-              style={styles.backButton} 
-              onPress={handleBackFromDetail}
-            >
-              <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-              <BodySmall color="white" style={styles.backButtonText}>Back to Questions</BodySmall>
-            </TouchableOpacity>
-          </Row>
+        <Row style={styles.backButtonRow}>
+          <BackButton onPress={handleBackFromDetail} color="white" />
+          <BodySmall color="white" style={styles.backButtonText}>Back to Questions</BodySmall>
+        </Row>
+        
+        <Card style={styles.detailCard}>
+          <H2 style={styles.detailQuestion}>{selectedQuestion.question}</H2>
           
-          <Card style={styles.detailCard}>
-            <H2 style={styles.detailQuestion}>{selectedQuestion.question}</H2>
-            
-            <ScrollContainer style={styles.answerScrollView}>
-              <Body>{selectedQuestion.fullAnswer}</Body>
-            </ScrollContainer>
-            
-            <Row style={styles.feedbackContainer} justify="space-between" align="center">
-              <BodySmall>Was this helpful?</BodySmall>
-              <Row style={styles.feedbackButtons}>
-                <SecondaryButton 
-                  title="Yes" 
-                  icon="thumbs-up-outline"
-                  onPress={() => console.log('Feedback: Yes')}
-                  style={styles.feedbackButton}
-                />
-                <Spacer size={8} horizontal />
-                <SecondaryButton 
-                  title="No" 
-                  icon="thumbs-down-outline"
-                  onPress={() => console.log('Feedback: No')}
-                  style={styles.feedbackButton}
-                />
-              </Row>
+          <View style={styles.answerScrollView}>
+            <Body>{selectedQuestion.fullAnswer}</Body>
+          </View>
+          
+          <Row style={styles.feedbackContainer} justify="space-between" align="center">
+            <BodySmall>Was this helpful?</BodySmall>
+            <Row style={styles.feedbackButtons}>
+              <Button 
+                label="Yes" 
+                icon="thumbs-up-outline"
+                onPress={() => console.log('Feedback: Yes')}
+                variant="secondary"
+                size="small"
+                style={styles.feedbackButton}
+              />
+              <Spacer size="sm" horizontal />
+              <Button 
+                label="No" 
+                icon="thumbs-down-outline"
+                onPress={() => console.log('Feedback: No')}
+                variant="secondary"
+                size="small"
+                style={styles.feedbackButton}
+              />
             </Row>
-          </Card>
-          
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={100}
-            style={styles.messageInputContainer}
+          </Row>
+        </Card>
+        
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={100}
+          style={styles.messageInputContainer}
+        >
+          <TextInput
+            style={styles.messageInput}
+            value={userMessage}
+            onChangeText={setUserMessage}
+            placeholder="Ask a follow-up question..."
+            multiline
+          />
+          <TouchableOpacity 
+            style={[
+              styles.sendButton, 
+              !userMessage.trim() && styles.sendButtonDisabled
+            ]} 
+            onPress={handleSendMessage}
+            disabled={!userMessage.trim()}
           >
-            <TextInput
-              style={styles.messageInput}
-              value={userMessage}
-              onChangeText={setUserMessage}
-              placeholder="Ask a follow-up question..."
-              multiline
-            />
-            <TouchableOpacity 
-              style={[
-                styles.sendButton, 
-                !userMessage.trim() && styles.sendButtonDisabled
-              ]} 
-              onPress={handleSendMessage}
-              disabled={!userMessage.trim()}
-            >
-              <Ionicons name="send" size={20} color={theme.colors.neutral.white} />
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
-        </SafeContainer>
+            <Ionicons name="send" size={20} color={theme.colors.neutral.white} />
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
       </Container>
     );
   };
@@ -297,9 +287,10 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
         <H3>{item.question}</H3>
         <BodySmall color="medium" style={styles.answerPreview}>{item.preview}</BodySmall>
         <Row style={styles.readMoreContainer} align="center">
-          <TextButton 
-            title="Read more" 
+          <Button 
+            label="Read more" 
             onPress={() => handleQuestionSelect(item)}
+            variant="text"
             style={styles.readMoreButton}
           />
           <Ionicons name="chevron-forward" size={16} color={theme.colors.primary.main} />
@@ -312,119 +303,107 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
   const renderMainContent = () => {
     return (
       <Container>
-        <SafeContainer>
-          {/* App header with logo */}
-          <AppHeader title="Ask" />
-          
-          {/* Search bar */}
-          <Section style={styles.searchBarContainer}>
-            <Row>
-              <TextInput
-                style={styles.searchInput}
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-                placeholder="Search questions..."
-                returnKeyType="search"
-                onSubmitEditing={handleSearch}
-              />
-              <TouchableOpacity 
-                style={styles.searchButton} 
-                onPress={handleSearch}
-              >
-                <Ionicons name="search" size={20} color={theme.colors.neutral.white} />
-              </TouchableOpacity>
-            </Row>
-          </Section>
-          
-          {/* Categories */}
-          <Section>
-            <H2 color="white" style={styles.sectionTitle}>Browse by Topic</H2>
-            <ScrollView 
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.categoriesContainer}
+        {/* Search bar */}
+        <Section style={styles.searchBarContainer}>
+          <Row>
+            <TextInput
+              style={styles.searchInput}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              placeholder="Search questions..."
+              returnKeyType="search"
+              onSubmitEditing={handleSearch}
+            />
+            <TouchableOpacity 
+              style={styles.searchButton} 
+              onPress={handleSearch}
             >
-              {categories.map(item => (
-                <TouchableOpacity 
-                  key={item.id}
-                  style={[
-                    styles.categoryButton,
-                    activeCategory === item.id && styles.categoryButtonActive
-                  ]}
-                  onPress={() => handleCategorySelect(item.id)}
-                >
-                  <Text style={styles.categoryIcon}>{item.icon}</Text>
-                  <BodySmall 
-                    style={activeCategory === item.id ? styles.categoryNameActive : styles.categoryName}
-                  >
-                    {item.name}
-                  </BodySmall>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </Section>
-          
-          {/* Content based on selection */}
-          <ScrollContainer style={styles.questionsContainer} showsVerticalScrollIndicator={false}>
-            {/* Search Results */}
-            {showSearchResults && (
-              <Section>
-                <H2 color="white" style={styles.sectionTitle}>
-                  Search Results for "{searchQuery}"
-                </H2>
-                {getFilteredQuestions().length > 0 ? (
-                  <Column style={styles.questionsList}>
-                    {getFilteredQuestions().map(item => renderQuestionItem(item))}
-                  </Column>
-                ) : (
-                  <Card style={styles.noResultsContainer}>
-                    <Body style={styles.noResultsText}>
-                      No results found for "{searchQuery}"
-                    </Body>
-                    <PrimaryButton 
-                      title="Ask this question directly"
-                      onPress={() => setUserMessage(searchQuery)}
-                      style={styles.askDirectlyButton}
-                    />
-                  </Card>
-                )}
-              </Section>
-            )}
-            
-            {/* Category Questions */}
-            {activeCategory && (
-              <Section>
-                <H2 color="white" style={styles.sectionTitle}>
-                  {categories.find(c => c.id === activeCategory)?.name} Questions
-                </H2>
+              <Ionicons name="search" size={20} color={theme.colors.neutral.white} />
+            </TouchableOpacity>
+          </Row>
+        </Section>
+        
+        {/* Categories */}
+        <Section>
+          <H2 color="white" style={styles.sectionTitle}>Browse by Topic</H2>
+          <ScrollView 
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoriesContainer}
+          >
+            {categories.map(item => (
+              <CategoryPill
+                key={item.id}
+                label={item.name}
+                icon={item.icon}
+                isSelected={activeCategory === item.id}
+                onPress={() => handleCategorySelect(item.id)}
+                style={styles.categoryPill}
+              />
+            ))}
+          </ScrollView>
+        </Section>
+        
+        {/* Content based on selection */}
+        <View style={styles.questionsContainer}>
+          {/* Search Results */}
+          {showSearchResults && (
+            <Section>
+              <H2 color="white" style={styles.sectionTitle}>
+                Search Results for "{searchQuery}"
+              </H2>
+              {getFilteredQuestions().length > 0 ? (
                 <Column style={styles.questionsList}>
-                  {getQuestionsByCategory(activeCategory).map(item => renderQuestionItem(item))}
+                  {getFilteredQuestions().map(item => renderQuestionItem(item))}
+                </Column>
+              ) : (
+                <Card style={styles.noResultsContainer}>
+                  <Body style={styles.noResultsText}>
+                    No results found for "{searchQuery}"
+                  </Body>
+                  <Button 
+                    label="Ask this question directly"
+                    onPress={() => setUserMessage(searchQuery)}
+                    style={styles.askDirectlyButton}
+                  />
+                </Card>
+              )}
+            </Section>
+          )}
+          
+          {/* Category Questions */}
+          {activeCategory && (
+            <Section>
+              <H2 color="white" style={styles.sectionTitle}>
+                {categories.find(c => c.id === activeCategory)?.name} Questions
+              </H2>
+              <Column style={styles.questionsList}>
+                {getQuestionsByCategory(activeCategory).map(item => renderQuestionItem(item))}
+              </Column>
+            </Section>
+          )}
+          
+          {/* Recent and Common questions - show only if not searching or filtering by category */}
+          {!showSearchResults && !activeCategory && (
+            <>
+              <Section>
+                <H2 color="white" style={styles.sectionTitle}>Recent Questions</H2>
+                <Column style={styles.questionsList}>
+                  {recentQuestions.map(item => renderQuestionItem(item))}
                 </Column>
               </Section>
-            )}
-            
-            {/* Recent and Common questions - show only if not searching or filtering by category */}
-            {!showSearchResults && !activeCategory && (
-              <>
-                <Section>
-                  <H2 color="white" style={styles.sectionTitle}>Recent Questions</H2>
-                  <Column style={styles.questionsList}>
-                    {recentQuestions.map(item => renderQuestionItem(item))}
-                  </Column>
-                </Section>
-                
-                <Section>
-                  <H2 color="white" style={styles.sectionTitle}>Common Questions</H2>
-                  <Column style={styles.questionsList}>
-                    {commonQuestions.map(item => renderQuestionItem(item))}
-                  </Column>
-                </Section>
-              </>
-            )}
-            
-            <Spacer size="xl" />
-          </ScrollContainer>
-        </SafeContainer>
+              
+              <Section>
+                <H2 color="white" style={styles.sectionTitle}>Common Questions</H2>
+                <Column style={styles.questionsList}>
+                  {commonQuestions.map(item => renderQuestionItem(item))}
+                </Column>
+              </Section>
+            </>
+          )}
+          
+          <Spacer size="xl" />
+        </View>
       </Container>
     );
   };
@@ -438,15 +417,16 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
 
 const styles = {
   searchBarContainer: {
-    marginBottom: 24,
+    marginBottom: theme.spacing.spacing.lg,
+    paddingHorizontal: theme.spacing.spacing.md,
   },
   searchInput: {
     flex: 1,
     height: 48,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 24,
-    paddingHorizontal: 16,
-    color: '#FFFFFF',
+    borderRadius: theme.spacing.borderRadius.pill,
+    paddingHorizontal: theme.spacing.spacing.md,
+    color: theme.colors.neutral.white,
     fontSize: 16,
   },
   searchButton: {
@@ -456,52 +436,36 @@ const styles = {
     backgroundColor: theme.colors.primary.main,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 8,
+    marginLeft: theme.spacing.spacing.sm,
   },
   sectionTitle: {
-    marginBottom: 16,
+    marginBottom: theme.spacing.spacing.md,
+    paddingHorizontal: theme.spacing.spacing.md,
   },
   categoriesContainer: {
-    paddingBottom: 16,
+    paddingBottom: theme.spacing.spacing.md,
+    paddingHorizontal: theme.spacing.spacing.md,
   },
-  categoryButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 12,
-    padding: 12,
-    marginRight: 12,
-    alignItems: 'center',
-    minWidth: 80,
-  },
-  categoryButtonActive: {
-    backgroundColor: '#FFFFFF',
-  },
-  categoryIcon: {
-    fontSize: 24,
-    marginBottom: 8,
-  },
-  categoryName: {
-    color: '#FFFFFF',
-    textAlign: 'center',
-  },
-  categoryNameActive: {
-    color: theme.colors.primary.main,
-    textAlign: 'center',
+  categoryPill: {
+    marginRight: theme.spacing.spacing.md,
   },
   questionsContainer: {
     flex: 1,
+    paddingBottom: 100, // Extra padding for bottom tab bar
   },
   questionsList: {
-    gap: 12,
+    gap: theme.spacing.spacing.md,
+    paddingHorizontal: theme.spacing.spacing.md,
   },
   questionCard: {
-    padding: 16,
+    padding: theme.spacing.spacing.md,
   },
   answerPreview: {
-    marginTop: 8,
-    marginBottom: 12,
+    marginTop: theme.spacing.spacing.sm,
+    marginBottom: theme.spacing.spacing.md,
   },
   readMoreContainer: {
-    marginTop: 8,
+    marginTop: theme.spacing.spacing.sm,
   },
   readMoreButton: {
     paddingVertical: 0,
@@ -509,49 +473,45 @@ const styles = {
     height: 'auto',
   },
   noResultsContainer: {
-    padding: 16,
+    padding: theme.spacing.spacing.md,
     alignItems: 'center',
+    marginHorizontal: theme.spacing.spacing.md,
   },
   noResultsText: {
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: theme.spacing.spacing.md,
   },
   askDirectlyButton: {
-    marginTop: 8,
+    marginTop: theme.spacing.spacing.sm,
   },
   backButtonRow: {
-    marginBottom: 16,
-  },
-  backButton: {
-    flexDirection: 'row',
+    marginBottom: theme.spacing.spacing.md,
+    paddingHorizontal: theme.spacing.spacing.md,
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
   },
   backButtonText: {
-    marginLeft: 8,
+    marginLeft: theme.spacing.spacing.sm,
   },
   detailCard: {
-    padding: 16,
-    marginBottom: 16,
+    padding: theme.spacing.spacing.md,
+    marginBottom: theme.spacing.spacing.md,
+    marginHorizontal: theme.spacing.spacing.md,
   },
   detailQuestion: {
-    marginBottom: 16,
+    marginBottom: theme.spacing.spacing.md,
   },
   answerScrollView: {
     maxHeight: 400,
-    marginBottom: 16,
+    marginBottom: theme.spacing.spacing.md,
   },
   feedbackContainer: {
-    marginTop: 16,
-    paddingTop: 16,
+    marginTop: theme.spacing.spacing.md,
+    paddingTop: theme.spacing.spacing.md,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(0, 0, 0, 0.1)',
+    borderTopColor: theme.colors.neutral.lightest,
   },
   feedbackButtons: {
-    marginLeft: 16,
+    marginLeft: theme.spacing.spacing.md,
   },
   feedbackButton: {
     height: 36,
@@ -561,16 +521,17 @@ const styles = {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 24,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    marginBottom: 16,
+    borderRadius: theme.spacing.borderRadius.pill,
+    paddingHorizontal: theme.spacing.spacing.md,
+    paddingVertical: theme.spacing.spacing.sm,
+    marginBottom: theme.spacing.spacing.md,
+    marginHorizontal: theme.spacing.spacing.md,
   },
   messageInput: {
     flex: 1,
     minHeight: 40,
     maxHeight: 100,
-    color: '#FFFFFF',
+    color: theme.colors.neutral.white,
     fontSize: 16,
   },
   sendButton: {
@@ -580,7 +541,7 @@ const styles = {
     backgroundColor: theme.colors.primary.main,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 8,
+    marginLeft: theme.spacing.spacing.sm,
   },
   sendButtonDisabled: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',

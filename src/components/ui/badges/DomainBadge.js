@@ -1,102 +1,121 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../../theme';
+import { Row, Body } from '../index';
 
 /**
  * DomainBadge Component
  * 
- * A reusable badge component for displaying developmental domains with icon and optional text
- * Used in Journey screen and other places where domains need to be identified
- * 
- * @param {Object} domain - The domain object containing name, color, and icon
- * @param {string} size - Size variant: 'small', 'medium', or 'large'
- * @param {boolean} showText - Whether to display the domain name text
- * @param {Object} style - Additional style overrides for the container
+ * A reusable badge component for displaying domain icons with consistent styling
+ * Used in Journey screen and other places where domain identification is needed
  */
 const DomainBadge = ({ 
   domain, 
   size = 'medium', 
-  showText = true,
-  style
+  style 
 }) => {
-  // Get icon based on domain name if not provided
-  const getIconName = () => {
-    if (domain.icon) return domain.icon;
-    
-    switch(domain.name) {
-      case 'Physical':
+  // Get domain color and icon based on domain type
+  const getDomainColor = () => {
+    switch (domain.type) {
+      case 'physical':
+        return theme.colors.domains.physical;
+      case 'cognitive':
+        return theme.colors.domains.cognitive;
+      case 'social':
+        return theme.colors.domains.social;
+      case 'emotional':
+        return theme.colors.domains.emotional;
+      case 'language':
+        return theme.colors.domains.language;
+      default:
+        return theme.colors.primary.main;
+    }
+  };
+
+  const getDomainIcon = () => {
+    switch (domain.type) {
+      case 'physical':
         return 'body-outline';
-      case 'Cognitive':
-        return 'brain-outline';
-      case 'Language':
-        return 'chatbubble-outline';
-      case 'Social/Emotional':
+      case 'cognitive':
+        return 'bulb-outline';
+      case 'social':
+        return 'people-outline';
+      case 'emotional':
         return 'heart-outline';
+      case 'language':
+        return 'chatbubble-outline';
       default:
         return 'star-outline';
     }
   };
 
-  // Determine icon size based on badge size
-  const getIconSize = () => {
-    switch(size) {
+  // Determine size dimensions
+  const getSizeStyles = () => {
+    switch (size) {
       case 'small':
-        return 16;
+        return {
+          container: {
+            width: 32,
+            height: 32,
+            borderRadius: 16,
+          },
+          icon: {
+            size: 16
+          }
+        };
       case 'large':
-        return 28;
+        return {
+          container: {
+            width: 64,
+            height: 64,
+            borderRadius: 32,
+          },
+          icon: {
+            size: 32
+          }
+        };
       case 'medium':
       default:
-        return 22;
+        return {
+          container: {
+            width: 48,
+            height: 48,
+            borderRadius: 24,
+          },
+          icon: {
+            size: 24
+          }
+        };
     }
   };
 
+  const sizeStyles = getSizeStyles();
+  const domainColor = getDomainColor();
+  const domainIcon = getDomainIcon();
+
   return (
-    <View style={[
-      styles.container, 
-      styles[size], 
-      { backgroundColor: domain.color || theme.colors.primary.main },
-      style
-    ]}>
+    <View 
+      style={[
+        styles.container, 
+        { backgroundColor: domainColor },
+        sizeStyles.container,
+        style
+      ]}
+    >
       <Ionicons 
-        name={getIconName()} 
-        size={getIconSize()} 
+        name={domainIcon} 
+        size={sizeStyles.icon.size} 
         color={theme.colors.neutral.white} 
       />
-      {showText && size !== 'small' && (
-        <Text style={styles.text}>{domain.name}</Text>
-      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: theme.spacing.borderRadius.md,
-    padding: theme.spacing.spacing.xs,
-  },
-  small: {
-    width: 32,
-    height: 32,
     justifyContent: 'center',
-    borderRadius: 16,
-    padding: 0,
-  },
-  medium: {
-    paddingHorizontal: theme.spacing.spacing.sm,
-    paddingVertical: theme.spacing.spacing.xs,
-  },
-  large: {
-    paddingHorizontal: theme.spacing.spacing.md,
-    paddingVertical: theme.spacing.spacing.sm,
-  },
-  text: {
-    fontFamily: theme.typography.fonts.medium,
-    fontSize: theme.typography.sizes.bodySmall,
-    color: theme.colors.neutral.white,
-    marginLeft: theme.spacing.spacing.xs,
+    alignItems: 'center',
   },
 });
 

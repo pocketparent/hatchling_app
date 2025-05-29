@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import { 
   View, 
   TouchableOpacity, 
-  ScrollView, 
   Alert, 
   Animated 
 } from 'react-native';
@@ -14,25 +13,19 @@ import theme from '../../theme';
 // Import UI components
 import {
   Container,
-  SafeContainer,
-  ScrollContainer,
-  Section,
   Row,
   Column,
   Spacer,
   Card,
-  H1,
   H2,
   H3,
   Body,
   BodySmall,
   Caption,
-  Label,
-  AppHeader,
-  PrimaryButton,
-  SecondaryButton,
-  TextButton,
-  IconButton
+  Button,
+  Section,
+  BackButton,
+  FilterPill
 } from '../../components/ui';
 
 /**
@@ -301,7 +294,7 @@ If your baby dislikes tummy time, start with very short sessions and gradually b
             style={styles.deleteButton}
             onPress={() => handleDeleteItem(type, id)}
           >
-            <Ionicons name="trash-outline" size={24} color="#FFFFFF" />
+            <Ionicons name="trash-outline" size={24} color={theme.colors.neutral.white} />
             <BodySmall color="white">Delete</BodySmall>
           </TouchableOpacity>
         </Animated.View>
@@ -350,41 +343,35 @@ If your baby dislikes tummy time, start with very short sessions and gradually b
   const renderInsightDetail = () => {
     return (
       <Container>
-        <SafeContainer>
-          <Row style={styles.backButtonRow}>
-            <TouchableOpacity 
-              style={styles.backButton} 
-              onPress={handleBackFromDetail}
-            >
-              <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-              <BodySmall color="white" style={styles.backButtonText}>Back to Saved</BodySmall>
-            </TouchableOpacity>
-          </Row>
+        <Row style={styles.backButtonRow}>
+          <BackButton onPress={handleBackFromDetail} color="white" />
+          <BodySmall color="white" style={styles.backButtonText}>Back to Saved</BodySmall>
+        </Row>
+        
+        <Card style={styles.detailCard}>
+          <View style={[styles.detailIconContainer, { backgroundColor: selectedInsight.color }]}>
+            <Body style={styles.detailIcon}>{selectedInsight.icon}</Body>
+          </View>
           
-          <Card style={styles.detailCard}>
-            <View style={[styles.detailIconContainer, { backgroundColor: selectedInsight.color }]}>
-              <Body style={styles.detailIcon}>{selectedInsight.icon}</Body>
-            </View>
-            
-            <H2 style={styles.detailTitle}>{selectedInsight.title}</H2>
-            <Caption color="medium" style={styles.detailType}>{selectedInsight.type}</Caption>
-            <Caption color="medium" style={styles.detailDate}>{selectedInsight.date}</Caption>
-            
-            <ScrollContainer style={styles.detailContentScroll}>
-              <Body>{selectedInsight.fullContent}</Body>
-            </ScrollContainer>
-            
-            <Row style={styles.detailActions} justify="center">
-              <SecondaryButton
-                title="Remove from Saved"
-                icon="trash-outline"
-                onPress={() => handleDeleteItem('insight', selectedInsight.id)}
-                style={styles.detailActionButton}
-                textColor={theme.colors.feedback.error}
-              />
-            </Row>
-          </Card>
-        </SafeContainer>
+          <H2 style={styles.detailTitle}>{selectedInsight.title}</H2>
+          <Caption color="medium" style={styles.detailType}>{selectedInsight.type}</Caption>
+          <Caption color="medium" style={styles.detailDate}>{selectedInsight.date}</Caption>
+          
+          <View style={styles.detailContentScroll}>
+            <Body>{selectedInsight.fullContent}</Body>
+          </View>
+          
+          <Row style={styles.detailActions} justify="center">
+            <Button
+              label="Remove from Saved"
+              icon="trash-outline"
+              onPress={() => handleDeleteItem('insight', selectedInsight.id)}
+              variant="secondary"
+              style={styles.detailActionButton}
+              textColor={theme.colors.feedback.error}
+            />
+          </Row>
+        </Card>
       </Container>
     );
   };
@@ -403,71 +390,60 @@ If your baby dislikes tummy time, start with very short sessions and gradually b
     
     return (
       <Container>
-        <SafeContainer>
-          {/* App header with logo */}
-          <AppHeader title="Saved" />
+        {/* Filter tabs */}
+        <Section style={styles.filterSection}>
+          <Row style={styles.filterContainer}>
+            {filterOptions.map(option => (
+              <FilterPill
+                key={option.id}
+                label={option.label}
+                isSelected={activeFilter === option.id}
+                onPress={() => setActiveFilter(option.id)}
+                style={styles.filterPill}
+              />
+            ))}
+          </Row>
+        </Section>
+        
+        {/* Saved items */}
+        <View style={styles.contentContainer}>
+          {/* No items message */}
+          {noItemsToDisplay && (
+            <Card style={styles.noItemsContainer}>
+              <H3 style={styles.noItemsTitle}>No saved items</H3>
+              <Body style={styles.noItemsText}>
+                Items you save will appear here for easy access.
+              </Body>
+              <Button
+                label="Explore Content"
+                onPress={() => navigation.navigate('Today')}
+                style={styles.exploreButton}
+              />
+            </Card>
+          )}
           
-          {/* Filter tabs */}
-          <Section>
-            <Row style={styles.filterContainer}>
-              {filterOptions.map(option => (
-                <TouchableOpacity
-                  key={option.id}
-                  style={[
-                    styles.filterOption,
-                    activeFilter === option.id && styles.filterOptionActive
-                  ]}
-                  onPress={() => setActiveFilter(option.id)}
-                >
-                  <BodySmall 
-                    color={activeFilter === option.id ? "primary" : "white"}
-                    style={styles.filterText}
-                  >
-                    {option.label}
-                  </BodySmall>
-                </TouchableOpacity>
-              ))}
-            </Row>
-          </Section>
+          {/* Insights section */}
+          {insights.length > 0 && (
+            <Section>
+              <H2 color="white" style={styles.sectionTitle}>Insights</H2>
+              <Column style={styles.savedItemsList}>
+                {insights.map(item => renderSavedItem(item, 'insight'))}
+              </Column>
+            </Section>
+          )}
           
-          {/* Saved items */}
-          <ScrollContainer contentContainerStyle={styles.scrollContent}>
-            {/* No items message */}
-            {noItemsToDisplay && (
-              <Card style={styles.noItemsContainer}>
-                <H3 style={styles.noItemsTitle}>No saved items</H3>
-                <Body style={styles.noItemsText}>
-                  Items you save will appear here for easy access.
-                </Body>
-                <PrimaryButton
-                  title="Explore Content"
-                  onPress={() => navigation.navigate('Today')}
-                  style={styles.exploreButton}
-                />
-              </Card>
-            )}
-            
-            {/* Insights section */}
-            {insights.length > 0 && (
-              <Section>
-                <H2 color="white" style={styles.sectionTitle}>Insights</H2>
-                <Column style={styles.savedItemsList}>
-                  {insights.map(item => renderSavedItem(item, 'insight'))}
-                </Column>
-              </Section>
-            )}
-            
-            {/* Activities section */}
-            {activities.length > 0 && (
-              <Section>
-                <H2 color="white" style={styles.sectionTitle}>Activities</H2>
-                <Column style={styles.savedItemsList}>
-                  {activities.map(item => renderSavedItem(item, 'activity'))}
-                </Column>
-              </Section>
-            )}
-          </ScrollContainer>
-        </SafeContainer>
+          {/* Activities section */}
+          {activities.length > 0 && (
+            <Section>
+              <H2 color="white" style={styles.sectionTitle}>Activities</H2>
+              <Column style={styles.savedItemsList}>
+                {activities.map(item => renderSavedItem(item, 'activity'))}
+              </Column>
+            </Section>
+          )}
+          
+          <Spacer size="xl" />
+        </View>
       </Container>
     );
   };
@@ -485,32 +461,28 @@ const styles = {
   gestureRoot: {
     flex: 1,
   },
+  filterSection: {
+    paddingHorizontal: theme.spacing.spacing.md,
+  },
   filterContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 25,
-    padding: 4,
-    marginBottom: 16,
+    borderRadius: theme.spacing.borderRadius.pill,
+    padding: theme.spacing.spacing.xs,
+    marginBottom: theme.spacing.spacing.md,
   },
-  filterOption: {
+  filterPill: {
     flex: 1,
-    paddingVertical: 8,
-    alignItems: 'center',
-    borderRadius: 25,
   },
-  filterOptionActive: {
-    backgroundColor: '#FFFFFF',
-  },
-  filterText: {
-    textAlign: 'center',
-  },
-  scrollContent: {
+  contentContainer: {
+    flex: 1,
     paddingBottom: 100, // Extra padding for bottom tab bar
+    paddingHorizontal: theme.spacing.spacing.md,
   },
   sectionTitle: {
-    marginBottom: 16,
+    marginBottom: theme.spacing.spacing.md,
   },
   savedItemsList: {
-    gap: 12,
+    gap: theme.spacing.spacing.md,
   },
   savedItemContainer: {
     marginBottom: 0,
@@ -521,7 +493,7 @@ const styles = {
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: theme.spacing.spacing.md,
   },
   icon: {
     fontSize: 24,
@@ -531,12 +503,12 @@ const styles = {
     justifyContent: 'center',
   },
   savedItemDescription: {
-    marginTop: 4,
-    marginBottom: 4,
+    marginTop: theme.spacing.spacing.xs,
+    marginBottom: theme.spacing.spacing.xs,
   },
   savedItemActions: {
     justifyContent: 'center',
-    paddingLeft: 8,
+    paddingLeft: theme.spacing.spacing.sm,
   },
   rightAction: {
     alignItems: 'center',
@@ -554,37 +526,36 @@ const styles = {
     alignItems: 'center',
     width: 80,
     height: '100%',
-    borderRadius: 12,
+    borderRadius: theme.spacing.borderRadius.md,
   },
   noItemsContainer: {
     alignItems: 'center',
-    padding: 24,
-    marginTop: 16,
+    padding: theme.spacing.spacing.lg,
+    marginTop: theme.spacing.spacing.md,
   },
   noItemsTitle: {
-    marginBottom: 8,
+    marginBottom: theme.spacing.spacing.sm,
     textAlign: 'center',
   },
   noItemsText: {
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: theme.spacing.spacing.lg,
   },
   exploreButton: {
-    paddingHorizontal: 24,
+    paddingHorizontal: theme.spacing.spacing.lg,
   },
   backButtonRow: {
-    marginBottom: 16,
-  },
-  backButton: {
-    flexDirection: 'row',
+    marginBottom: theme.spacing.spacing.md,
+    paddingHorizontal: theme.spacing.spacing.md,
     alignItems: 'center',
   },
   backButtonText: {
-    marginLeft: 8,
+    marginLeft: theme.spacing.spacing.sm,
   },
   detailCard: {
     alignItems: 'center',
-    padding: 24,
+    padding: theme.spacing.spacing.lg,
+    marginHorizontal: theme.spacing.spacing.md,
   },
   detailIconContainer: {
     width: 60,
@@ -592,30 +563,30 @@ const styles = {
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: theme.spacing.spacing.md,
   },
   detailIcon: {
     fontSize: 30,
   },
   detailTitle: {
-    marginBottom: 8,
+    marginBottom: theme.spacing.spacing.sm,
     textAlign: 'center',
   },
   detailType: {
-    marginBottom: 4,
+    marginBottom: theme.spacing.spacing.xs,
   },
   detailDate: {
-    marginBottom: 16,
+    marginBottom: theme.spacing.spacing.md,
   },
   detailContentScroll: {
     maxHeight: 400,
     width: '100%',
-    marginBottom: 24,
+    marginBottom: theme.spacing.spacing.lg,
   },
   detailActions: {
-    marginTop: 8,
+    marginTop: theme.spacing.spacing.sm,
   },
   detailActionButton: {
-    paddingHorizontal: 16,
+    paddingHorizontal: theme.spacing.spacing.md,
   },
 };

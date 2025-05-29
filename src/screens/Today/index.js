@@ -22,9 +22,6 @@ import theme from '../../theme';
 // Import UI components
 import {
   Container,
-  SafeContainer,
-  ScrollContainer,
-  Section,
   Row,
   Column,
   Spacer,
@@ -35,12 +32,9 @@ import {
   Body,
   BodySmall,
   Caption,
-  Label,
-  AppHeader,
-  PrimaryButton,
-  SecondaryButton,
-  TextButton,
-  IconButton
+  Button,
+  Section,
+  CardTitle
 } from '../../components/ui';
 
 /**
@@ -154,126 +148,121 @@ export default function TodayScreen({ navigation }) {
     <ScreenErrorWrapper screenName="Today" navigation={navigation}>
       <GestureHandlerRootView style={styles.gestureRoot}>
         <Container>
-          <SafeContainer>
-            <ScrollContainer contentContainerStyle={styles.scrollContent}>
-              {/* App header with logo */}
-              <AppHeader title="Today" />
+          {/* Header with baby info */}
+          <Section style={styles.header}>
+            <Row align="center">
+              <View style={styles.avatarContainer}>
+                <Image 
+                  source={require('../../../assets/baby-avatar.png')} 
+                  style={styles.avatar}
+                  defaultSource={require('../../../assets/baby-avatar.png')}
+                />
+              </View>
+              <Column style={styles.babyInfo}>
+                <H1 color="white">Emma,</H1>
+                <H2 color="white">4 months</H2>
+              </Column>
+            </Row>
+          </Section>
+          
+          {/* Main insight card */}
+          <Section style={styles.insightSection}>
+            <Card style={styles.insightCard}>
+              <Caption style={styles.insightLabel}>DAILY INSIGHT</Caption>
               
-              {/* Header with baby info */}
-              <Section>
-                <Row style={styles.header}>
-                  <View style={styles.avatarContainer}>
-                    <Image 
-                      source={require('../../../assets/baby-avatar.png')} 
-                      style={styles.avatar}
-                      defaultSource={require('../../../assets/baby-avatar.png')}
-                    />
+              <PanGestureHandler onGestureEvent={gestureHandler}>
+                <Animated.View style={[styles.insightContent, animatedStyle]}>
+                  <H2 style={styles.insightTitle}>
+                    {currentPanel.title}
+                  </H2>
+                  
+                  <Body style={styles.insightText}>
+                    {currentPanel.content}
+                  </Body>
+                  
+                  {/* Pagination dots */}
+                  {renderPaginationDots()}
+                </Animated.View>
+              </PanGestureHandler>
+              
+              {/* Action buttons */}
+              <Row style={styles.actionButtonsContainer}>
+                <TouchableOpacity style={styles.actionButton}>
+                  <View style={styles.iconContainer}>
+                    <Ionicons name="bookmark-outline" size={24} color={theme.colors.neutral.white} />
                   </View>
-                  <Column style={styles.babyInfo}>
-                    <H1 color="white">Emma,</H1>
-                    <H2 color="white">4 months</H2>
-                  </Column>
+                  <BodySmall color="white">Save</BodySmall>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.actionButton}>
+                  <View style={styles.iconContainer}>
+                    <Ionicons name="share-outline" size={24} color={theme.colors.neutral.white} />
+                  </View>
+                  <BodySmall color="white">Share</BodySmall>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.actionButton}>
+                  <View style={styles.iconContainer}>
+                    <Ionicons name="happy-outline" size={24} color={theme.colors.neutral.white} />
+                  </View>
+                  <BodySmall color="white">Helpful</BodySmall>
+                </TouchableOpacity>
+              </Row>
+            </Card>
+            
+            {/* Weekly Check-in Card */}
+            <Card style={styles.weeklyCheckInCard}>
+              <TouchableOpacity 
+                style={styles.weeklyCheckInContent}
+                onPress={handleWeeklyCheckIn}
+              >
+                <Row align="center" justify="space-between">
+                  <Row align="center">
+                    <View style={styles.weeklyCheckInIconContainer}>
+                      <Ionicons name="clipboard-outline" size={24} color={theme.colors.neutral.white} />
+                    </View>
+                    <Column style={styles.weeklyCheckInTextContainer}>
+                      <H3 color="white">Weekly Check-in</H3>
+                      <BodySmall color="white">
+                        Tell us how Emma is doing this week
+                      </BodySmall>
+                    </Column>
+                  </Row>
+                  <Ionicons name="chevron-forward" size={24} color={theme.colors.neutral.white} />
                 </Row>
-              </Section>
+              </TouchableOpacity>
+            </Card>
+            
+            {/* Upcoming check-ins reminder */}
+            <Card style={styles.upcomingCheckInsCard}>
+              <CardTitle 
+                title="Upcoming Check-ins"
+                action={true}
+                actionText="See All"
+                onActionPress={() => console.log('See all check-ins')}
+              />
               
-              {/* Main insight card */}
-              <Section>
-                <Card style={styles.insightCard}>
-                  <Label style={styles.insightLabel}>DAILY INSIGHT</Label>
-                  
-                  <PanGestureHandler onGestureEvent={gestureHandler}>
-                    <Animated.View style={[styles.insightContent, animatedStyle]}>
-                      <H2 style={styles.insightTitle}>
-                        {currentPanel.title}
-                      </H2>
-                      
-                      <Body style={styles.insightText}>
-                        {currentPanel.content}
-                      </Body>
-                      
-                      {/* Pagination dots */}
-                      {renderPaginationDots()}
-                    </Animated.View>
-                  </PanGestureHandler>
-                  
-                  {/* Action buttons */}
-                  <Row style={styles.actionButtonsContainer}>
-                    <TouchableOpacity style={styles.actionButton}>
-                      <View style={styles.iconContainer}>
-                        <Ionicons name="bookmark-outline" size={24} color="#FFFFFF" />
-                      </View>
-                      <BodySmall color="white">Save</BodySmall>
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity style={styles.actionButton}>
-                      <View style={styles.iconContainer}>
-                        <Ionicons name="share-outline" size={24} color="#FFFFFF" />
-                      </View>
-                      <BodySmall color="white">Share</BodySmall>
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity style={styles.actionButton}>
-                      <View style={styles.iconContainer}>
-                        <Ionicons name="happy-outline" size={24} color="#FFFFFF" />
-                      </View>
-                      <BodySmall color="white">Helpful</BodySmall>
-                    </TouchableOpacity>
-                  </Row>
-                </Card>
-                
-                {/* Weekly Check-in Card */}
-                <Card style={styles.weeklyCheckInCard}>
-                  <TouchableOpacity 
-                    style={styles.weeklyCheckInContent}
-                    onPress={handleWeeklyCheckIn}
-                  >
-                    <Row align="center" justify="space-between">
-                      <Row align="center">
-                        <View style={styles.weeklyCheckInIconContainer}>
-                          <Ionicons name="clipboard-outline" size={24} color="#FFFFFF" />
-                        </View>
-                        <Column style={styles.weeklyCheckInTextContainer}>
-                          <H3 color="white">Weekly Check-in</H3>
-                          <BodySmall color="white">
-                            Tell us how Emma is doing this week
-                          </BodySmall>
-                        </Column>
-                      </Row>
-                      <Ionicons name="chevron-forward" size={24} color="#FFFFFF" />
-                    </Row>
-                  </TouchableOpacity>
-                </Card>
-                
-                {/* Upcoming check-ins reminder */}
-                <Card style={styles.upcomingCheckInsCard}>
-                  <Row style={styles.upcomingCheckInsHeader} justify="space-between" align="center">
-                    <H3 color="dark">Upcoming Check-ins</H3>
-                    <TextButton 
-                      title="See All" 
-                      onPress={() => console.log('See all check-ins')}
-                    />
-                  </Row>
-                  
-                  <Card style={styles.checkInItem}>
-                    <Row align="center">
-                      <View style={styles.checkInIconContainer}>
-                        <Ionicons name="calendar" size={24} color={theme.colors.primary.main} />
-                      </View>
-                      <Column style={styles.checkInContent}>
-                        <Body>4-Month Wellness Check</Body>
-                        <Caption color="medium">May 30, 2025</Caption>
-                      </Column>
-                      <PrimaryButton 
-                        title="Prepare" 
-                        onPress={() => console.log('Prepare for check-in')}
-                        style={styles.checkInButton}
-                      />
-                    </Row>
-                  </Card>
-                </Card>
-              </Section>
-            </ScrollContainer>
-          </SafeContainer>
+              <Card style={styles.checkInItem}>
+                <Row align="center">
+                  <View style={styles.checkInIconContainer}>
+                    <Ionicons name="calendar" size={24} color={theme.colors.primary.main} />
+                  </View>
+                  <Column style={styles.checkInContent}>
+                    <Body>4-Month Wellness Check</Body>
+                    <Caption color="medium">May 30, 2025</Caption>
+                  </Column>
+                  <Button 
+                    label="Prepare" 
+                    onPress={() => console.log('Prepare for check-in')}
+                    style={styles.checkInButton}
+                    size="small"
+                  />
+                </Row>
+              </Card>
+            </Card>
+          </Section>
+          
+          <Spacer size="xl" />
         </Container>
       </GestureHandlerRootView>
     </ScreenErrorWrapper>
@@ -284,24 +273,22 @@ const styles = {
   gestureRoot: {
     flex: 1,
   },
-  scrollContent: {
-    paddingBottom: 100, // Extra padding for bottom tab bar
-  },
   header: {
-    paddingTop: 5,
-    paddingBottom: 10,
+    paddingTop: theme.spacing.spacing.xs,
+    paddingBottom: theme.spacing.spacing.sm,
+    paddingHorizontal: theme.spacing.spacing.md,
   },
   avatarContainer: {
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: theme.colors.neutral.white,
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#FFFFFF',
-    marginRight: 15,
+    borderColor: theme.colors.neutral.white,
+    marginRight: theme.spacing.spacing.md,
   },
   avatar: {
     width: 65,
@@ -311,73 +298,77 @@ const styles = {
   babyInfo: {
     justifyContent: 'center',
   },
+  insightSection: {
+    paddingHorizontal: theme.spacing.spacing.md,
+  },
   insightCard: {
-    backgroundColor: '#F8EFE0', // Cream/beige background matching the design
+    backgroundColor: theme.colors.background.cream,
     overflow: 'hidden',
-    marginBottom: 20,
+    marginBottom: theme.spacing.spacing.md,
+    padding: 0,
   },
   insightLabel: {
     fontSize: 16,
-    color: '#B05E35', // Copper/brown color matching the design
+    color: theme.colors.accent.copper,
     textAlign: 'center',
-    marginTop: 24,
-    marginBottom: 16,
+    marginTop: theme.spacing.spacing.lg,
+    marginBottom: theme.spacing.spacing.md,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   insightContent: {
-    padding: 24,
+    padding: theme.spacing.spacing.lg,
     paddingTop: 0,
-    paddingHorizontal: 16,
+    paddingHorizontal: theme.spacing.spacing.md,
   },
   insightTitle: {
-    color: '#004D4D', // Dark teal matching the design
+    color: theme.colors.primary.dark,
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: theme.spacing.spacing.lg,
   },
   insightText: {
-    color: '#004D4D', // Dark teal matching the design
+    color: theme.colors.primary.dark,
     textAlign: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 24,
+    paddingHorizontal: theme.spacing.spacing.md,
+    marginBottom: theme.spacing.spacing.lg,
   },
   paginationDotsContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: theme.spacing.spacing.md,
   },
   paginationDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
     backgroundColor: 'rgba(0, 77, 77, 0.2)',
-    marginHorizontal: 4,
+    marginHorizontal: theme.spacing.spacing.xs,
   },
   paginationDotActive: {
-    backgroundColor: '#004D4D',
+    backgroundColor: theme.colors.primary.dark,
     width: 10,
     height: 10,
     borderRadius: 5,
   },
   actionButtonsContainer: {
     justifyContent: 'space-around',
-    backgroundColor: '#F79770', // Coral/orange matching the design
-    paddingVertical: 16,
+    backgroundColor: theme.colors.accent.coral,
+    paddingVertical: theme.spacing.spacing.md,
   },
   actionButton: {
     alignItems: 'center',
   },
   iconContainer: {
-    marginBottom: 4,
+    marginBottom: theme.spacing.spacing.xs,
   },
   weeklyCheckInCard: {
-    backgroundColor: '#2E7D7D', // Darker teal for contrast
-    marginBottom: 20,
+    backgroundColor: theme.colors.primary.dark,
+    marginBottom: theme.spacing.spacing.md,
     padding: 0,
     overflow: 'hidden',
   },
   weeklyCheckInContent: {
-    padding: 16,
+    padding: theme.spacing.spacing.md,
   },
   weeklyCheckInIconContainer: {
     width: 40,
@@ -386,21 +377,19 @@ const styles = {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: theme.spacing.spacing.md,
   },
   weeklyCheckInTextContainer: {
     flex: 1,
   },
   upcomingCheckInsCard: {
-    backgroundColor: '#F8EFE0',
-    marginBottom: 20,
-  },
-  upcomingCheckInsHeader: {
-    marginBottom: 16,
+    backgroundColor: theme.colors.background.cream,
+    marginBottom: theme.spacing.spacing.md,
+    padding: theme.spacing.spacing.md,
   },
   checkInItem: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    padding: 12,
+    padding: theme.spacing.spacing.md,
   },
   checkInIconContainer: {
     width: 40,
@@ -409,7 +398,7 @@ const styles = {
     backgroundColor: 'rgba(0, 77, 77, 0.1)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: theme.spacing.spacing.md,
   },
   checkInContent: {
     flex: 1,
@@ -417,7 +406,7 @@ const styles = {
   checkInButton: {
     height: 32,
     paddingVertical: 0,
-    paddingHorizontal: 12,
+    paddingHorizontal: theme.spacing.spacing.md,
     justifyContent: 'center',
   },
 };

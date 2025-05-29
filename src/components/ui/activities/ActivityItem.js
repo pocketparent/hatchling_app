@@ -1,79 +1,83 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../../theme';
+import { Row, Column, Body, BodySmall, Caption } from '../index';
 
 /**
  * ActivityItem Component
  * 
- * A reusable component for displaying individual activities
- * Used in Journey screen and other places where activities need to be displayed
- * 
- * @param {Object} activity - The activity object containing title, description, and other properties
- * @param {string} iconName - Optional custom icon name (defaults to bulb-outline)
- * @param {string} iconColor - Optional custom icon color (defaults to secondary color)
- * @param {Object} style - Additional style overrides for the container
+ * A reusable component for displaying activity items
+ * Used in Journey screen for displaying activities related to milestones
  */
 const ActivityItem = ({ 
-  activity, 
-  iconName = 'bulb-outline',
-  iconColor,
+  activity,
+  domainColor,
+  onPress,
   style
 }) => {
   return (
-    <View style={[styles.container, style]}>
-      <View style={[
-        styles.iconContainer, 
-        { backgroundColor: `${iconColor || theme.colors.secondary.main}20` }
-      ]}>
+    <TouchableOpacity 
+      style={[styles.container, style]} 
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
+      <Row>
+        <View style={[styles.iconContainer, { backgroundColor: domainColor }]}>
+          <Ionicons 
+            name={activity.icon || "star-outline"} 
+            size={18} 
+            color={theme.colors.neutral.white} 
+          />
+        </View>
+        
+        <Column style={styles.content}>
+          <Body style={styles.title}>
+            {activity.title}
+          </Body>
+          
+          {activity.description && (
+            <BodySmall color="medium" numberOfLines={2}>
+              {activity.description}
+            </BodySmall>
+          )}
+          
+          {activity.duration && (
+            <Caption color="medium">
+              {activity.duration}
+            </Caption>
+          )}
+        </Column>
+        
         <Ionicons 
-          name={iconName} 
-          size={24} 
-          color={iconColor || theme.colors.secondary.main} 
+          name="chevron-forward" 
+          size={20} 
+          color={theme.colors.neutral.medium} 
         />
-      </View>
-      <View style={styles.content}>
-        <Text style={styles.title}>{activity.title}</Text>
-        <Text style={styles.description}>{activity.description}</Text>
-      </View>
-    </View>
+      </Row>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    backgroundColor: theme.colors.neutral.lightest,
-    borderRadius: theme.spacing.borderRadius.lg,
-    padding: theme.spacing.spacing.md,
-    marginBottom: theme.spacing.spacing.sm,
-    shadowColor: theme.colors.neutral.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    paddingVertical: theme.spacing.spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.neutral.lightest,
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    marginRight: theme.spacing.spacing.md,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: theme.spacing.spacing.sm,
   },
   content: {
     flex: 1,
   },
   title: {
-    fontSize: theme.typography.sizes.body,
-    fontFamily: theme.typography.fonts.semibold,
-    color: theme.colors.secondary.main,
     marginBottom: theme.spacing.spacing.xs,
-  },
-  description: {
-    fontSize: theme.typography.sizes.bodySmall,
-    fontFamily: theme.typography.fonts.regular,
-    color: theme.colors.neutral.dark,
   },
 });
 

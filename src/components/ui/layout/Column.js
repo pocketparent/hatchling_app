@@ -5,15 +5,26 @@ import theme from '../../../theme';
 /**
  * Column Component
  * 
- * A reusable column component for vertical layouts
- * Used across the app for content organization
- * 
- * @param {React.ReactNode} children - Child components to render inside the column
- * @param {Object} style - Additional style overrides for the container
+ * A reusable layout component for vertical arrangement
+ * Used throughout the app for consistent layout
  */
-const Column = ({ children, style }) => {
+const Column = ({ 
+  children, 
+  align = 'flex-start', 
+  justify = 'flex-start',
+  style 
+}) => {
   return (
-    <View style={[styles.container, style]}>
+    <View 
+      style={[
+        styles.container, 
+        { 
+          alignItems: align,
+          justifyContent: justify,
+        },
+        style
+      ]}
+    >
       {children}
     </View>
   );
@@ -22,7 +33,7 @@ const Column = ({ children, style }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-  },
+  }
 });
 
 export default Column;

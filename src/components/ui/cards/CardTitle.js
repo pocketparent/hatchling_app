@@ -1,46 +1,44 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import theme from '../../../theme';
+import { Body, BodySmall } from '../Typography';
 
 /**
  * CardTitle Component
  * 
- * A reusable component for displaying card titles with optional icon and action button
- * Used across the app for consistent card header styling
- * 
- * @param {string} title - The title text to display
- * @param {string} iconName - Optional icon name to display before the title
- * @param {string} iconColor - Optional color for the icon
- * @param {string} actionText - Optional text for the action button
- * @param {Function} onAction - Function to call when action button is pressed
- * @param {Object} style - Additional style overrides for the container
+ * A reusable component for card titles with consistent styling
+ * Used throughout the app for card headers
  */
 const CardTitle = ({ 
   title,
-  iconName,
-  iconColor = theme.colors.primary.main,
+  subtitle,
+  action,
   actionText,
-  onAction,
-  style
+  onActionPress,
+  style 
 }) => {
   return (
     <View style={[styles.container, style]}>
       <View style={styles.titleContainer}>
-        {iconName && (
-          <Ionicons 
-            name={iconName} 
-            size={20} 
-            color={iconColor} 
-            style={styles.icon}
-          />
+        <Body weight="bold" style={styles.title}>
+          {title}
+        </Body>
+        
+        {subtitle && (
+          <BodySmall color="medium">
+            {subtitle}
+          </BodySmall>
         )}
-        <Text style={styles.title}>{title}</Text>
       </View>
       
-      {actionText && onAction && (
-        <TouchableOpacity onPress={onAction}>
-          <Text style={styles.actionText}>{actionText}</Text>
+      {action && (
+        <TouchableOpacity 
+          onPress={onActionPress}
+          activeOpacity={0.7}
+        >
+          <BodySmall color="primary">
+            {actionText || 'See All'}
+          </BodySmall>
         </TouchableOpacity>
       )}
     </View>
@@ -52,25 +50,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing.spacing.sm,
+    marginBottom: theme.spacing.spacing.md,
   },
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  icon: {
-    marginRight: theme.spacing.spacing.xs,
+    flex: 1,
   },
   title: {
-    fontSize: theme.typography.sizes.h3,
-    fontFamily: theme.typography.fonts.semibold,
-    color: theme.colors.neutral.darkest,
-  },
-  actionText: {
-    fontSize: theme.typography.sizes.bodySmall,
-    fontFamily: theme.typography.fonts.medium,
-    color: theme.colors.primary.main,
-  },
+    marginBottom: subtitle ? theme.spacing.spacing.xs : 0,
+  }
 });
 
 export default CardTitle;

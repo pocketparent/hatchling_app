@@ -1,36 +1,60 @@
-/**
- * Hatchling App UI Components Index
- * 
- * Central export for all reusable UI components
- */
-import Typography from './Typography';
-import Buttons from './Buttons';
-import Cards from './Cards';
-import Inputs from './Inputs';
-import AppHeader from './AppHeader';
-import Layout from './Layout';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { H1, H2, H3, Body, BodySmall, Caption } from './Typography';
+import Row from './layout/Row';
+import Column from './layout/Column';
+import Spacer from './layout/Spacer';
+import Section from './layout/Section';
+import Container from './layout/Container';
+import Card from './cards/Card';
+import CardTitle from './cards/CardTitle';
+import Button from './buttons/Button';
+import BackButton from './buttons/BackButton';
+import OptionButton from './buttons/OptionButton';
+import TextInput from './inputs/TextInput';
+import ProgressBar from './progress/ProgressBar';
+import ProgressIndicator from './progress/ProgressIndicator';
+import DomainBadge from './badges/DomainBadge';
+import CategoryPill from './filters/CategoryPill';
+import DomainProgressCard from './cards/DomainProgressCard';
 
+// Export all UI components for easy imports
 export {
-  Typography,
-  Buttons,
-  Cards,
-  Inputs,
-  AppHeader,
-  Layout
+  // Typography
+  H1,
+  H2,
+  H3,
+  Body,
+  BodySmall,
+  Caption,
+  
+  // Layout
+  Row,
+  Column,
+  Spacer,
+  Section,
+  Container,
+  
+  // Cards
+  Card,
+  CardTitle,
+  DomainProgressCard,
+  
+  // Buttons
+  Button,
+  BackButton,
+  OptionButton,
+  
+  // Inputs
+  TextInput,
+  
+  // Progress
+  ProgressBar,
+  ProgressIndicator,
+  
+  // Badges
+  DomainBadge,
+  
+  // Filters
+  CategoryPill,
 };
-
-// Export individual components for easier imports
-export const { H1, H2, H3, Body, BodySmall, Caption, Label } = Typography;
-export const { PrimaryButton, SecondaryButton, TextButton, IconButton } = Buttons;
-export const { Card, InteractiveCard, AccentCard, InteractiveAccentCard } = Cards;
-export const { Input, Checkbox, Toggle, RadioButton } = Inputs;
-export const { 
-  Container, 
-  SafeContainer, 
-  ScrollContainer, 
-  Section, 
-  Row, 
-  Column, 
-  Spacer, 
-  Divider 
-} = Layout;
