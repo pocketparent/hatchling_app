@@ -302,10 +302,12 @@ const styles = {
     paddingHorizontal: theme.spacing.spacing.md,
   },
   insightCard: {
-    backgroundColor: theme.colors.background.cream,
+    backgroundColor: theme.colors.background.card,
     overflow: 'hidden',
     marginBottom: theme.spacing.spacing.md,
     padding: 0,
+    borderRadius: theme.spacing.borderRadius.md,
+    ...theme.spacing.shadows.small,
   },
   insightLabel: {
     fontSize: 16,
@@ -366,6 +368,8 @@ const styles = {
     marginBottom: theme.spacing.spacing.md,
     padding: 0,
     overflow: 'hidden',
+    borderRadius: theme.spacing.borderRadius.md,
+    ...theme.spacing.shadows.small,
   },
   weeklyCheckInContent: {
     padding: theme.spacing.spacing.md,
@@ -383,9 +387,11 @@ const styles = {
     flex: 1,
   },
   upcomingCheckInsCard: {
-    backgroundColor: theme.colors.background.cream,
+    backgroundColor: theme.colors.background.card,
     marginBottom: theme.spacing.spacing.md,
     padding: theme.spacing.spacing.md,
+    borderRadius: theme.spacing.borderRadius.md,
+    ...theme.spacing.shadows.small,
   },
   checkInItem: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',

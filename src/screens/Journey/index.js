@@ -371,36 +371,41 @@ export default function JourneyScreen({ navigation }) {
     
     // Default: Overview view
     return (
-      <Card
+      <TouchableOpacity
         key={domain.id}
-        style={styles.domainCard}
+        style={styles.domainCardTouchable}
         onPress={() => handleSelectDomain(domain.id)}
+        activeOpacity={0.7}
       >
-        <Row>
-          <DomainBadge domain={domain} size="medium" />
-          <Column style={styles.domainInfoContainer}>
-            <H3>{domain.name}</H3>
-            <BodySmall color="medium" numberOfLines={2} style={styles.domainDescription}>
-              {domain.description}
-            </BodySmall>
-            
-            <Row style={styles.domainStatsContainer}>
-              <Column style={styles.progressBarContainer}>
-                <ProgressBar 
-                  progress={progress} 
-                  color={getDomainColor(domain)}
-                  height={8}
-                  style={styles.progressBar}
-                />
-                <Body style={styles.progressText}>{Math.round(progress * 100)}%</Body>
-              </Column>
-            </Row>
-          </Column>
-          <View style={styles.domainCardArrow}>
-            <Ionicons name="chevron-forward" size={20} color={theme.colors.neutral.light} />
-          </View>
-        </Row>
-      </Card>
+        <Card
+          style={styles.domainCard}
+        >
+          <Row>
+            <DomainBadge domain={domain} size="medium" />
+            <Column style={styles.domainInfoContainer}>
+              <H3>{domain.name}</H3>
+              <BodySmall color="medium" numberOfLines={2} style={styles.domainDescription}>
+                {domain.description}
+              </BodySmall>
+              
+              <Row style={styles.domainStatsContainer}>
+                <Column style={styles.progressBarContainer}>
+                  <ProgressBar 
+                    progress={progress} 
+                    color={getDomainColor(domain)}
+                    height={8}
+                    style={styles.progressBar}
+                  />
+                  <Body style={styles.progressText}>{Math.round(progress * 100)}%</Body>
+                </Column>
+              </Row>
+            </Column>
+            <View style={styles.domainCardArrow}>
+              <Ionicons name="chevron-forward" size={20} color={theme.colors.neutral.light} />
+            </View>
+          </Row>
+        </Card>
+      </TouchableOpacity>
     );
   };
   
@@ -455,21 +460,21 @@ export default function JourneyScreen({ navigation }) {
           <Spacer size="xl" />
         </View>
       </Container>
-    </ScreenErrorWrapper>
-  );
-}
-
-const styles = {
+    </ScreenErrorWrapper>const styles = {
+  gestureRoot: {
+    flex: 1,
+  },
   phaseSelector: {
-    marginBottom: theme.spacing.spacing.md,
+    paddingVertical: theme.spacing.spacing.sm,
+    backgroundColor: theme.colors.primary.main,
   },
   phaseSelectorContent: {
-    paddingHorizontal: theme.spacing.spacing.sm,
+    paddingHorizontal: theme.spacing.spacing.md,
   },
   phaseItem: {
-    paddingHorizontal: theme.spacing.spacing.md,
     paddingVertical: theme.spacing.spacing.sm,
-    marginHorizontal: theme.spacing.spacing.xs,
+    paddingHorizontal: theme.spacing.spacing.md,
+    marginRight: theme.spacing.spacing.sm,
     borderRadius: theme.spacing.borderRadius.pill,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
@@ -482,12 +487,12 @@ const styles = {
   phaseItemTextSelected: {
     color: theme.colors.primary.main,
   },
-  phaseDescription: {
-    marginBottom: theme.spacing.spacing.lg,
+  domainCardTouchable: {
+    marginBottom: theme.spacing.spacing.sm,
   },
-  phaseDescriptionText: {
-    textAlign: 'center',
-    paddingHorizontal: theme.spacing.spacing.md,
+  domainCard: {
+    padding: theme.spacing.spacing.md,
+    marginBottom: 0,
   },
   domainsContainer: {
     paddingBottom: 100, // Extra padding for bottom tab bar
