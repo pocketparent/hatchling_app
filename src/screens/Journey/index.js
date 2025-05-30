@@ -460,7 +460,11 @@ export default function JourneyScreen({ navigation }) {
           <Spacer size="xl" />
         </View>
       </Container>
-    </ScreenErrorWrapper>const styles = {
+    </ScreenErrorWrapper>
+  );
+}
+
+const styles = {
   gestureRoot: {
     flex: 1,
   },
@@ -499,8 +503,12 @@ export default function JourneyScreen({ navigation }) {
     gap: 8, // Reduced spacing between domain cards
     paddingHorizontal: theme.spacing.spacing.md,
   },
-  domainCard: {
-    marginBottom: theme.spacing.spacing.sm,
+  phaseDescription: {
+    backgroundColor: theme.colors.primary.main,
+    paddingBottom: theme.spacing.spacing.md,
+  },
+  phaseDescriptionText: {
+    textAlign: 'center',
   },
   domainInfoContainer: {
     flex: 1,
