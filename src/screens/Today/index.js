@@ -167,42 +167,124 @@ export default function TodayScreen({ navigation }) {
           
           {/* Main insight card */}
           <Section style={styles.insightSection}>
-            <Card style={styles.insightCard}>
-              <Caption style={styles.insightLabel}>DAILY INSIGHT</Caption>
+            <Card 
+              variant="default"
+              style={{
+                backgroundColor: theme.colors.neutral.lightest,
+                padding: 0,
+                borderRadius: 24,
+                overflow: 'hidden',
+                marginBottom: theme.spacing.spacing.md,
+                ...theme.spacing.shadows.small,
+              }}
+            >
+              <Caption 
+                style={{
+                  fontSize: 16,
+                  color: theme.colors.accent.copper,
+                  textAlign: 'center',
+                  marginTop: theme.spacing.spacing.lg,
+                  marginBottom: theme.spacing.spacing.md,
+                  textTransform: 'uppercase',
+                  letterSpacing: 0.5,
+                }}
+              >
+                DAILY INSIGHT
+              </Caption>
               
               <PanGestureHandler onGestureEvent={gestureHandler}>
-                <Animated.View style={[styles.insightContent, animatedStyle]}>
-                  <H2 style={styles.insightTitle}>
+                <Animated.View 
+                  style={[
+                    {
+                      padding: theme.spacing.spacing.lg,
+                      paddingTop: 0,
+                      paddingHorizontal: theme.spacing.spacing.md,
+                    }, 
+                    animatedStyle
+                  ]}
+                >
+                  <H2 
+                    style={{
+                      color: theme.colors.primary.dark,
+                      textAlign: 'center',
+                      marginBottom: theme.spacing.spacing.md,
+                      fontSize: 28,
+                      fontWeight: '600',
+                    }}
+                  >
                     {currentPanel.title}
                   </H2>
                   
-                  <Body style={styles.insightText}>
+                  <Body 
+                    style={{
+                      color: theme.colors.primary.dark,
+                      textAlign: 'center',
+                      paddingHorizontal: theme.spacing.spacing.md,
+                      marginBottom: theme.spacing.spacing.lg,
+                    }}
+                  >
                     {currentPanel.content}
                   </Body>
                   
                   {/* Pagination dots */}
-                  {renderPaginationDots()}
+                  <Row 
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginBottom: theme.spacing.spacing.md,
+                      marginTop: theme.spacing.spacing.md,
+                    }}
+                  >
+                    {insightPanels.map((_, index) => (
+                      <View
+                        key={index}
+                        style={[
+                          {
+                            width: 8,
+                            height: 8,
+                            borderRadius: 4,
+                            backgroundColor: 'rgba(0, 77, 77, 0.2)',
+                            marginHorizontal: theme.spacing.spacing.xs,
+                          },
+                          index === currentIndex && {
+                            backgroundColor: theme.colors.primary.dark,
+                            width: 10,
+                            height: 10,
+                            borderRadius: 5,
+                          }
+                        ]}
+                      />
+                    ))}
+                  </Row>
                 </Animated.View>
               </PanGestureHandler>
               
               {/* Action buttons */}
-              <Row style={styles.actionButtonsContainer}>
-                <TouchableOpacity style={styles.actionButton}>
-                  <View style={styles.iconContainer}>
+              <Row 
+                style={{
+                  justifyContent: 'space-around',
+                  backgroundColor: theme.colors.secondary.light,
+                  paddingVertical: theme.spacing.spacing.md,
+                  borderBottomLeftRadius: 24,
+                  borderBottomRightRadius: 24,
+                }}
+              >
+                <TouchableOpacity style={{ alignItems: 'center' }}>
+                  <View style={{ marginBottom: theme.spacing.spacing.xs }}>
                     <Ionicons name="bookmark-outline" size={24} color={theme.colors.neutral.white} />
                   </View>
                   <BodySmall color="white">Save</BodySmall>
                 </TouchableOpacity>
                 
-                <TouchableOpacity style={styles.actionButton}>
-                  <View style={styles.iconContainer}>
+                <TouchableOpacity style={{ alignItems: 'center' }}>
+                  <View style={{ marginBottom: theme.spacing.spacing.xs }}>
                     <Ionicons name="share-outline" size={24} color={theme.colors.neutral.white} />
                   </View>
                   <BodySmall color="white">Share</BodySmall>
                 </TouchableOpacity>
                 
-                <TouchableOpacity style={styles.actionButton}>
-                  <View style={styles.iconContainer}>
+                <TouchableOpacity style={{ alignItems: 'center' }}>
+                  <View style={{ marginBottom: theme.spacing.spacing.xs }}>
                     <Ionicons name="happy-outline" size={24} color={theme.colors.neutral.white} />
                   </View>
                   <BodySmall color="white">Helpful</BodySmall>
@@ -211,17 +293,35 @@ export default function TodayScreen({ navigation }) {
             </Card>
             
             {/* Weekly Check-in Card */}
-            <Card style={styles.weeklyCheckInCard}>
+            <Card 
+              variant="default"
+              style={{
+                backgroundColor: theme.colors.primary.dark,
+                padding: 0,
+                overflow: 'hidden',
+                marginBottom: theme.spacing.spacing.md,
+                borderRadius: theme.spacing.borderRadius.md,
+                ...theme.spacing.shadows.small,
+              }}
+            >
               <TouchableOpacity 
-                style={styles.weeklyCheckInContent}
+                style={{ padding: theme.spacing.spacing.md }}
                 onPress={handleWeeklyCheckIn}
               >
                 <Row align="center" justify="space-between">
                   <Row align="center">
-                    <View style={styles.weeklyCheckInIconContainer}>
+                    <View style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 20,
+                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginRight: theme.spacing.spacing.md,
+                    }}>
                       <Ionicons name="clipboard-outline" size={24} color={theme.colors.neutral.white} />
                     </View>
-                    <Column style={styles.weeklyCheckInTextContainer}>
+                    <Column style={{ flex: 1 }}>
                       <H3 color="white">Weekly Check-in</H3>
                       <BodySmall color="white">
                         Tell us how Emma is doing this week
@@ -234,7 +334,16 @@ export default function TodayScreen({ navigation }) {
             </Card>
             
             {/* Upcoming check-ins reminder */}
-            <Card style={styles.upcomingCheckInsCard}>
+            <Card 
+              variant="default"
+              style={{
+                backgroundColor: theme.colors.neutral.lightest,
+                padding: theme.spacing.spacing.md,
+                marginBottom: theme.spacing.spacing.md,
+                borderRadius: theme.spacing.borderRadius.md,
+                ...theme.spacing.shadows.small,
+              }}
+            >
               <CardTitle 
                 title="Upcoming Check-ins"
                 action={true}
@@ -242,20 +351,40 @@ export default function TodayScreen({ navigation }) {
                 onActionPress={() => console.log('See all check-ins')}
               />
               
-              <Card style={styles.checkInItem}>
+              <Card 
+                variant="default"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                  padding: theme.spacing.spacing.md,
+                  marginBottom: 0,
+                }}
+              >
                 <Row align="center">
-                  <View style={styles.checkInIconContainer}>
+                  <View style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 20,
+                    backgroundColor: 'rgba(0, 77, 77, 0.1)',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginRight: theme.spacing.spacing.md,
+                  }}>
                     <Ionicons name="calendar" size={24} color={theme.colors.primary.main} />
                   </View>
-                  <Column style={styles.checkInContent}>
+                  <Column style={{ flex: 1 }}>
                     <Body>4-Month Wellness Check</Body>
                     <Caption color="medium">May 30, 2025</Caption>
                   </Column>
                   <Button 
                     label="Prepare" 
                     onPress={() => console.log('Prepare for check-in')}
-                    style={styles.checkInButton}
                     size="small"
+                    style={{
+                      height: 32,
+                      paddingVertical: 0,
+                      paddingHorizontal: theme.spacing.spacing.md,
+                      justifyContent: 'center',
+                    }}
                   />
                 </Row>
               </Card>
@@ -302,11 +431,11 @@ const styles = {
     paddingHorizontal: theme.spacing.spacing.md,
   },
   insightCard: {
-    backgroundColor: theme.colors.background.card,
+    backgroundColor: theme.colors.neutral.lightest, // Cream/beige background
     overflow: 'hidden',
     marginBottom: theme.spacing.spacing.md,
     padding: 0,
-    borderRadius: theme.spacing.borderRadius.md,
+    borderRadius: 24, // More rounded corners to match design
     ...theme.spacing.shadows.small,
   },
   insightLabel: {
@@ -326,7 +455,9 @@ const styles = {
   insightTitle: {
     color: theme.colors.primary.dark,
     textAlign: 'center',
-    marginBottom: theme.spacing.spacing.lg,
+    marginBottom: theme.spacing.spacing.md,
+    fontSize: 28,
+    fontWeight: '600',
   },
   insightText: {
     color: theme.colors.primary.dark,
@@ -338,6 +469,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: theme.spacing.spacing.md,
+    marginTop: theme.spacing.spacing.md,
   },
   paginationDot: {
     width: 8,
@@ -354,8 +486,10 @@ const styles = {
   },
   actionButtonsContainer: {
     justifyContent: 'space-around',
-    backgroundColor: theme.colors.accent.coral,
+    backgroundColor: theme.colors.secondary.light, // Coral/orange color from the reference
     paddingVertical: theme.spacing.spacing.md,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
   },
   actionButton: {
     alignItems: 'center',
