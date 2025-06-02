@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../../../theme';
 import DomainBadge from '../../ui/badges/DomainBadge';
@@ -16,21 +16,71 @@ import DomainBadge from '../../ui/badges/DomainBadge';
  * @param {Object} style - Additional style overrides for the container
  */
 const DomainCard = ({ domain, onExplore, style }) => {
+  // Import Card component at the top level
+  const Card = require('../../ui/cards/Card').default;
+  
+  // Animation for progress bar
+  const [progressAnimation] = useState(new Animated.Value(0));
+  const [buttonScale] = useState(new Animated.Value(1));
+  
+  // Animate progress bar on mount
+  useEffect(() => {
+    Animated.timing(progressAnimation, {
+      toValue: domain.progress,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  }, [domain.progress]);
+  
+  // Button press animation
+  const animateButtonPress = () => {
+    Animated.sequence([
+      Animated.timing(buttonScale, {
+        toValue: 0.95,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.spring(buttonScale, {
+        toValue: 1,
+        friction: 4,
+        tension: 100,
+        useNativeDriver: true,
+      })
+    ]).start();
+  };
+  
+  // Interpolate width for progress bar
+  const progressWidth = progressAnimation.interpolate({
+    inputRange: [0, 100],
+    outputRange: ['0%', '100%'],
+  });
+  
   return (
-    <View style={[styles.container, style]}>
+    <Card 
+      variant="default" 
+      elevation="soft" 
+      style={[styles.container, style]}
+      animated={true}
+    >
       {/* Domain icon and title */}
       <View style={styles.headerContainer}>
         <DomainBadge domain={domain} size="medium" />
-        <Text style={styles.title}>{domain.name}</Text>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{domain.name}</Text>
+          <Text style={styles.subtitle}>{domain.description || 'Explore developmental milestones and activities'}</Text>
+        </View>
       </View>
       
-      {/* Progress bar */}
+      {/* Progress bar with animation */}
       <View style={styles.progressContainer}>
         <View style={styles.progressBackground}>
-          <View 
+          <Animated.View 
             style={[
               styles.progressFill, 
-              { width: `${domain.progress}%`, backgroundColor: domain.color || theme.colors.primary.main }
+              { 
+                width: progressWidth, 
+                backgroundColor: domain.color || theme.colors.primary.main 
+              }
             ]} 
           />
         </View>
@@ -39,15 +89,24 @@ const DomainCard = ({ domain, onExplore, style }) => {
         </Text>
       </View>
       
-      {/* Explore button */}
+      {/* Explore button with animation */}
       <TouchableOpacity 
         style={styles.exploreButton}
-        onPress={() => onExplore(domain.id)}
-        activeOpacity={0.8}
+        onPress={() => {
+          animateButtonPress();
+          onExplore(domain.id);
+        }}
+        activeOpacity={0.7}
       >
-        <Text style={styles.exploreButtonText}>Explore</Text>
+        <Animated.View style={{ 
+          transform: [{ scale: buttonScale }],
+          width: '100%',
+          alignItems: 'center'
+        }}>
+          <Text style={styles.exploreButtonText}>Explore</Text>
+        </Animated.View>
       </TouchableOpacity>
-    </View>
+    </Card>
   );
 };
 
@@ -56,12 +115,12 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.neutral.lightest,
     borderRadius: theme.spacing.borderRadius.lg,
     padding: theme.spacing.spacing.lg,
-    marginBottom: theme.spacing.spacing.md,
-    shadowColor: theme.colors.neutral.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    marginBottom: theme.spacing.spacing.lg, // Increased from md to lg for more breathing room
+    ...theme.spacing.shadows.soft,
+  },
+  titleContainer: {
+    flex: 1,
+    marginLeft: theme.spacing.spacing.sm,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -70,9 +129,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: theme.typography.sizes.xl,
-    fontFamily: theme.typography.fonts.semibold,
+    fontFamily: 'SFProDisplay-Bold', // Updated to use bold for better contrast
     color: theme.colors.primary.dark,
     marginLeft: theme.spacing.spacing.sm,
+  },
+  subtitle: {
+    fontSize: theme.typography.sizes.sm,
+    fontFamily: 'SFProText-Regular',
+    color: theme.colors.neutral.dark, // Changed from medium to dark for better contrast
+    marginLeft: theme.spacing.spacing.sm,
+    marginTop: 2,
   },
   progressContainer: {
     marginBottom: theme.spacing.spacing.md,
@@ -90,8 +156,8 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: theme.typography.sizes.caption,
-    fontFamily: theme.typography.fonts.regular,
-    color: theme.colors.primary.main,
+    fontFamily: 'SFProText-Regular',
+    color: theme.colors.primary.dark, // Changed from main to dark for better contrast
     textAlign: 'right',
   },
   exploreButton: {
@@ -99,11 +165,12 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     paddingVertical: theme.spacing.spacing.sm,
     alignItems: 'center',
+    overflow: 'hidden',
   },
   exploreButtonText: {
     color: theme.colors.neutral.white,
     fontSize: theme.typography.sizes.body,
-    fontFamily: theme.typography.fonts.medium,
+    fontFamily: 'SFProText-Bold', // Changed from medium to bold for consistency
   },
 });
 

@@ -8,7 +8,7 @@ import { Text, StyleSheet } from 'react-native';
 import theme from '../../theme';
 
 // Heading 1 - Large titles for screen headers
-export const H1 = ({ children, style, color = 'dark', ...props }) => (
+export const H1 = ({ children, style, color = 'darkest', ...props }) => (
   <Text 
     style={[
       styles.h1, 
@@ -22,7 +22,7 @@ export const H1 = ({ children, style, color = 'dark', ...props }) => (
 );
 
 // Heading 2 - Section titles
-export const H2 = ({ children, style, color = 'dark', ...props }) => (
+export const H2 = ({ children, style, color = 'darkest', ...props }) => (
   <Text 
     style={[
       styles.h2, 
@@ -36,7 +36,7 @@ export const H2 = ({ children, style, color = 'dark', ...props }) => (
 );
 
 // Heading 3 - Card titles, smaller sections
-export const H3 = ({ children, style, color = 'dark', ...props }) => (
+export const H3 = ({ children, style, color = 'darkest', ...props }) => (
   <Text 
     style={[
       styles.h3, 
@@ -64,7 +64,7 @@ export const Body = ({ children, style, color = 'dark', ...props }) => (
 );
 
 // Body Small - Secondary content text
-export const BodySmall = ({ children, style, color = 'medium', ...props }) => (
+export const BodySmall = ({ children, style, color = 'dark', ...props }) => (
   <Text 
     style={[
       styles.bodySmall, 
@@ -78,7 +78,7 @@ export const BodySmall = ({ children, style, color = 'medium', ...props }) => (
 );
 
 // Caption - Small text for labels, timestamps, etc.
-export const Caption = ({ children, style, color = 'medium', ...props }) => (
+export const Caption = ({ children, style, color = 'dark', ...props }) => (
   <Text 
     style={[
       styles.caption, 
@@ -92,7 +92,7 @@ export const Caption = ({ children, style, color = 'medium', ...props }) => (
 );
 
 // Label - Used for form labels, section headers
-export const Label = ({ children, style, color = 'medium', ...props }) => (
+export const Label = ({ children, style, color = 'dark', ...props }) => (
   <Text 
     style={[
       styles.label, 
@@ -113,21 +113,21 @@ const getColor = (colorName) => {
     case 'light':
       return theme.colors.neutral.light;
     case 'medium':
-      return theme.colors.neutral.medium;
+      return theme.colors.neutral.dark; // Changed from medium to dark for better contrast
     case 'dark':
-      return theme.colors.neutral.dark;
-    case 'darkest':
       return theme.colors.neutral.darkest;
+    case 'darkest':
+      return theme.colors.neutral.black;
     case 'primary':
-      return theme.colors.primary.main;
+      return theme.colors.primary.dark; // Changed from main to dark for better contrast
     case 'secondary':
-      return theme.colors.secondary.main;
+      return theme.colors.secondary.dark; // Changed from main to dark for better contrast
     case 'error':
       return theme.colors.feedback.error;
     case 'success':
       return theme.colors.feedback.success;
     default:
-      return theme.colors.neutral.dark;
+      return theme.colors.neutral.darkest;
   }
 };
 
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.4,
   },
   label: {
-    fontFamily: 'SFProText-Medium',
+    fontFamily: 'SFProText-Bold', // Changed from Medium to Bold for consistency
     fontSize: 14,
     lineHeight: 20,
     letterSpacing: 0.1,

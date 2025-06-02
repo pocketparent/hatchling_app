@@ -15,15 +15,10 @@ const fontFamilies = {
   mono: 'Courier',
 };
 
-// Font weights (needed for legacy compatibility in some styles)
+// Font weights (simplified to just two main weights)
 const fontWeights = {
-  thin: '100',
-  light: '300',
   regular: '400',
-  medium: '500',
-  semibold: '600',
   bold: '700',
-  black: '900',
 };
 
 // Font sizes
@@ -69,17 +64,17 @@ export const textVariants = {
     letterSpacing: letterSpacing.tight,
   },
   h3: {
-    fontFamily: fontFamilies.secondary,
+    fontFamily: fontFamilies.secondaryBold, // Changed from secondary to secondaryBold for better contrast
     fontSize: fontSizes.xxxl,
     lineHeight: fontSizes.xxxl * lineHeights.tight,
   },
   h4: {
-    fontFamily: fontFamilies.secondary,
+    fontFamily: fontFamilies.secondaryBold, // Changed from secondary to secondaryBold for better contrast
     fontSize: fontSizes.xxl,
     lineHeight: fontSizes.xxl * lineHeights.tight,
   },
   h5: {
-    fontFamily: fontFamilies.secondary,
+    fontFamily: fontFamilies.secondaryBold, // Changed from secondary to secondaryBold for better contrast
     fontSize: fontSizes.xl,
     lineHeight: fontSizes.xl * lineHeights.tight,
   },
@@ -112,7 +107,7 @@ export const textVariants = {
     textTransform: 'uppercase',
   },
   insightTitle: {
-    fontFamily: fontFamilies.secondary,
+    fontFamily: fontFamilies.secondaryBold, // Changed from secondary to secondaryBold for better contrast
     fontSize: fontSizes.xl,
     lineHeight: fontSizes.xl * lineHeights.tight,
   },
@@ -122,7 +117,7 @@ export const textVariants = {
     lineHeight: fontSizes.md * lineHeights.relaxed,
   },
   milestoneTitle: {
-    fontFamily: fontFamilies.secondary,
+    fontFamily: fontFamilies.secondaryBold, // Changed from secondary to secondaryBold for better contrast
     fontSize: fontSizes.lg,
     lineHeight: fontSizes.lg * lineHeights.tight,
   },
@@ -131,7 +126,7 @@ export const textVariants = {
 export default {
   fontFamilies,
   fontSizes,
-  fontWeights, // ✅ now actually defined above
+  fontWeights,
   lineHeights,
   letterSpacing,
   textVariants,

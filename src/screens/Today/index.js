@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Image, 
   TouchableOpacity, 
   Dimensions, 
   Alert,
-  View
+  View,
+  Animated
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import Animated, {
+import Animated as ReAnimated, {
   useSharedValue,
   useAnimatedStyle,
   useAnimatedGestureHandler,
   withSpring,
+  withTiming,
   runOnJS,
+  Easing,
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
@@ -69,21 +72,58 @@ export default function TodayScreen({ navigation }) {
   
   // Animation values
   const translateX = useSharedValue(0);
+  const cardOpacity = useSharedValue(1);
   const { width } = Dimensions.get('window');
   const SWIPE_THRESHOLD = width * 0.2;
   
-  // Update current index
+  // Animation for button press
+  const [saveButtonScale] = useState(new Animated.Value(1));
+  const [shareButtonScale] = useState(new Animated.Value(1));
+  const [helpfulButtonScale] = useState(new Animated.Value(1));
+  
+  // Progress bar animation
+  const progressValue = useSharedValue(0);
+  const progressAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      width: `${progressValue.value}%`,
+    };
+  });
+  
+  // Animate progress bar on mount
+  useEffect(() => {
+    progressValue.value = withTiming(65, {
+      duration: 1000,
+      easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+    });
+  }, []);
+  
+  // Update current index with animation
   const updateIndex = (newIndex) => {
-    setCurrentIndex(newIndex);
+    // Fade out
+    cardOpacity.value = withTiming(0.5, {
+      duration: 150,
+      easing: Easing.ease,
+    }, () => {
+      runOnJS(setCurrentIndex)(newIndex);
+      // Fade in
+      cardOpacity.value = withTiming(1, {
+        duration: 300,
+        easing: Easing.ease,
+      });
+    });
   };
   
-  // Gesture handler for swipe
+  // Gesture handler for swipe with improved animation
   const gestureHandler = useAnimatedGestureHandler({
     onStart: (_, context) => {
       context.startX = translateX.value;
     },
     onActive: (event, context) => {
       translateX.value = context.startX + event.translationX;
+      
+      // Adjust opacity based on swipe distance
+      const swipeProgress = Math.abs(translateX.value) / SWIPE_THRESHOLD;
+      cardOpacity.value = Math.max(0.8, 1 - swipeProgress * 0.2);
     },
     onEnd: (event) => {
       const direction =
@@ -96,33 +136,45 @@ export default function TodayScreen({ navigation }) {
           runOnJS(updateIndex)(newIndex);
         }
       }
-      translateX.value = withSpring(0);
+      
+      // Spring back to center with improved animation
+      translateX.value = withSpring(0, {
+        damping: 20,
+        stiffness: 200,
+      });
+      
+      // Restore opacity
+      cardOpacity.value = withTiming(1, {
+        duration: 200,
+        easing: Easing.ease,
+      });
     },
   });
   
-  // Animated style for swipe
+  // Animated style for swipe with opacity
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
+    opacity: cardOpacity.value,
   }));
   
   // Current insight panel
   const currentPanel = insightPanels[currentIndex];
   
-  // Render pagination dots
-  const renderPaginationDots = () => {
-    return (
-      <Row style={styles.paginationDotsContainer}>
-        {insightPanels.map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.paginationDot,
-              index === currentIndex && styles.paginationDotActive
-            ]}
-          />
-        ))}
-      </Row>
-    );
+  // Button press animations
+  const animateButtonPress = (buttonScale) => {
+    Animated.sequence([
+      Animated.timing(buttonScale, {
+        toValue: 0.9,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.spring(buttonScale, {
+        toValue: 1,
+        friction: 4,
+        tension: 100,
+        useNativeDriver: true,
+      })
+    ]).start();
   };
   
   // Handle weekly check-in
@@ -169,13 +221,13 @@ export default function TodayScreen({ navigation }) {
           <Section style={styles.insightSection}>
             <Card 
               variant="default"
+              elevation="soft"
               style={{
                 backgroundColor: theme.colors.neutral.lightest,
                 padding: 0,
                 borderRadius: 24,
                 overflow: 'hidden',
-                marginBottom: theme.spacing.spacing.md,
-                ...theme.spacing.shadows.small,
+                marginBottom: theme.spacing.spacing.lg,
               }}
             >
               <Caption 
@@ -193,7 +245,7 @@ export default function TodayScreen({ navigation }) {
               </Caption>
               
               <PanGestureHandler onGestureEvent={gestureHandler}>
-                <Animated.View 
+                <ReAnimated.View 
                   style={[
                     {
                       padding: theme.spacing.spacing.lg,
@@ -256,7 +308,7 @@ export default function TodayScreen({ navigation }) {
                       />
                     ))}
                   </Row>
-                </Animated.View>
+                </ReAnimated.View>
               </PanGestureHandler>
               
               {/* Action buttons */}
@@ -269,24 +321,60 @@ export default function TodayScreen({ navigation }) {
                   borderBottomRightRadius: 24,
                 }}
               >
-                <TouchableOpacity style={{ alignItems: 'center' }}>
-                  <View style={{ marginBottom: theme.spacing.spacing.xs }}>
+                <TouchableOpacity 
+                  style={{ alignItems: 'center' }}
+                  onPress={() => {
+                    animateButtonPress(saveButtonScale);
+                    console.log('Insight saved');
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Animated.View 
+                    style={{ 
+                      marginBottom: theme.spacing.spacing.xs,
+                      transform: [{ scale: saveButtonScale }]
+                    }}
+                  >
                     <Ionicons name="bookmark-outline" size={24} color={theme.colors.neutral.white} />
-                  </View>
+                  </Animated.View>
                   <BodySmall color="white">Save</BodySmall>
                 </TouchableOpacity>
                 
-                <TouchableOpacity style={{ alignItems: 'center' }}>
-                  <View style={{ marginBottom: theme.spacing.spacing.xs }}>
+                <TouchableOpacity 
+                  style={{ alignItems: 'center' }}
+                  onPress={() => {
+                    animateButtonPress(shareButtonScale);
+                    console.log('Insight shared');
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Animated.View 
+                    style={{ 
+                      marginBottom: theme.spacing.spacing.xs,
+                      transform: [{ scale: shareButtonScale }]
+                    }}
+                  >
                     <Ionicons name="share-outline" size={24} color={theme.colors.neutral.white} />
-                  </View>
+                  </Animated.View>
                   <BodySmall color="white">Share</BodySmall>
                 </TouchableOpacity>
                 
-                <TouchableOpacity style={{ alignItems: 'center' }}>
-                  <View style={{ marginBottom: theme.spacing.spacing.xs }}>
+                <TouchableOpacity 
+                  style={{ alignItems: 'center' }}
+                  onPress={() => {
+                    animateButtonPress(helpfulButtonScale);
+                    console.log('Insight marked as helpful');
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Animated.View 
+                    style={{ 
+                      marginBottom: theme.spacing.spacing.xs,
+                      transform: [{ scale: helpfulButtonScale }]
+                    }}
+                  >
                     <Ionicons name="happy-outline" size={24} color={theme.colors.neutral.white} />
-                  </View>
+                  </Animated.View>
                   <BodySmall color="white">Helpful</BodySmall>
                 </TouchableOpacity>
               </Row>
@@ -295,18 +383,19 @@ export default function TodayScreen({ navigation }) {
             {/* Weekly Check-in Card */}
             <Card 
               variant="default"
+              elevation="soft"
               style={{
                 backgroundColor: theme.colors.primary.dark,
                 padding: 0,
                 overflow: 'hidden',
-                marginBottom: theme.spacing.spacing.md,
-                borderRadius: theme.spacing.borderRadius.md,
-                ...theme.spacing.shadows.small,
+                marginBottom: theme.spacing.spacing.lg,
+                borderRadius: theme.spacing.borderRadius.lg,
               }}
             >
               <TouchableOpacity 
                 style={{ padding: theme.spacing.spacing.md }}
                 onPress={handleWeeklyCheckIn}
+                activeOpacity={0.7}
               >
                 <Row align="center" justify="space-between">
                   <Row align="center">
@@ -336,12 +425,12 @@ export default function TodayScreen({ navigation }) {
             {/* Upcoming check-ins reminder */}
             <Card 
               variant="default"
+              elevation="soft"
               style={{
                 backgroundColor: theme.colors.neutral.lightest,
                 padding: theme.spacing.spacing.md,
-                marginBottom: theme.spacing.spacing.md,
-                borderRadius: theme.spacing.borderRadius.md,
-                ...theme.spacing.shadows.small,
+                marginBottom: theme.spacing.spacing.lg,
+                borderRadius: theme.spacing.borderRadius.lg,
               }}
             >
               <CardTitle 
@@ -353,11 +442,15 @@ export default function TodayScreen({ navigation }) {
               
               <Card 
                 variant="default"
+                elevation="soft"
                 style={{
                   backgroundColor: 'rgba(255, 255, 255, 0.5)',
                   padding: theme.spacing.spacing.md,
                   marginBottom: 0,
                 }}
+                animated={true}
+                pressable={true}
+                onPress={() => console.log('Check-in details')}
               >
                 <Row align="center">
                   <View style={{
@@ -373,7 +466,7 @@ export default function TodayScreen({ navigation }) {
                   </View>
                   <Column style={{ flex: 1 }}>
                     <Body>4-Month Wellness Check</Body>
-                    <Caption color="medium">May 30, 2025</Caption>
+                    <Caption color="dark">May 30, 2025</Caption>
                   </Column>
                   <Button 
                     label="Prepare" 
@@ -433,10 +526,9 @@ const styles = {
   insightCard: {
     backgroundColor: theme.colors.neutral.lightest, // Cream/beige background
     overflow: 'hidden',
-    marginBottom: theme.spacing.spacing.md,
+    marginBottom: theme.spacing.spacing.lg,
     padding: 0,
     borderRadius: 24, // More rounded corners to match design
-    ...theme.spacing.shadows.small,
   },
   insightLabel: {
     fontSize: 16,
@@ -490,63 +582,5 @@ const styles = {
     paddingVertical: theme.spacing.spacing.md,
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
-  },
-  actionButton: {
-    alignItems: 'center',
-  },
-  iconContainer: {
-    marginBottom: theme.spacing.spacing.xs,
-  },
-  weeklyCheckInCard: {
-    backgroundColor: theme.colors.primary.dark,
-    marginBottom: theme.spacing.spacing.md,
-    padding: 0,
-    overflow: 'hidden',
-    borderRadius: theme.spacing.borderRadius.md,
-    ...theme.spacing.shadows.small,
-  },
-  weeklyCheckInContent: {
-    padding: theme.spacing.spacing.md,
-  },
-  weeklyCheckInIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: theme.spacing.spacing.md,
-  },
-  weeklyCheckInTextContainer: {
-    flex: 1,
-  },
-  upcomingCheckInsCard: {
-    backgroundColor: theme.colors.background.card,
-    marginBottom: theme.spacing.spacing.md,
-    padding: theme.spacing.spacing.md,
-    borderRadius: theme.spacing.borderRadius.md,
-    ...theme.spacing.shadows.small,
-  },
-  checkInItem: {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    padding: theme.spacing.spacing.md,
-  },
-  checkInIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 77, 77, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: theme.spacing.spacing.md,
-  },
-  checkInContent: {
-    flex: 1,
-  },
-  checkInButton: {
-    height: 32,
-    paddingVertical: 0,
-    paddingHorizontal: theme.spacing.spacing.md,
-    justifyContent: 'center',
   },
 };
