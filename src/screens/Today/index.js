@@ -8,15 +8,14 @@ import {
   Animated as RNAnimated
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import {
+import ReAnimated, {
   useSharedValue,
   useAnimatedStyle,
   useAnimatedGestureHandler,
   withSpring,
   withTiming,
   runOnJS,
-  Easing,
-  Animated as ReAnimated
+  Easing
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
