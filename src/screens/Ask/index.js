@@ -5,7 +5,8 @@ import {
   KeyboardAvoidingView, 
   Platform, 
   ScrollView,
-  Text
+  Text,
+  StyleSheet
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ScreenErrorWrapper } from '../../components/error/ErrorComponents';
@@ -18,6 +19,7 @@ import {
   Column,
   Spacer,
   Card,
+  H1,
   H2,
   H3,
   Body,
@@ -49,14 +51,16 @@ export default function AskScreen({ navigation }) {
     { id: '2', name: 'Feeding', icon: '🍼' },
     { id: '3', name: 'Development', icon: '🧩' },
     { id: '4', name: 'Health', icon: '🩺' },
+    { id: '5', name: 'Behavior', icon: '🧸' },
+    { id: '6', name: 'Parenting', icon: '👨‍👩‍👧' },
   ];
 
-  // Mock data for recent questions
-  const recentQuestions = [
+  // Mock data for recommended questions
+  const recommendedQuestions = [
     { 
       id: '1', 
       category: '1',
-      question: 'Why is my baby waking up every hour at night?',
+      question: 'Why is my baby suddenly fussy at night?',
       preview: 'Sleep patterns change as your baby develops. Around 4 months...',
       fullAnswer: `Sleep patterns change as your baby develops. Around 4 months, many babies experience a sleep regression due to developmental leaps and changes in sleep cycles. This is completely normal and temporary.
 
@@ -72,94 +76,30 @@ Remember that this phase is temporary and usually resolves within 2-6 weeks as y
     },
     { 
       id: '2', 
-      category: '2',
-      question: 'How do I know if my baby is getting enough milk?',
-      preview: 'Look for these signs of satisfaction after feeding...',
-      fullAnswer: `It can be challenging to know exactly how much milk your baby is getting, especially if you're breastfeeding. Here are reliable indicators that your baby is getting enough milk:
-
-Physical signs:
-• Steady weight gain following initial newborn weight loss
-• At least 6-8 wet diapers per day after the first week
-• Regular bowel movements (frequency varies by age and feeding method)
-• Your baby appears satisfied after feedings
-• Good skin elasticity and moist mouth
-
-Feeding behavior:
-• You can hear or see your baby swallowing during feeds
-• Your baby seems content after most feedings
-• Feeding sessions last approximately 20-40 minutes (breastfeeding) or your baby finishes the expected amount of formula
-
-If you're concerned about your baby's intake, tracking wet/dirty diapers and regular weight checks can provide reassurance. Always consult your pediatrician if you have ongoing concerns about feeding or weight gain.`
-    },
-    { 
-      id: '3', 
-      category: '3',
-      question: 'When should my baby start rolling over?',
-      preview: 'Most babies begin rolling from tummy to back around 4 months...',
-      fullAnswer: `Rolling over is an important milestone in your baby's physical development. Here's what you can expect:
-
-• Most babies start rolling from tummy to back between 4-5 months
-• Rolling from back to tummy typically happens between 5-6 months
-• Some babies may roll as early as 3 months or as late as 7 months
-• Some babies may skip rolling from tummy to back and go straight to rolling from back to tummy
-
-To encourage rolling:
-• Provide plenty of supervised tummy time daily
-• Place toys slightly out of reach during floor play to encourage movement
-• Gently assist your baby by showing them how to shift their weight to the side
-
-Remember that all babies develop at their own pace. If your baby hasn't started rolling by 6-7 months, or if they roll one way but not the other by 8 months, it's a good idea to mention it to your pediatrician at your next visit.`
-    },
-  ];
-
-  // Mock data for common questions
-  const commonQuestions = [
-    { 
-      id: '4', 
       category: '1',
-      question: 'When will my baby start sleeping through the night?',
-      preview: 'Every baby is different, but most begin to sleep for longer stretches...',
-      fullAnswer: `The timeline for sleeping through the night varies significantly from baby to baby. Here's a general guideline:
+      question: 'When do 4-month-olds drop a nap?',
+      preview: 'Most 4-month-olds still need 3-4 naps per day, but this varies...',
+      fullAnswer: `At 4 months old, most babies still need 3-4 naps per day, totaling about 4-5 hours of daytime sleep. It's typically not until around 6-8 months that babies consolidate to 3 naps, and then to 2 naps around 8-10 months.
 
-• Newborns (0-3 months): Sleep is irregular with frequent wakings every 2-4 hours to feed
-• 3-6 months: Many babies begin to have longer sleep stretches of 5-6 hours
-• 6-9 months: Some babies may sleep 8-10 hours without feeding
-• 9-12 months: Many babies can sleep 10-12 hours through the night
+However, every baby is different, and some may show signs of changing their nap patterns earlier. Signs your baby might be ready to drop a nap include:
+• Consistently fighting a particular nap
+• Taking very short naps or skipping naps entirely
+• Being able to stay awake longer between sleep periods without becoming overtired
+• Still sleeping well at night despite nap changes
 
-Factors that influence when a baby sleeps through the night include:
-• Individual temperament and development
-• Feeding method and schedule
-• Sleep environment and routines
-• Growth spurts and developmental milestones
+If your 4-month-old seems to be dropping a nap, first rule out other causes like:
+• A sleep regression (very common at 4 months)
+• Overtiredness making it harder to fall asleep
+• Environmental distractions
+• Hunger or discomfort
 
-It's important to have realistic expectations and understand that night wakings are normal and necessary for many babies, especially those who are breastfed. Consistent bedtime routines, age-appropriate sleep schedules, and gradually helping your baby learn to self-soothe can support the development of healthy sleep patterns.`
-    },
-    { 
-      id: '5', 
-      category: '2',
-      question: 'When should I start solid foods?',
-      preview: 'Most pediatricians recommend introducing solids around 6 months...',
-      fullAnswer: `The American Academy of Pediatrics recommends introducing solid foods around 6 months of age. Here are signs your baby is ready for solids:
-
-• Can sit up with minimal support
-• Has good head control
-• Shows interest in food (watches you eat, reaches for food)
-• Has lost the tongue-thrust reflex (no longer automatically pushes food out of mouth)
-• Seems hungry after a full day of milk feedings
-
-When starting solids:
-• Begin with single-ingredient foods without added sugar or salt
-• Wait 3-5 days between introducing new foods to watch for allergic reactions
-• Offer a variety of flavors and textures as your baby becomes more experienced
-• Continue breast milk or formula as the primary source of nutrition through the first year
-
-Common first foods include iron-fortified infant cereal, pureed vegetables and fruits, and soft, mashed foods. Some families choose to follow a baby-led weaning approach with appropriate finger foods instead of purees. Discuss your plans with your pediatrician to determine the best approach for your baby.`
+Rather than dropping a nap completely at 4 months, focus on establishing a consistent nap routine with age-appropriate wake windows (typically 1.5-2.5 hours for a 4-month-old). If nap transitions are happening, they'll occur gradually as your baby matures.`
     },
   ];
 
   // Filter questions based on search query
   const getFilteredQuestions = () => {
-    const allQuestions = [...recentQuestions, ...commonQuestions];
+    const allQuestions = [...recommendedQuestions];
     if (!searchQuery.trim()) return [];
     
     return allQuestions.filter(q => 
@@ -170,7 +110,7 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
 
   // Get questions by category
   const getQuestionsByCategory = (categoryId) => {
-    const allQuestions = [...recentQuestions, ...commonQuestions];
+    const allQuestions = [...recommendedQuestions];
     return allQuestions.filter(q => q.category === categoryId);
   };
 
@@ -282,268 +222,291 @@ Common first foods include iron-fortified infant cereal, pureed vegetables and f
     <Card 
       key={item.id}
       style={styles.questionCard}
+      elevation="soft"
+      animated={true}
+      pressable={true}
+      onPress={() => handleQuestionSelect(item)}
     >
-      <TouchableOpacity onPress={() => handleQuestionSelect(item)}>
-        <H3>{item.question}</H3>
-        <BodySmall color="medium" style={styles.answerPreview}>{item.preview}</BodySmall>
-        <Row style={styles.readMoreContainer} align="center">
-          <Button 
-            label="Read more" 
-            onPress={() => handleQuestionSelect(item)}
-            variant="text"
-            style={styles.readMoreButton}
-          />
-          <Ionicons name="chevron-forward" size={16} color={theme.colors.primary.main} />
-        </Row>
-      </TouchableOpacity>
+      <H3>{item.question}</H3>
+      <BodySmall color="dark" style={styles.answerPreview}>{item.preview}</BodySmall>
+      <Row style={styles.readMoreContainer} align="center">
+        <Ionicons name="chevron-forward" size={24} color={theme.colors.primary.main} style={styles.chevronIcon} />
+      </Row>
     </Card>
   );
 
   // Render main content
   const renderMainContent = () => {
     return (
-      <Container>
-        {/* Search bar */}
-        <Section style={styles.searchBarContainer}>
-          <Row>
-            <TextInput
-              style={styles.searchInput}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              placeholder="Search questions..."
-              returnKeyType="search"
-              onSubmitEditing={handleSearch}
-            />
-            <TouchableOpacity 
-              style={styles.searchButton} 
-              onPress={handleSearch}
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <Container>
+          {/* Header with personalized greeting */}
+          <Section style={styles.headerSection}>
+            <H1 style={styles.headerTitle}>Hi Emma's Parent — what's on your mind today?</H1>
+          </Section>
+          
+          {/* Search bar */}
+          <Section style={styles.searchBarContainer}>
+            <Card 
+              style={styles.searchCard}
+              elevation="soft"
             >
-              <Ionicons name="search" size={20} color={theme.colors.neutral.white} />
-            </TouchableOpacity>
-          </Row>
-        </Section>
-        
-        {/* Categories */}
-        <Section>
-          <H2 color="white" style={styles.sectionTitle}>Browse by Topic</H2>
-          <ScrollView 
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.categoriesContainer}
-          >
-            {categories.map(item => (
-              <CategoryPill
-                key={item.id}
-                label={item.name}
-                icon={item.icon}
-                isSelected={activeCategory === item.id}
-                onPress={() => handleCategorySelect(item.id)}
-                style={styles.categoryPill}
-              />
-            ))}
-          </ScrollView>
-        </Section>
-        
-        {/* Content based on selection */}
-        <View style={styles.questionsContainer}>
-          {/* Search Results */}
-          {showSearchResults && (
-            <Section>
-              <H2 color="white" style={styles.sectionTitle}>
-                Search Results for "{searchQuery}"
-              </H2>
-              {getFilteredQuestions().length > 0 ? (
-                <Column style={styles.questionsList}>
-                  {getFilteredQuestions().map(item => renderQuestionItem(item))}
-                </Column>
-              ) : (
-                <Card style={styles.noResultsContainer}>
-                  <Body style={styles.noResultsText}>
-                    No results found for "{searchQuery}"
-                  </Body>
-                  <Button 
-                    label="Ask this question directly"
-                    onPress={() => setUserMessage(searchQuery)}
-                    style={styles.askDirectlyButton}
-                  />
-                </Card>
-              )}
-            </Section>
-          )}
+              <Row align="center">
+                <Ionicons name="search" size={24} color={theme.colors.neutral.medium} style={styles.searchIcon} />
+                <TextInput
+                  style={styles.searchInput}
+                  value={searchQuery}
+                  onChangeText={setSearchQuery}
+                  placeholder="Ask a question about sleep, feeding, or anything else..."
+                  returnKeyType="search"
+                  onSubmitEditing={handleSearch}
+                />
+              </Row>
+            </Card>
+          </Section>
           
-          {/* Category Questions */}
-          {activeCategory && (
-            <Section>
-              <H2 color="white" style={styles.sectionTitle}>
-                {categories.find(c => c.id === activeCategory)?.name} Questions
-              </H2>
-              <Column style={styles.questionsList}>
-                {getQuestionsByCategory(activeCategory).map(item => renderQuestionItem(item))}
-              </Column>
-            </Section>
-          )}
-          
-          {/* Recent and Common questions - show only if not searching or filtering by category */}
-          {!showSearchResults && !activeCategory && (
-            <>
+          {/* Content based on selection */}
+          <View style={styles.questionsContainer}>
+            {/* Search Results */}
+            {showSearchResults && (
               <Section>
-                <H2 color="white" style={styles.sectionTitle}>Recent Questions</H2>
+                <H2 style={styles.sectionTitle}>
+                  Search Results for "{searchQuery}"
+                </H2>
+                {getFilteredQuestions().length > 0 ? (
+                  <Column style={styles.questionsList}>
+                    {getFilteredQuestions().map(item => renderQuestionItem(item))}
+                  </Column>
+                ) : (
+                  <Card style={styles.noResultsContainer}>
+                    <Body style={styles.noResultsText}>
+                      No results found for "{searchQuery}"
+                    </Body>
+                    <Button 
+                      label="Ask this question directly"
+                      onPress={() => setUserMessage(searchQuery)}
+                      style={styles.askDirectlyButton}
+                    />
+                  </Card>
+                )}
+              </Section>
+            )}
+            
+            {/* Category Questions */}
+            {activeCategory && (
+              <Section>
+                <H2 style={styles.sectionTitle}>
+                  {categories.find(c => c.id === activeCategory)?.name} Questions
+                </H2>
                 <Column style={styles.questionsList}>
-                  {recentQuestions.map(item => renderQuestionItem(item))}
+                  {getQuestionsByCategory(activeCategory).map(item => renderQuestionItem(item))}
                 </Column>
               </Section>
-              
-              <Section>
-                <H2 color="white" style={styles.sectionTitle}>Common Questions</H2>
-                <Column style={styles.questionsList}>
-                  {commonQuestions.map(item => renderQuestionItem(item))}
-                </Column>
-              </Section>
-            </>
-          )}
-          
-          <Spacer size="xl" />
-        </View>
-      </Container>
+            )}
+            
+            {/* Recommended and Browse sections - show only if not searching or filtering by category */}
+            {!showSearchResults && !activeCategory && (
+              <>
+                <Section>
+                  <H2 style={styles.sectionTitle}>Recommended for You</H2>
+                  <Column style={styles.questionsList}>
+                    {recommendedQuestions.map(item => renderQuestionItem(item))}
+                  </Column>
+                </Section>
+                
+                <Section>
+                  <H2 style={styles.sectionTitle}>Browse by Topic</H2>
+                  <ScrollView 
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.categoriesContainer}
+                  >
+                    {categories.map(item => (
+                      <CategoryPill
+                        key={item.id}
+                        label={item.name}
+                        icon={item.icon}
+                        isSelected={activeCategory === item.id}
+                        onPress={() => handleCategorySelect(item.id)}
+                        style={styles.categoryPill}
+                      />
+                    ))}
+                  </ScrollView>
+                </Section>
+              </>
+            )}
+            
+            <Spacer size="xl" />
+          </View>
+        </Container>
+      </ScrollView>
     );
   };
 
   return (
     <ScreenErrorWrapper screenName="Ask" navigation={navigation}>
-      {selectedQuestion ? renderQuestionDetail() : renderMainContent()}
+      <View style={styles.container}>
+        {selectedQuestion ? renderQuestionDetail() : renderMainContent()}
+      </View>
     </ScreenErrorWrapper>
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.neutral.lightest,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+  },
+  headerSection: {
+    paddingTop: theme.spacing.spacing.lg,
+    paddingHorizontal: theme.spacing.spacing.lg,
+    marginBottom: theme.spacing.spacing.md,
+  },
+  headerTitle: {
+    fontSize: 28,
+    textAlign: 'center',
+    color: theme.colors.primary.dark,
+    fontFamily: 'SFProDisplay-Bold',
+  },
   searchBarContainer: {
-    marginBottom: theme.spacing.spacing.lg,
+    paddingHorizontal: theme.spacing.spacing.lg,
+    marginBottom: theme.spacing.spacing.xl,
+  },
+  searchCard: {
+    backgroundColor: theme.colors.neutral.white,
+    borderRadius: 30,
+    padding: theme.spacing.spacing.sm,
     paddingHorizontal: theme.spacing.spacing.md,
+  },
+  searchIcon: {
+    marginRight: theme.spacing.spacing.sm,
   },
   searchInput: {
     flex: 1,
     height: 48,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: theme.spacing.borderRadius.pill,
-    paddingHorizontal: theme.spacing.spacing.md,
-    color: theme.colors.neutral.white,
     fontSize: 16,
-  },
-  searchButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: theme.colors.primary.main,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: theme.spacing.spacing.sm,
+    color: theme.colors.neutral.dark,
   },
   sectionTitle: {
     marginBottom: theme.spacing.spacing.md,
-    paddingHorizontal: theme.spacing.spacing.md,
-  },
-  categoriesContainer: {
-    paddingBottom: theme.spacing.spacing.md,
-    paddingHorizontal: theme.spacing.spacing.md,
-  },
-  categoryPill: {
-    marginRight: theme.spacing.spacing.md,
+    color: theme.colors.primary.dark,
+    paddingHorizontal: theme.spacing.spacing.lg,
   },
   questionsContainer: {
     flex: 1,
-    paddingBottom: 100, // Extra padding for bottom tab bar
   },
   questionsList: {
-    gap: theme.spacing.spacing.md,
-    paddingHorizontal: theme.spacing.spacing.md,
+    paddingHorizontal: theme.spacing.spacing.lg,
   },
   questionCard: {
-    padding: theme.spacing.spacing.md,
-  },
-  answerPreview: {
-    marginTop: theme.spacing.spacing.sm,
+    backgroundColor: theme.colors.secondary.light,
+    borderRadius: theme.spacing.borderRadius.lg,
+    padding: theme.spacing.spacing.lg,
     marginBottom: theme.spacing.spacing.md,
   },
-  readMoreContainer: {
-    marginTop: theme.spacing.spacing.sm,
+  answerPreview: {
+    marginTop: theme.spacing.spacing.xs,
+    marginBottom: theme.spacing.spacing.sm,
   },
-  readMoreButton: {
-    paddingVertical: 0,
-    paddingHorizontal: 0,
-    height: 'auto',
+  readMoreContainer: {
+    justifyContent: 'flex-end',
+  },
+  chevronIcon: {
+    alignSelf: 'flex-end',
+  },
+  categoriesContainer: {
+    paddingHorizontal: theme.spacing.spacing.lg,
+    paddingBottom: theme.spacing.spacing.md,
+  },
+  categoryPill: {
+    marginRight: theme.spacing.spacing.sm,
+    marginBottom: theme.spacing.spacing.sm,
   },
   noResultsContainer: {
-    padding: theme.spacing.spacing.md,
+    padding: theme.spacing.spacing.lg,
     alignItems: 'center',
-    marginHorizontal: theme.spacing.spacing.md,
+    marginHorizontal: theme.spacing.spacing.lg,
   },
   noResultsText: {
     textAlign: 'center',
     marginBottom: theme.spacing.spacing.md,
   },
   askDirectlyButton: {
-    marginTop: theme.spacing.spacing.sm,
+    width: '100%',
   },
   backButtonRow: {
-    marginBottom: theme.spacing.spacing.md,
     paddingHorizontal: theme.spacing.spacing.md,
+    paddingVertical: theme.spacing.spacing.md,
     alignItems: 'center',
   },
   backButtonText: {
     marginLeft: theme.spacing.spacing.sm,
   },
   detailCard: {
-    padding: theme.spacing.spacing.md,
-    marginBottom: theme.spacing.spacing.md,
-    marginHorizontal: theme.spacing.spacing.md,
+    flex: 1,
+    margin: theme.spacing.spacing.md,
+    padding: theme.spacing.spacing.lg,
+    marginBottom: 80,
   },
   detailQuestion: {
     marginBottom: theme.spacing.spacing.md,
   },
   answerScrollView: {
-    maxHeight: 400,
-    marginBottom: theme.spacing.spacing.md,
+    flex: 1,
+    marginBottom: theme.spacing.spacing.lg,
   },
   feedbackContainer: {
-    marginTop: theme.spacing.spacing.md,
     paddingTop: theme.spacing.spacing.md,
     borderTopWidth: 1,
-    borderTopColor: theme.colors.neutral.lightest,
+    borderTopColor: theme.colors.neutral.light,
   },
   feedbackButtons: {
-    marginLeft: theme.spacing.spacing.md,
+    justifyContent: 'flex-end',
   },
   feedbackButton: {
-    height: 36,
-    paddingVertical: 0,
+    minWidth: 80,
   },
   messageInputContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: theme.spacing.borderRadius.pill,
-    paddingHorizontal: theme.spacing.spacing.md,
-    paddingVertical: theme.spacing.spacing.sm,
-    marginBottom: theme.spacing.spacing.md,
-    marginHorizontal: theme.spacing.spacing.md,
+    backgroundColor: theme.colors.neutral.white,
+    padding: theme.spacing.spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.neutral.light,
   },
   messageInput: {
     flex: 1,
     minHeight: 40,
     maxHeight: 100,
-    color: theme.colors.neutral.white,
-    fontSize: 16,
+    backgroundColor: theme.colors.neutral.lighter,
+    borderRadius: 20,
+    paddingHorizontal: theme.spacing.spacing.md,
+    paddingVertical: theme.spacing.spacing.xs,
+    marginRight: theme.spacing.spacing.sm,
   },
   sendButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: theme.colors.primary.main,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: theme.spacing.spacing.sm,
   },
   sendButtonDisabled: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: theme.colors.neutral.medium,
   },
-};
+});
