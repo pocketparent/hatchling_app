@@ -5,10 +5,10 @@ import {
   Dimensions, 
   Alert,
   View,
-  Animated
+  Animated as RNAnimated
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import Animated as ReAnimated, {
+import {
   useSharedValue,
   useAnimatedStyle,
   useAnimatedGestureHandler,
@@ -16,6 +16,7 @@ import Animated as ReAnimated, {
   withTiming,
   runOnJS,
   Easing,
+  Animated as ReAnimated
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
@@ -77,9 +78,9 @@ export default function TodayScreen({ navigation }) {
   const SWIPE_THRESHOLD = width * 0.2;
   
   // Animation for button press
-  const [saveButtonScale] = useState(new Animated.Value(1));
-  const [shareButtonScale] = useState(new Animated.Value(1));
-  const [helpfulButtonScale] = useState(new Animated.Value(1));
+  const [saveButtonScale] = useState(new RNAnimated.Value(1));
+  const [shareButtonScale] = useState(new RNAnimated.Value(1));
+  const [helpfulButtonScale] = useState(new RNAnimated.Value(1));
   
   // Progress bar animation
   const progressValue = useSharedValue(0);
@@ -162,13 +163,13 @@ export default function TodayScreen({ navigation }) {
   
   // Button press animations
   const animateButtonPress = (buttonScale) => {
-    Animated.sequence([
-      Animated.timing(buttonScale, {
+    RNAnimated.sequence([
+      RNAnimated.timing(buttonScale, {
         toValue: 0.9,
         duration: 100,
         useNativeDriver: true,
       }),
-      Animated.spring(buttonScale, {
+      RNAnimated.spring(buttonScale, {
         toValue: 1,
         friction: 4,
         tension: 100,
@@ -329,14 +330,14 @@ export default function TodayScreen({ navigation }) {
                   }}
                   activeOpacity={0.7}
                 >
-                  <Animated.View 
+                  <RNAnimated.View 
                     style={{ 
                       marginBottom: theme.spacing.spacing.xs,
                       transform: [{ scale: saveButtonScale }]
                     }}
                   >
                     <Ionicons name="bookmark-outline" size={24} color={theme.colors.neutral.white} />
-                  </Animated.View>
+                  </RNAnimated.View>
                   <BodySmall color="white">Save</BodySmall>
                 </TouchableOpacity>
                 
@@ -348,14 +349,14 @@ export default function TodayScreen({ navigation }) {
                   }}
                   activeOpacity={0.7}
                 >
-                  <Animated.View 
+                  <RNAnimated.View 
                     style={{ 
                       marginBottom: theme.spacing.spacing.xs,
                       transform: [{ scale: shareButtonScale }]
                     }}
                   >
                     <Ionicons name="share-outline" size={24} color={theme.colors.neutral.white} />
-                  </Animated.View>
+                  </RNAnimated.View>
                   <BodySmall color="white">Share</BodySmall>
                 </TouchableOpacity>
                 
@@ -367,14 +368,14 @@ export default function TodayScreen({ navigation }) {
                   }}
                   activeOpacity={0.7}
                 >
-                  <Animated.View 
+                  <RNAnimated.View 
                     style={{ 
                       marginBottom: theme.spacing.spacing.xs,
                       transform: [{ scale: helpfulButtonScale }]
                     }}
                   >
                     <Ionicons name="happy-outline" size={24} color={theme.colors.neutral.white} />
-                  </Animated.View>
+                  </RNAnimated.View>
                   <BodySmall color="white">Helpful</BodySmall>
                 </TouchableOpacity>
               </Row>
